@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{prescription.title}"></title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.2/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/common.css}"/>
+</head>
+<body>
+<div th:class="'container-fluid width-s-90 width-m-75 shadow p-3'">
+    <form method="post" th:action="@{/prescriptions/add/{appointmentId}(appointmentId=${appointmentId})}"
+          th:object="${prescriptionModel}">
+        <!--Expire Date Field-->
+        <div th:class="mt-3">
+            <label th:class="form-label" for="expireDate" th:text="#{prescription.expire_date}"></label>
+            <input th:type="date"
+                   th:class="${#fields.hasErrors('expireDate')}? 'border border-2 border-danger form-control':'form-control'"
+                   id="expireDate" th:field="*{expireDate}"/>
+            <ul th:class="custom-bullet" th:if="${#fields.hasErrors('expireDate')}">
+                <li th:class="'form-error'" th:each="error : ${#fields.errors('expireDate')}"
+                    th:text="${error}"></li>
+            </ul>
+        </div>
+        <!--Medications Checkboxes-->
+        <div th:class="'mt-3'">
+            <label th:class="'form-label d-inline'" for="medications"
+                   th:text="#{prescription.medications}"></label>
+
+            <div th:each="medication:${medications} "
+                 th:class="form-check"
+                 id="medications">
+
+                <label>
+                    <input  th:id="${medication.getMedicationId()}" th:type="checkbox" th:field="*{selectedMedications}" th:value="${medication.getMedicationId()}"/>
+                </label>
+                <label th:for="${medication.getMedicationId()}" th:class="'form-check-label fw-bold'" th:text="${medication.getName()}"></label>
+            </div>
+            <ul th:class="custom-bullet" th:if="${#fields.hasErrors('selectedMedications')}">
+                <li th:class="'form-error'" th:each="error : ${#fields.errors('selectedMedications')}"
+                    th:text="${error}"></li>
+            </ul>
+
+        </div>
+
+        <button th:class="'btn btn-primary mt-3'" type="submit" th:text="#{prescription.title}"></button>
+        <a th:class="'btn btn-danger mt-3'" th:href="@{/appointments/details/{id}(id=${appointmentId})}"
+           th:text="#{button.back}"></a>
+
+    </form>
+</div>
+<script th:src="@{/webjars/bootstrap/5.3.2/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

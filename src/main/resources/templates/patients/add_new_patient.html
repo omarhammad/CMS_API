@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{patient.title2}"></title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.2/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+</head>
+<body>
+
+<div class="toast-container">
+    <div th:if="${exceptionMsg != null && !#strings.isEmpty(exceptionMsg)}"
+         class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive"
+         aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body" th:text="${exceptionMsg}">
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                    aria-label="Close"></button>
+        </div>
+    </div>
+</div>
+
+<div th:class="'container-fluid width-s-90 width-m-75  shadow m-auto p-3'">
+    <form method="post" action="/patients/add" th:object="${patientModel}">
+        <div th:class="m-2">
+            <label th:class="form-label" th:text="#{patient_form.firstName}" for="first_name"></label>
+            <input th:class="${#fields.hasErrors('firstName')}? 'form-control border border-2 border-danger ' : 'form-control'"
+                   placeholder="Jan" id="first_name"
+                   th:field="*{firstName}"/>
+            <ul th:class="custom-bullet" th:if="${#fields.hasErrors('firstName')}">
+                <li th:class="'form-error'" th:each="error : ${#fields.errors('firstName')}"
+                    th:text="${error}"></li>
+            </ul>
+        </div>
+        <div th:class="m-2">
+            <label th:class="form-label" th:text="#{patient_form.lastName}" for="last_name"></label>
+            <input th:class="${#fields.hasErrors('lastName')}? 'form-control border border-2 border-danger ' : 'form-control'"
+                   placeholder="Smith" id="last_name"
+                   th:field="*{lastName}"/>
+            <ul th:class="custom-bullet" th:if="${#fields.hasErrors('lastName')}">
+                <li th:class="'form-error'" th:each="error : ${#fields.errors('lastName')}"
+                    th:text="${error}"></li>
+            </ul>
+        </div>
+
+        <div th:class="m-2">
+            <label th:class="form-label" th:text="#{patient_form.gender}" for="gender"></label>
+            <select th:class="form-select" id="gender" th:field="*{gender}">
+                <option value="M">Male</option>
+                <option value="F">Female</option>
+            </select>
+        </div>
+
+        <div th:class="m-2">
+            <label th:class="form-label" th:text="#{patient_form.nationalRegistryNumber}" for="national_num"></label>
+            <input th:class="${#fields.hasErrors('nationalNumber')}? 'form-control border border-2 border-danger ' : 'form-control'"
+                   th:placeholder="#{patient_form.nationalRegistryNumber.hint}"
+                   id="national_num"
+                   th:field="*{nationalNumber}"/>
+            <ul th:class="custom-bullet" th:if="${#fields.hasErrors('nationalNumber')}">
+                <li th:class="'form-error'" th:each="error : ${#fields.errors('nationalNumber')}"
+                    th:text="${error}"></li>
+            </ul>
+        </div>
+
+        <button th:class="'btn btn-primary m-2'" type="submit" th:text="#{patient.title2}">Add Patient</button>
+        <a th:class="'btn btn-danger'" th:href="@{'/patients/'}" th:text="#{button.back}">Back</a>
+
+
+    </form>
+
+</div>
+
+
+<script th:src="@{/webjars/bootstrap/5.3.2/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/js/toast.js}"></script>
+
+</body>
+</html>

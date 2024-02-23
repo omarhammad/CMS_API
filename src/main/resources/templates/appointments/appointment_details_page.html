@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{appointments.title3}"></title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.2/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/common.css}"/>
+</head>
+<body>
+<div th:class="'container-fluid width-s-90  width-m-50 shadow p-3'">
+
+    <div th:class="card">
+        <div th:class="'card-header text-center'"><h4 th:class="'fw-bold'">Appointment</h4></div>
+        <div th:class="'card-body m-3'">
+            <div>
+                <i th:class="'bi bi-calendar-fill me-3 details-icons text-success' "></i>
+                <p th:class="'d-inline-block details-text '"
+                   th:text="${#temporals.format(appointment.getAppointmentDateTime().toLocalDate(), 'dd/MM/yyyy')}"></p>
+            </div>
+            <div>
+                <i th:class="'bi bi-clock-fill me-3 details-icons text-success' "></i>
+                <p th:class="'d-inline-block details-text ' "
+                   th:text="${#temporals.format(appointment.getAppointmentDateTime().toLocalTime(), 'hh:mm a')}"
+                ></p>
+            </div>
+            <div>
+                <i th:class="'bi bi-clipboard2-pulse-fill me-3 details-icons text-warning ' "></i>
+                <p th:class="'d-inline-block details-text'"
+                   th:text="${appointment.getPurpose()}"></p>
+            </div>
+            <div>
+                <i th:class="'bi bi-heart-pulse-fill me-3 details-icons text-danger ' "></i>
+                <p th:class="'d-inline-block details-text'"
+                   th:text="${appointment.getAppointmentType().getLabel()}"></p>
+            </div>
+            <div>
+                <i th:class="'bi bi bi-person-fill me-3 details-icons text-primary '"></i>
+                <p th:class="'d-inline-block details-text'"
+                   th:with="doctor=${appointment.getDoctor()}"
+                   th:text="${#strings.concat('Dr. ',doctor.getFirstName(),' ',doctor.getLastName())}"></p>
+            </div>
+            <div>
+                <i th:class="'bi bi bi-person-fill me-3 details-icons' "></i>
+                <p th:class="'d-inline-block details-text'"
+                   th:with="patient=${appointment.getPatient()}"
+                   th:text="${#strings.concat('Pt. ',patient.getFirstName(),' ',patient.getLastName())}"></p>
+            </div>
+            <!--Prescription Section-->
+
+            <div th:class="'card m-3'" th:with="prescription=${appointment.getPrescription()}">
+                <div th:class="card-header"><h3 th:class="d-inline-block">Prescription</h3>
+                    <a th:if="${appointment.getPrescription()}!=null"
+                       th:class="' text-danger h4 bi bi-trash d-inline position-absolute end-0 me-3'"
+                       th:href="@{/prescriptions/delete/{appointmentId}/{prescriptionId}(appointmentId=${appointment.appointmentId},prescriptionId=${appointment.getPrescription().getPrescriptionId()})}">
+                    </a>
+                </div>
+                <!--If Prescription exist-->
+                <div th:class="'card-body bg-body-secondary'" th:if="${appointment.getPrescription()} != null">
+                    <div th:class="'bg-body-tertiary rounded-3 p-2 m-2'"
+                         th:each="medication :${prescription.getMedications()}">
+                        <p th:class="h5"><strong th:text="${medication.getName().toUpperCase()}"></strong>
+                            (<i th:text="${medication.getDosage()}"></i>)</p>
+                        <p  th:class="h6" th:text="${#strings.concat(medication.getFrequencies(),'X a day for ',medication.getDaysDuration(),' days')}"></p>
+                        <p  th:class="h6" th:utext="${#strings.concat('Note:<br>&nbsp;&nbsp;',medication.getNotes())}"></p>
+                    </div>
+                    <h5 th:class="'m-3 text-center'" th:text="${#strings.concat('Expire Date : ',prescription.getExpireDate())}"></h5>
+                </div>
+                <!--If Prescription does not exist-->
+                <div th:class="'card-body text-center'" th:if="${appointment.getPrescription()} == null">
+                    <a th:class="'btn btn-primary'"
+                       th:href="@{/prescriptions/add/{appointmentId}(appointmentId=${appointment.getAppointmentId()})}"
+                    ><i th:class="'bi bi-plus-circle-fill'"></i> Add Prescription</a>
+                </div>
+            </div>
+
+
+            <div th:class="'card-footer text-center'"><a th:class="'btn btn-danger'"
+                                                         th:href="@{/appointments/}">Back</a>
+            </div>
+        </div>
+
+
+    </div>
+    <script th:src="@{/webjars/bootstrap/5.3.2/js/bootstrap.bundle.min.js}"></script>
+</div>
+
+</body>
+</html>

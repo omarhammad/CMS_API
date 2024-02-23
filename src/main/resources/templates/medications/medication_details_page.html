@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{medications.title3}"></title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.2/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/common.css}"/>
+</head>
+<body>
+<div th:class="'container-fluid width-s-90  width-m-50 shadow p-3'">
+
+    <div th:class="card">
+        <div th:class="'card-header text-center'"><h4 th:class="'fw-bold'">Medication</h4></div>
+        <div th:class="'card-body m-3'">
+            <div>
+                <i th:class="'bi bi-heart-pulse-fill me-3 details-icons' " th:text="' '+#{medications.name}+':'"></i>
+
+                <p th:class="'d-inline-block details-text'"
+                   th:text="${medication.getName().toUpperCase()}"></p>
+            </div>
+            <div>
+                <i th:class="'bi  bi-capsule me-3 details-icons text-info' " th:text="' '+#{medications.type}+':'"></i>
+                <p th:class="'d-inline-block details-text text-center'"
+                   th:text="${#strings.concat(medication.getForm(),'( ',medication.getForm().getUsage(),' )')}"></p>
+            </div>
+            <div>
+                <i th:class="'bi bi-prescription2 me-3 details-icons text-success' " th:text="' '+#{medications.dosage}+':'">
+                    Dosage: </i>
+                <p th:class="'d-inline-block details-text'"
+                   th:text="${medication.getDosage()}"></p>
+            </div>
+            <div>
+                <i th:class="'bi bi-arrow-counterclockwise me-3 details-icons text-primary' " th:text="' '+#{medications.freq}+':'"></i>
+                <p th:class="'d-inline-block details-text'"
+                   th:text="${#strings.concat(medication.getFrequencies(),' times per day')}"></p>
+            </div>
+            <div>
+                <i th:class="'bi bi-calendar2-heart-fill me-3 details-icons text-primary' " th:text="' '+#{medications.duration}+':'"></i>
+                <p th:class="'d-inline-block details-text'"
+                   th:text="${#strings.concat(medication.getDaysDuration(),' days')}"></p>
+            </div>
+
+            <div>
+                <i th:class="'bi bi-journal-check me-3 details-icons text-primary' " th:text="' '+#{medications.note}+':'"></i>
+                <p th:class="'d-inline-block details-text text-center'"
+                   th:text="${medication.getNotes()}"></p>
+            </div>
+        </div>
+        <div th:class="'card-footer text-center'"><a th:class="'btn btn-danger'" th:href="@{/medications/}">Back</a>
+        </div>
+
+    </div>
+
+
+</div>
+<script th:src="@{/webjars/bootstrap/5.3.2/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

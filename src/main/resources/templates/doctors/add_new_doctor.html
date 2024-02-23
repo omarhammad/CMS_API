@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{doctor.title2}"></title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.2/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+</head>
+<body>
+
+<div class="toast-container">
+    <div th:if="${exceptionMsg != null && !#strings.isEmpty(exceptionMsg)}"
+         class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive"
+         aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body" th:text="${exceptionMsg}">
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                    aria-label="Close"></button>
+        </div>
+    </div>
+</div>
+
+
+<div th:class="'container-fluid width-s-90 width-m-75 shadow p-3 m-auto'">
+    <form method="post" action="/doctors/add" th:object="${doctorModel}">
+        <div th:class="'m-2'">
+            <label th:class="'form-label'" for="first_name" th:text="#{doctor_form.firstName}"></label>
+            <input th:class="${#fields.hasErrors('firstName')}? 'form-control border border-2 border-danger ' : 'form-control'"
+                   placeholder="Jan" type="text" id="first_name" th:field="*{firstName}"/>
+            <ul th:class="custom-bullet" th:if="${#fields.hasErrors('firstName')}">
+                <li th:class="'form-error'" th:each="error : ${#fields.errors('firstName')}"
+                    th:text="${error}"></li>
+            </ul>
+        </div>
+        <div th:class="'m-2'">
+            <label th:class="'form-label'" for="last_name" th:text="#{doctor_form.lastName}"></label>
+            <input th:class="${#fields.hasErrors('lastName')}? 'form-control border border-2 border-danger ' : 'form-control'"
+                   placeholder="Smith" type="text" id="last_name" th:field="*{lastName}"/>
+            <ul th:class="custom-bullet" th:if="${#fields.hasErrors('lastName')}">
+                <li th:class="'form-error'" th:each="error : ${#fields.errors('lastName')}"
+                    th:text="${error}"></li>
+            </ul>
+        </div>
+        <div th:class="'m-2'">
+            <label th:class="'form-label'" for="spec" th:text="#{doctor_form.specialization}"></label>
+            <input th:class="${#fields.hasErrors('specialization')}? 'form-control border border-2 border-danger ' : 'form-control'"
+                   placeholder="e.g:Urology" type="text" id="spec"
+                   th:field="*{specialization}"/>
+            <ul th:class="custom-bullet" th:if="${#fields.hasErrors('specialization')}">
+                <li th:class="'form-error'" th:each="error : ${#fields.errors('specialization')}"
+                    th:text="${error}"></li>
+            </ul>
+        </div>
+        <div th:class="'m-2'">
+            <label th:class="'form-label'" for="phone_number" th:text="#{doctor_form.phoneNumber}"></label>
+            <input th:class="${#fields.hasErrors('phoneNumber')}? 'form-control border border-2 border-danger ' : 'form-control'"
+                   placeholder="0465XXXXXX" type="tel" id="phone_number"
+                   th:field="*{phoneNumber}"/>
+            <ul th:class="custom-bullet" th:if="${#fields.hasErrors('phoneNumber')}">
+                <li th:class="'form-error'" th:each="error : ${#fields.errors('phoneNumber')}"
+                    th:text="${error}"></li>
+            </ul>
+        </div>
+        <div th:class="'m-2'">
+            <label th:class="'form-label'" for="email" th:text="#{doctor_form.email}"></label>
+            <input th:class="${#fields.hasErrors('email')}? 'form-control border border-2 border-danger ' : 'form-control'"
+                   placeholder="example@gmail.com" type="text" id="email"
+                   th:field="*{email}"/>
+            <ul th:class="custom-bullet" th:if="${#fields.hasErrors('email')}">
+                <li th:class="'form-error'" th:each="error : ${#fields.errors('email')}"
+                    th:text="${error}"></li>
+            </ul>
+        </div>
+        <button th:class="'btn btn-primary m-2'" type="submit" th:text="#{doctor.title2}"></button>
+        <a th:class="'btn btn-danger'" th:href="@{'/doctors/'}" th:text="#{button.back}">Back</a>
+
+    </form>
+
+
+</div>
+
+<script th:src="@{/webjars/bootstrap/5.3.2/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/js/toast.js}"></script>
+
+</body>
+</html>

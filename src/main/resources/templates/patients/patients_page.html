@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{patient.title1}"></title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.2/css/bootstrap.min.css}"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/common.css}"/>
+</head>
+<body>
+<div th:insert="fragments/navbar::naviagtion_bar(3)"></div>
+
+<div th:class="'container-fluid p-3'">
+
+    <table th:class="'table table-light table-hover'">
+        <thead th:class="'table-header'">
+        <tr>
+            <th th:text="#{patient.first_name}"></th>
+            <th th:text="#{patient.last_name}"></th>
+            <th th:text="#{patient.gender}"></th>
+            <th th:text="#{patient.age}"></th>
+            <th th:text="#{patient.national_number}"></th>
+            <th></th>
+        </tr>
+        </thead>
+        <tr th:each="patient:${patients}"
+            th:attr="details_page=@{/patients/details/{id}(id=${patient.getId()})}"
+            onclick="window.location.href=this.getAttribute('details_page')">
+
+            <td th:text="${patient.getFirstName()}"></td>
+            <td th:text="${patient.getLastName()}"></td>
+            <td th:text="${patient.getGender()}"></td>
+            <td th:text="${patient.getAge()}"></td>
+            <td th:text="${patient.getNationalNumber()}"></td>
+            <td><a th:href="@{/patients/delete/{id}(id=${patient.getId()})}"><i
+                    th:class="'bi bi-trash-fill text-danger'"></i></a></td>
+
+
+        </tr>
+    </table>
+    <a th:class="'btn btn-primary'" th:href="@{'/patients/add'}" th:text="#{patient.title2}"></a>
+</div>
+
+<div th:insert="fragments/footer::copy_rights"></div>
+
+<script th:src="@{/webjars/bootstrap/5.3.2/js/bootstrap.min.js}"></script>
+</body>
+</html>

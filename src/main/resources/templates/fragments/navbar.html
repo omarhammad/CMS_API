@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div th:fragment="naviagtion_bar(active)">
+    <nav th:class="'navbar navbar-expand-lg bg-body-tertiary border-dark border-bottom-2'  ">
+        <div th:class="container-fluid">
+            <a th:class="navbar-brand" th:href="@{/}">CMS</a>
+            <button th:class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span th:class="navbar-toggler-icon "></span>
+            </button>
+            <div th:class="'collapse navbar-collapse'" id="navbarNav">
+                <ul th:class="navbar-nav">
+                    <li th:class="nav-item">
+                        <a th:class="${active==1?'nav-link active link-underline' :'nav-link'}" aria-current="page"
+                           th:href="@{/appointments/}" th:text="#{navbar.appointment}"></a>
+                    </li>
+                    <li th:class="nav-item">
+                        <a th:class="${active==2?'nav-link active link-underline' :'nav-link'}" th:href="@{/doctors/}"
+                           th:text="#{navbar.doctors}"></a>
+                    </li>
+                    <li th:class=" nav-item">
+                        <a th:class="${active==3?'nav-link active link-underline' :'nav-link'}"
+                           th:href="@{/patients/}" th:text="#{navbar.patient}"></a>
+                    </li>
+                    <li th:class=" nav-item">
+                        <a th:class="${active==4?'nav-link active link-underline' :'nav-link'}"
+                           th:href="@{/medications/}" th:text="#{navbar.medications}"></a>
+                    </li>
+                    <li th:class=" nav-item">
+                        <a th:class="${active==5?'nav-link active link-underline' :'nav-link'}"
+                           th:href="@{/sessions/}" th:text="#{navbar.sessions}"></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</div>
+
+
+</body>
+</html>

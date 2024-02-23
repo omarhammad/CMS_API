@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{doctor.title3}"></title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.2/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/common.css}"/>
+</head>
+<body>
+<div th:class="'container-fluid width-s-90  width-m-50 shadow p-3'">
+
+    <div th:class="card">
+        <div th:class="'card-header text-center'"><h4 th:class="'fw-bold'">Patient</h4></div>
+        <div th:class="'card-body m-3'">
+            <div>
+                <i th:class="'bi bi bi-person-fill me-3 details-icons' "></i>
+                <p th:class="'d-inline-block details-text'"
+                   th:text="${#strings.concat('Dr. ',doctor.getFirstName(),' ',doctor.getLastName()).toUpperCase()}"></p>
+            </div>
+            <div>
+                <i th:class="'bi bi bi-heart-pulse-fill me-3 details-icons text-info' "></i>
+                <p th:class="'d-inline-block details-text'"
+                   th:text="${#strings.concat('Spec. ',doctor.getSpecialization()).toUpperCase()}"></p>
+            </div>
+            <div>
+                <i th:class="'bi bi bi-envelope-at-fill me-3 details-icons text-success' "></i>
+                <p th:class="'d-inline-block details-text'"
+                   th:text="${doctor.getContactInfo().split(',')[1]}"></p>
+            </div>
+            <div>
+                <i th:class="'bi bi bi-telephone-fill me-3 details-icons text-success' "></i>
+                <p th:class="'d-inline-block details-text'"
+                   th:text="${doctor.getContactInfo().split(',')[0]}"></p>
+            </div>
+            <div>
+                <p th:class="details-icons-texts"><i th:class="'bi bi-calendar-heart me-3 text-success' "></i> Appointment with Patients: </p>
+                <div th:class="text-center">
+                    <p th:if="${hisPatients.isEmpty()}" th:class="'h4 m-3'" th:text="'There is No appointments'"></p>
+
+                    <p th:class="'d-block details-text'" th:each="patient: ${hisPatients}"
+                       th:text="${#strings.concat(patient.getFirstName(),' ',patient.getLastName(),)}"></p>
+                </div>
+            </div>
+        </div>
+        <div th:class="'card-footer text-center'"><a th:class="'btn btn-danger'" th:href="@{/doctors/}">Back</a></div>
+
+    </div>
+
+
+</div>
+<script th:src="@{/webjars/bootstrap/5.3.2/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

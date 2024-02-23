@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{sessionHistory.title}"></title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.2/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/common.css}"/>
+
+</head>
+<body>
+<div th:insert="fragments/navbar::naviagtion_bar(5)"></div>
+
+<div th:class="'container-fluid p-3'">
+    <table th:class="'table table-light'">
+        <thead th:class="'table-header'">
+        <tr>
+            <th th:text="#{sessionHistory.page_visited}"></th>
+            <th th:text="#{sessionHistory.date}"></th>
+            <th th:text="#{sessionHistory.time}"></th>
+        </tr>
+        </thead>
+        <tr th:each="sessionHistory : ${sessionHistories}">
+            <td th:text="${sessionHistory.getPageVisited()}"></td>
+            <td th:text="${sessionHistory.getSessionDateTime().toLocalDate()  }"></td>
+            <td th:text="${#temporals.format(sessionHistory.getSessionDateTime().toLocalTime(),'HH:mm:ss a')  }"></td>
+        </tr>
+    </table>
+</div>
+<div th:insert="fragments/footer::copy_rights"></div>
+
+<script type="text/javascript" th:src="@{/webjars/bootstrap/5.3.2/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

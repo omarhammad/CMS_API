@@ -1,0 +1,377 @@
+{
+  "doctors": [
+    {
+      "doctorId": 1,
+      "firstName": "Omar",
+      "lastName": "Hammad",
+      "specialization": "Pediatrics",
+      "contactInfo": "0465358794,omarhammad97@gmail.com"
+    },
+    {
+      "doctorId": 2,
+      "firstName": "Saif",
+      "lastName": "Qudaih",
+      "specialization": "Urology",
+      "contactInfo": "046512312312,saifquadih02@gmail.com"
+    },
+    {
+      "doctorId": 3,
+      "firstName": "Fadi",
+      "lastName": "Alaydi",
+      "specialization": "Neurology",
+      "contactInfo": "0466201463,fadialaydi989@gmail.com"
+    },
+    {
+      "doctorId": 1,
+      "firstName": "Said",
+      "lastName": "Khalaf",
+      "specialization": "Obstetrics and gynaecology",
+      "contactInfo": "0465343453,saidkhalaf@gmail.com"
+    },
+    {
+      "doctorId": 5,
+      "firstName": "Anton",
+      "lastName": "Smith",
+      "specialization": "Urology",
+      "contactInfo": "0465358796,anton.smith@gmail.com"
+    },
+    {
+      "doctorId": 6,
+      "firstName": "Ramy",
+      "lastName": "El-Helow",
+      "specialization": "Ophthalmology",
+      "contactInfo": "0465233245,ramy.elhelow@gmail.com"
+    },
+    {
+      "doctorId": 7,
+      "firstName": "Hamed",
+      "lastName": "Hamed",
+      "specialization": "Urology",
+      "contactInfo": "0465358794,hamed.hamed@gmail.com"
+    }
+  ],
+  "patients": [
+    {
+      "id": 1,
+      "firstName": "David",
+      "lastName": "heart",
+      "age": 26,
+      "gender": "male",
+      "medicalRecords": [],
+      "nationalNumber": "94.05.21-123.45"
+    },
+    {
+      "id": 2,
+      "firstName": "Jan",
+      "lastName": "Smith",
+      "age": 23,
+      "gender": "male",
+      "medicalRecords": [],
+      "nationalNumber": "00.12.30-678.90"
+    },
+    {
+      "id": 3,
+      "firstName": "ALex",
+      "lastName": "watson",
+      "age": 20,
+      "gender": "female",
+      "medicalRecords": [],
+      "nationalNumber": "03.09.11-987.65"
+    },
+    {
+      "id": 4,
+      "firstName": "Mohammaed",
+      "lastName": "Safi",
+      "age": 19,
+      "gender": "male",
+      "medicalRecords": [],
+      "nationalNumber": "04.08.25-654.32"
+    },
+    {
+      "id": 5,
+      "firstName": "Jennifer",
+      "lastName": "Aniston",
+      "age": 40,
+      "gender": "female",
+      "medicalRecords": [],
+      "nationalNumber": "83.04.10-321.09"
+    },
+    {
+      "id": 6,
+      "firstName": "Alex",
+      "lastName": "Rijke",
+      "nationalNumber": "02.01.29-633.38",
+      "age": 2021,
+      "gender": "Male"
+    },
+    {
+      "id": 7,
+      "firstName": "Sara",
+      "lastName": "Hammad",
+      "nationalNumber": "03.08.02-633.38",
+      "age": 120,
+      "gender": "Female"
+    },
+    {
+      "id": 8,
+      "firstName": "Areej",
+      "lastName": "Hammad",
+      "nationalNumber": "09.06.20-644.48",
+      "age": 14,
+      "gender": "Female"
+    },
+    {
+      "id": 9,
+      "firstName": "Maria",
+      "lastName": "Hammad",
+      "nationalNumber": "08.03.31.655.57",
+      "age": 15,
+      "gender": "Female"
+    },
+    {
+      "id": 10,
+      "firstName": "Samy",
+      "lastName": "Hammad",
+      "nationalNumber": "18.03.01-233.22",
+      "age": 5,
+      "gender": "Male"
+    },
+    {
+      "id": 11,
+      "firstName": "Mustafa",
+      "lastName": "Hammad",
+      "nationalNumber": "05.06.02-633.38",
+      "age": 18,
+      "gender": "Male"
+    }
+  ],
+  "appointments": [
+    {
+      "appointmentId": 1,
+      "appointmentDateTime": "23-10-2023 12:30 PM",
+      "purpose": "Heart Issue",
+      "doctor": {
+        "doctorId": 1,
+        "firstName": "Omar",
+        "lastName": "Hammad",
+        "specialization": "Pediatrics",
+        "contactInfo": "0465358794,omarhammad97@gmail.com"
+      },
+      "patient": {
+        "id": 1,
+        "firstName": "David",
+        "lastName": "heart",
+        "age": 26,
+        "gender": "male",
+        "medicalRecords": []
+      }
+    },
+    {
+      "appointmentId": 2,
+      "appointmentDateTime": "23-10-2023 01:00 PM",
+      "purpose": "Ears issue",
+      "doctor": {
+        "doctorId": 2,
+        "firstName": "Saif",
+        "lastName": "Qudaih",
+        "specialization": "Urology",
+        "contactInfo": "046512312312,saifquadih02@gmail.com"
+      },
+      "patient": {
+        "id": 1,
+        "firstName": "David",
+        "lastName": "heart",
+        "age": 26,
+        "gender": "male",
+        "medicalRecords": []
+      }
+    },
+    {
+      "appointmentId": 3,
+      "appointmentDateTime": "24-10-2023 01:30 PM",
+      "purpose": "flu",
+      "doctor": {
+        "doctorId": 3,
+        "firstName": "Fadi",
+        "lastName": "Alaydi",
+        "specialization": "Neurology",
+        "contactInfo": "0466201463,fadialaydi989@gmail.com"
+      },
+      "patient": {
+        "id": 4,
+        "firstName": "Mohammaed",
+        "lastName": "Safi",
+        "age": 19,
+        "gender": "male",
+        "medicalRecords": []
+      }
+    },
+    {
+      "appointmentId": 4,
+      "appointmentDateTime": "17-10-2023 01:07 AM",
+      "purpose": "Love Issue",
+      "doctor": {
+        "doctorId": 1,
+        "firstName": "Omar",
+        "lastName": "Hammad",
+        "specialization": "Pediatrics",
+        "contactInfo": "0465358794,omarhammad97@gmail.com"
+      },
+      "patient": {
+        "id": 1,
+        "firstName": "David",
+        "lastName": "heart",
+        "nationalNumber": "94.05.21-123.45",
+        "age": 26,
+        "gender": "male",
+        "medicalRecords": []
+      }
+    },
+    {
+      "appointmentId": 5,
+      "appointmentDateTime": "27-10-2023 05:30 PM",
+      "purpose": "Neck Pain",
+      "doctor": {
+        "doctorId": 3,
+        "firstName": "Fadi",
+        "lastName": "Alaydi",
+        "specialization": "Neurology",
+        "contactInfo": "0466201463,fadialaydi989@gmail.com"
+      },
+      "patient": {
+        "id": 2,
+        "firstName": "Jan",
+        "lastName": "Smith",
+        "nationalNumber": "00.12.30-678.90",
+        "age": 23,
+        "gender": "male",
+        "medicalRecords": []
+      }
+    },
+    {
+      "appointmentId": 6,
+      "appointmentDateTime": "18-10-2023 07:56 PM",
+      "purpose": "Love Issue",
+      "doctor": {
+        "doctorId": 1,
+        "firstName": "Omar",
+        "lastName": "Hammad",
+        "specialization": "Pediatrics",
+        "contactInfo": "0465358794,omarhammad97@gmail.com"
+      },
+      "patient": {
+        "id": 2,
+        "firstName": "Jan",
+        "lastName": "Smith",
+        "nationalNumber": "00.12.30-678.90",
+        "age": 23,
+        "gender": "male",
+        "medicalRecords": []
+      }
+    },
+    {
+      "appointmentId": 7,
+      "appointmentDateTime": "18-10-2023 05:42 PM",
+      "purpose": "Love Issue",
+      "doctor": {
+        "doctorId": 6,
+        "firstName": "Ramy",
+        "lastName": "El-Helow",
+        "specialization": "Ophthalmology",
+        "contactInfo": "0465233245,ramy.elhelow@gmail.com"
+      },
+      "patient": {
+        "id": 9,
+        "firstName": "Maria",
+        "lastName": "Hammad",
+        "nationalNumber": "08.03.31.655.57",
+        "age": 15,
+        "gender": "Female"
+      }
+    },
+    {
+      "appointmentId": 8,
+      "appointmentDateTime": "21-10-2023 01:30 PM",
+      "purpose": "Neck Pain",
+      "doctor": {
+        "doctorId": 1,
+        "firstName": "Omar",
+        "lastName": "Hammad",
+        "specialization": "Pediatrics",
+        "contactInfo": "0465358794,omarhammad97@gmail.com"
+      },
+      "patient": {
+        "id": 1,
+        "firstName": "David",
+        "lastName": "heart",
+        "nationalNumber": "94.05.21-123.45",
+        "age": 26,
+        "gender": "male",
+        "medicalRecords": []
+      }
+    },
+    {
+      "appointmentId": 9,
+      "appointmentDateTime": "30-10-2023 01:30 PM",
+      "purpose": "Love Issue",
+      "doctor": {
+        "doctorId": 1,
+        "firstName": "Omar",
+        "lastName": "Hammad",
+        "specialization": "Pediatrics",
+        "contactInfo": "0465358794,omarhammad97@gmail.com"
+      },
+      "patient": {
+        "id": 1,
+        "firstName": "David",
+        "lastName": "heart",
+        "nationalNumber": "94.05.21-123.45",
+        "age": 26,
+        "gender": "male",
+        "medicalRecords": []
+      }
+    },
+    {
+      "appointmentId": 10,
+      "appointmentDateTime": "31-10-2023 03:30 PM",
+      "purpose": "I have a pain in my blablabla",
+      "doctor": {
+        "doctorId": 1,
+        "firstName": "Omar",
+        "lastName": "Hammad",
+        "specialization": "Pediatrics",
+        "contactInfo": "0465358794,omarhammad97@gmail.com"
+      },
+      "patient": {
+        "id": 4,
+        "firstName": "Mohammaed",
+        "lastName": "Safi",
+        "nationalNumber": "04.08.25-654.32",
+        "age": 19,
+        "gender": "male",
+        "medicalRecords": []
+      }
+    },
+    {
+      "appointmentId": 11,
+      "appointmentDateTime": "31-10-2023 03:30 PM",
+      "purpose": "I have a pain in my blablabla",
+      "doctor": {
+        "doctorId": 1,
+        "firstName": "Omar",
+        "lastName": "Hammad",
+        "specialization": "Pediatrics",
+        "contactInfo": "0465358794,omarhammad97@gmail.com"
+      },
+      "patient": {
+        "id": 4,
+        "firstName": "Mohammaed",
+        "lastName": "Safi",
+        "nationalNumber": "04.08.25-654.32",
+        "age": 19,
+        "gender": "male",
+        "medicalRecords": []
+      }
+    }
+  ]
+}
