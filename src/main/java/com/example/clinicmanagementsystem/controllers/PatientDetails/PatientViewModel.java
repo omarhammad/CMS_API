@@ -1,4 +1,4 @@
-package com.example.clinicmanagementsystem.presentation.PatientDetails;
+package com.example.clinicmanagementsystem.controllers.PatientDetails;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;

@@ -1,6 +1,5 @@
-package com.example.clinicmanagementsystem.presentation.Prescription;
+package com.example.clinicmanagementsystem.controllers.Prescription;
 
-import com.example.clinicmanagementsystem.domain.Medication;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;

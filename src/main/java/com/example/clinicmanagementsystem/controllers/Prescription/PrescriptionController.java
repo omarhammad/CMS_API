@@ -1,23 +1,18 @@
-package com.example.clinicmanagementsystem.presentation.Prescription;
+package com.example.clinicmanagementsystem.controllers.Prescription;
 
-import com.example.clinicmanagementsystem.Exceptions.NationalNumberExistException;
-import com.example.clinicmanagementsystem.Exceptions.NationalNumberNotFoundException;
-import com.example.clinicmanagementsystem.domain.Appointment;
 import com.example.clinicmanagementsystem.domain.Medication;
 import com.example.clinicmanagementsystem.domain.SessionHistory;
-import com.example.clinicmanagementsystem.services.appointmentServices.AppointmentService;
-import com.example.clinicmanagementsystem.services.treatementServices.TreatmentService;
+import com.example.clinicmanagementsystem.services.appointmentServices.IAppointmentService;
+import com.example.clinicmanagementsystem.services.treatementServices.ITreatmentService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -28,11 +23,11 @@ import java.util.List;
 public class PrescriptionController {
 
 
-    TreatmentService service;
-    AppointmentService appSvc;
+    ITreatmentService service;
+    IAppointmentService appSvc;
     Logger logger;
 
-    public PrescriptionController(TreatmentService service, AppointmentService appSvc) {
+    public PrescriptionController(ITreatmentService service, IAppointmentService appSvc) {
         this.service = service;
         this.appSvc = appSvc;
         logger = LoggerFactory.getLogger(PrescriptionController.class);

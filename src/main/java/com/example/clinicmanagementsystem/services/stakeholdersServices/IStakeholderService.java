@@ -3,26 +3,27 @@ package com.example.clinicmanagementsystem.services.stakeholdersServices;
 import com.example.clinicmanagementsystem.domain.Appointment;
 import com.example.clinicmanagementsystem.domain.Doctor;
 import com.example.clinicmanagementsystem.domain.Patient;
+import com.example.clinicmanagementsystem.dtos.doctors.DoctorResponseDTO;
 
 import java.util.List;
 
-public interface StakeholderService {
+public interface IStakeholderService {
 
 
-    List<Doctor> getAllDoctors();
+    List<DoctorResponseDTO> getAllDoctors();
 
     List<Patient> getAllPatients();
 
-    Doctor getADoctor(int doctorId);
+    DoctorResponseDTO getADoctor(int doctorId);
 
     Patient getAPatient(int patientId);
 
-    boolean addNewDoctor(String firstName, String lastName, String specialization, String contactInfo);
+    DoctorResponseDTO addNewDoctor(String firstName, String lastName, String specialization, String contactInfo);
 
 
     boolean addNewPatient(String firstName, String lastName, String gender, String nationalNumber);
 
-    boolean removeDoctor(int doctorId);
+    int removeDoctor(int doctorId);
 
     boolean removePatient(int patientId);
 

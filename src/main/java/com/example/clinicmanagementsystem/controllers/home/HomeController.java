@@ -1,4 +1,4 @@
-package com.example.clinicmanagementsystem.presentation.home;
+package com.example.clinicmanagementsystem.controllers.home;
 
 import com.example.clinicmanagementsystem.domain.SessionHistory;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.LocaleResolver;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 @Controller

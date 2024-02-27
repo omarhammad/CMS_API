@@ -7,7 +7,7 @@ import com.example.clinicmanagementsystem.domain.Doctor;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public interface AppointmentService {
+public interface IAppointmentService {
 
 
     List<Appointment> getAllAppointment();

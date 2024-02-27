@@ -12,12 +12,6 @@ public class Doctor extends Stakeholder {
 
 
     @Column(nullable = false)
-    @Size(min = 3, max = 20)
-    private String firstName;
-    @Column(nullable = false)
-    @Size(max = 30)
-    private String lastName;
-    @Column(nullable = false)
     private String specialization;
     @Column(nullable = false, unique = true)
     private String contactInfo;
@@ -36,34 +30,34 @@ public class Doctor extends Stakeholder {
 
     public Doctor(int id, String firstName, String lastName, String specialization, String contactInfo) {
         super(id);
-        this.firstName = firstName;
-        this.lastName = lastName;
+        super.setFirstName(firstName);
+        super.setLastName(lastName);
         this.specialization = specialization;
         this.contactInfo = contactInfo;
     }
 
     public Doctor(String firstName, String lastName, String specialization, String contactInfo) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+        super.setFirstName(firstName);
+        super.setLastName(lastName);
         this.specialization = specialization;
         this.contactInfo = contactInfo;
     }
 
 
     public String getFirstName() {
-        return firstName;
+        return super.getFirstName();
     }
 
     public void setFirstName(String firstName) {
-        this.firstName = firstName;
+        super.setFirstName(firstName);
     }
 
     public String getLastName() {
-        return lastName;
+        return super.getLastName();
     }
 
     public void setLastName(String lastName) {
-        this.lastName = lastName;
+        super.setLastName(lastName);
     }
 
     public String getSpecialization() {
@@ -94,8 +88,8 @@ public class Doctor extends Stakeholder {
     @Override
     public String toString() {
         return "Doctor{" +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
+                ", firstName='" + this.getFirstName() + '\'' +
+                ", lastName='" + this.getLastName() + '\'' +
                 ", specialization='" + specialization + '\'' +
                 ", contactInfo='" + contactInfo + '\'' +
                 '}';

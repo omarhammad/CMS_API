@@ -5,36 +5,46 @@ import com.example.clinicmanagementsystem.Exceptions.NationalNumberExistExceptio
 import com.example.clinicmanagementsystem.domain.Appointment;
 import com.example.clinicmanagementsystem.domain.Doctor;
 import com.example.clinicmanagementsystem.domain.Patient;
-import com.example.clinicmanagementsystem.repository.appointmentsRepo.AppointmentsJPA2;
-import com.example.clinicmanagementsystem.repository.stakeholdersRepo.StakeholdersJPA2;
-import org.hibernate.exception.ConstraintViolationException;
-import org.springframework.context.annotation.Profile;
+import com.example.clinicmanagementsystem.dtos.doctors.DoctorResponseDTO;
+import com.example.clinicmanagementsystem.repository.appointmentsRepo.AppointmentsSpringData;
+import com.example.clinicmanagementsystem.repository.stakeholdersRepo.StakeholdersSpringData;
+import org.modelmapper.ModelMapper;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import javax.print.Doc;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class StakeholderJPA2Service implements StakeholderService {
+public class StakeholderSvc implements IStakeholderService {
 
 
-    StakeholdersJPA2 stakeholdersRepo;
-    AppointmentsJPA2 appointmentsRepo;
+    StakeholdersSpringData stakeholdersRepo;
+    AppointmentsSpringData appointmentsRepo;
+    ModelMapper modelMapper;
 
-    public StakeholderJPA2Service(StakeholdersJPA2 stakeholdersRepo, AppointmentsJPA2 appointmentsRepo) {
+    public StakeholderSvc(StakeholdersSpringData stakeholdersRepo, AppointmentsSpringData appointmentsRepo, ModelMapper modelMapper) {
         this.stakeholdersRepo = stakeholdersRepo;
         this.appointmentsRepo = appointmentsRepo;
+        this.modelMapper = modelMapper;
     }
 
     @Override
-    public List<Doctor> getAllDoctors() {
-        return stakeholdersRepo.findAll().stream()
+    public List<DoctorResponseDTO> getAllDoctors() {
+        List<Doctor> doctors = stakeholdersRepo.findAll().stream()
                 .filter(Doctor.class::isInstance)
                 .map(Doctor.class::cast)
-                .collect(Collectors.toList());
+                .toList();
+
+        List<DoctorResponseDTO> doctorResponseDTOS = new ArrayList<>();
+        for (Doctor doctor : doctors) {
+            doctorResponseDTOS.add(modelMapper.map(doctor, DoctorResponseDTO.class));
+        }
+        return doctorResponseDTOS;
 
     }
 
@@ -47,8 +57,12 @@ public class StakeholderJPA2Service implements StakeholderService {
     }
 
     @Override
-    public Doctor getADoctor(int doctorId) {
-        return ((Doctor) stakeholdersRepo.findById(doctorId).orElse(null));
+    public DoctorResponseDTO getADoctor(int doctorId) {
+        Doctor doctor = ((Doctor) stakeholdersRepo.findById(doctorId).orElse(null));
+        if (doctor == null) {
+            return null;
+        }
+        return modelMapper.map(doctor, DoctorResponseDTO.class);
     }
 
     @Override
@@ -57,19 +71,22 @@ public class StakeholderJPA2Service implements StakeholderService {
     }
 
     @Override
-    public boolean addNewDoctor(String firstName, String lastName, String specialization, String contactInfo) {
+    public DoctorResponseDTO addNewDoctor(String firstName, String lastName, String specialization, String contactInfo) {
         Doctor doctor = new Doctor();
         doctor.setFirstName(firstName);
         doctor.setLastName(lastName);
         doctor.setSpecialization(specialization);
         doctor.setContactInfo(contactInfo);
 
+        Doctor addedDoctor;
+
         try {
-            stakeholdersRepo.save(doctor);
+            addedDoctor = stakeholdersRepo.save(doctor);
         } catch (DataIntegrityViolationException e) {
             throw new ContactInfoExistException(contactInfo);
         }
-        return true;
+
+        return modelMapper.map(addedDoctor, DoctorResponseDTO.class);
     }
 
     @Override
@@ -97,9 +114,12 @@ public class StakeholderJPA2Service implements StakeholderService {
     }
 
     @Override
-    public boolean removeDoctor(int doctorId) {
+    public int removeDoctor(int doctorId) {
+        if (stakeholdersRepo.findById(doctorId).isEmpty()) {
+            return 404;
+        }
         stakeholdersRepo.deleteById(doctorId);
-        return stakeholdersRepo.findById(doctorId).isEmpty();
+        return stakeholdersRepo.findById(doctorId).isEmpty() ? 204 : 501;
     }
 
     @Override

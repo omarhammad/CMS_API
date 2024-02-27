@@ -1,10 +1,10 @@
-package com.example.clinicmanagementsystem.presentation.doctorDetails;
+package com.example.clinicmanagementsystem.dtos.doctors;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 
-public class DoctorViewModel {
+public class CreateDoctorRequestDTO {
 
     @NotBlank(message = "First name must be provided!")
     private String firstName;
@@ -58,5 +58,17 @@ public class DoctorViewModel {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+
+    @Override
+    public String toString() {
+        return "CreateDoctorRequestDTO{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", specialization='" + specialization + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", email='" + email + '\'' +
+                '}';
     }
 }

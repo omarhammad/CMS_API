@@ -8,7 +8,7 @@ import com.example.clinicmanagementsystem.domain.util.Unit;
 import java.time.LocalDate;
 import java.util.List;
 
-public interface TreatmentService {
+public interface ITreatmentService {
 
 
     boolean addNewPrescription(List<Medication> medications, LocalDate expireDate, int appointmentId);

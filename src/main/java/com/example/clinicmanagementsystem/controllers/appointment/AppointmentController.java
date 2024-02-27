@@ -1,17 +1,16 @@
-package com.example.clinicmanagementsystem.presentation.appointment;
+package com.example.clinicmanagementsystem.controllers.appointment;
 
 import com.example.clinicmanagementsystem.Exceptions.InvalidAppointmentException;
 import com.example.clinicmanagementsystem.Exceptions.NationalNumberNotFoundException;
 import com.example.clinicmanagementsystem.domain.Appointment;
 import com.example.clinicmanagementsystem.domain.util.AppointmentType;
 import com.example.clinicmanagementsystem.domain.SessionHistory;
-import com.example.clinicmanagementsystem.services.appointmentServices.AppointmentService;
+import com.example.clinicmanagementsystem.services.appointmentServices.IAppointmentService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -27,10 +26,10 @@ import java.util.List;
 public class AppointmentController {
 
     private final Logger logger;
-    AppointmentService service;
+    IAppointmentService service;
 
     @Autowired
-    public AppointmentController(AppointmentService service) {
+    public AppointmentController(IAppointmentService service) {
         logger = LoggerFactory.getLogger(AppointmentController.class);
         this.service = service;
     }

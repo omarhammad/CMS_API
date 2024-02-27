@@ -16,7 +16,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
-public class AppointmentSvc implements AppointmentService {
+public class AppointmentSvc implements IAppointmentService {
 
 
     AppointmentsSpringData appointmentRepo;

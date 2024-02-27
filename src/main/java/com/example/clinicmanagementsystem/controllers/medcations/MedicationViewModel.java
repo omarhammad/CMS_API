@@ -1,4 +1,4 @@
-package com.example.clinicmanagementsystem.presentation.medcations;
+package com.example.clinicmanagementsystem.controllers.medcations;
 
 import com.example.clinicmanagementsystem.domain.util.MedicationForm;
 import com.example.clinicmanagementsystem.domain.util.Unit;

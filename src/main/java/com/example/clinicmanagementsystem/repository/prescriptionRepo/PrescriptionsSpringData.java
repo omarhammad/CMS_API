@@ -3,7 +3,6 @@ package com.example.clinicmanagementsystem.repository.prescriptionRepo;
 import com.example.clinicmanagementsystem.domain.Prescription;
 import jakarta.transaction.Transactional;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Example;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -15,7 +14,7 @@ import java.util.Optional;
 
 @Repository
 
-public interface PrescriptionsJPA2 extends JpaRepository<Prescription, Integer> {
+public interface PrescriptionsSpringData extends JpaRepository<Prescription, Integer> {
     @Override
     <S extends Prescription> @NotNull List<S> findAll(@NotNull Example<S> example);
 

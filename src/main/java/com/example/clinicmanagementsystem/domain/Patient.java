@@ -13,12 +13,6 @@ import java.util.List;
 @Table(name = "patients")
 public class Patient extends Stakeholder {
 
-    @Column(nullable = false)
-    @Size(min = 3, max = 20)
-    private String firstName;
-    @Size(max = 30)
-    @Column(nullable = false)
-    private String lastName;
 
     @Column(unique = true)
     @Pattern(regexp = "^\\d{2}\\.\\d{2}\\.\\d{2}-\\d{3}\\.\\d{2}$")
@@ -41,35 +35,35 @@ public class Patient extends Stakeholder {
 
     public Patient(int id, String firstName, String lastName, String nationalNumber, int age, String gender) {
         super(id);
-        this.firstName = firstName;
-        this.lastName = lastName;
+        super.setFirstName(firstName);
+        super.setLastName(lastName);
         this.nationalNumber = nationalNumber;
         this.age = age;
         this.gender = gender;
     }
 
     public Patient(String firstName, String lastName, String nationalNumber, int age, String gender) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+        super.setFirstName(firstName);
+        super.setLastName(lastName);
         this.nationalNumber = nationalNumber;
         this.age = age;
         this.gender = gender;
     }
 
     public String getFirstName() {
-        return firstName;
+        return super.getFirstName();
     }
 
     public void setFirstName(String firstName) {
-        this.firstName = firstName;
+        super.setFirstName(firstName);
     }
 
     public String getLastName() {
-        return lastName;
+        return super.getLastName();
     }
 
     public void setLastName(String lastName) {
-        this.lastName = lastName;
+        super.setLastName(lastName);
     }
 
     public int getAge() {

@@ -1,4 +1,4 @@
-package com.example.clinicmanagementsystem.presentation.appointment;
+package com.example.clinicmanagementsystem.controllers.appointment;
 
 import com.example.clinicmanagementsystem.domain.util.AppointmentType;
 import jakarta.validation.constraints.*;

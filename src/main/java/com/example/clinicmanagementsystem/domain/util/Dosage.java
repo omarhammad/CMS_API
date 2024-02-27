@@ -1,6 +1,7 @@
 package com.example.clinicmanagementsystem.domain.util;
 
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 
 import java.util.Objects;
@@ -8,7 +9,7 @@ import java.util.Objects;
 @Embeddable
 public class Dosage {
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private Unit unit;
     private double quantity;
 

@@ -1,4 +1,4 @@
-package com.example.clinicmanagementsystem.presentation.sessionHistory;
+package com.example.clinicmanagementsystem.controllers.sessionHistory;
 
 
 import com.example.clinicmanagementsystem.domain.SessionHistory;

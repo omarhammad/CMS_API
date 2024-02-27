@@ -1,14 +1,11 @@
-package com.example.clinicmanagementsystem.presentation.medcations;
+package com.example.clinicmanagementsystem.controllers.medcations;
 
-import com.example.clinicmanagementsystem.Exceptions.InvalidAppointmentException;
 import com.example.clinicmanagementsystem.Exceptions.MedicationDeletionException;
 import com.example.clinicmanagementsystem.domain.Medication;
-import com.example.clinicmanagementsystem.domain.util.AppointmentType;
 import com.example.clinicmanagementsystem.domain.util.MedicationForm;
 import com.example.clinicmanagementsystem.domain.SessionHistory;
 import com.example.clinicmanagementsystem.domain.util.Unit;
-import com.example.clinicmanagementsystem.presentation.appointment.AppointmentViewModel;
-import com.example.clinicmanagementsystem.services.treatementServices.TreatmentService;
+import com.example.clinicmanagementsystem.services.treatementServices.ITreatmentService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -28,11 +25,11 @@ import java.util.List;
 @RequestMapping("/medications")
 public class MedicationsController {
 
-    private final TreatmentService service;
+    private final ITreatmentService service;
     private Logger logger;
 
     @Autowired
-    public MedicationsController(TreatmentService service) {
+    public MedicationsController(ITreatmentService service) {
         this.service = service;
         this.logger = LoggerFactory.getLogger(MedicationsController.class);
     }

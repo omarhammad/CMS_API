@@ -1,0 +1,51 @@
+### 200 Retrieved
+GET http://localhost:8080/api/doctors
+
+### 200 Retrieved
+GET http://localhost:8080/api/doctors/1
+
+### 404 NOT FOUND
+GET http://localhost:8080/api/doctors/20
+
+###  204 DELETED
+DELETE http://localhost:8080/api/doctors/1
+
+###  404 NOT FOUND
+DELETE http://localhost:8080/api/doctors/1
+
+### 200 ADDED
+POST http://localhost:8080/api/doctors
+Content-Type: application/json
+
+{
+  "firstName": "Omar",
+  "lastName": "Hammad",
+  "specialization": "Urology",
+  "phoneNumber": "+32465358794",
+  "email": "omar.hammad@student.kd.be"
+}
+
+### 400 Bad Request as fields not validated!
+POST http://localhost:8080/api/doctors
+Content-Type: application/json
+
+{
+  "firstName": "",
+  "lastName": "",
+  "specialization": "",
+  "phoneNumber": "",
+  "email": ""
+}
+
+
+### 400 Bad Request as the contact must be different
+POST http://localhost:8080/api/doctors
+Content-Type: application/json
+
+{
+  "firstName": "Omar",
+  "lastName": "Hammad",
+  "specialization": "Urology",
+  "phoneNumber": "+32465358794",
+  "email": "omar.hammad@student.kd.be"
+}

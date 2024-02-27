@@ -14,13 +14,14 @@ public class Medication {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int medicationId;
     private String name;
+    @Enumerated(EnumType.STRING)
     private MedicationForm form;
     @Embedded
     private Dosage dosage;
     private int frequencies;
     private int daysDuration;
     private String notes;
-    @ManyToMany( fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Prescription> prescriptions;
 
 

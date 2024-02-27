@@ -4,7 +4,6 @@ import com.example.clinicmanagementsystem.domain.Doctor;
 import com.example.clinicmanagementsystem.domain.Patient;
 import com.example.clinicmanagementsystem.domain.Stakeholder;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Example;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -15,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface StakeholdersJPA2 extends JpaRepository<Stakeholder, Integer> {
+public interface StakeholdersSpringData extends JpaRepository<Stakeholder, Integer> {
 
 
     @Override

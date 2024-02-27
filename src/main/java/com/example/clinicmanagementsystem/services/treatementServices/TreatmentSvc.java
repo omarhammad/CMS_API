@@ -7,10 +7,9 @@ import com.example.clinicmanagementsystem.domain.Prescription;
 import com.example.clinicmanagementsystem.domain.util.Dosage;
 import com.example.clinicmanagementsystem.domain.util.MedicationForm;
 import com.example.clinicmanagementsystem.domain.util.Unit;
-import com.example.clinicmanagementsystem.repository.appointmentsRepo.AppointmentsJPA2;
-import com.example.clinicmanagementsystem.repository.medicationsRepo.MedicationsJPA2;
-import com.example.clinicmanagementsystem.repository.prescriptionRepo.PrescriptionsJPA2;
-import org.springframework.context.annotation.Profile;
+import com.example.clinicmanagementsystem.repository.appointmentsRepo.AppointmentsSpringData;
+import com.example.clinicmanagementsystem.repository.medicationsRepo.MedicationsSpringData;
+import com.example.clinicmanagementsystem.repository.prescriptionRepo.PrescriptionsSpringData;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
@@ -19,15 +18,15 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-public class TreatmentJP2Service implements TreatmentService {
+public class TreatmentSvc implements ITreatmentService {
 
 
-    PrescriptionsJPA2 prescriptionsRepo;
-    MedicationsJPA2 medicationsRepo;
+    PrescriptionsSpringData prescriptionsRepo;
+    MedicationsSpringData medicationsRepo;
 
-    AppointmentsJPA2 appointmentsRepo;
+    AppointmentsSpringData appointmentsRepo;
 
-    public TreatmentJP2Service(PrescriptionsJPA2 prescriptionsRepo, MedicationsJPA2 medicationsRepo, AppointmentsJPA2 appointmentsRepo) {
+    public TreatmentSvc(PrescriptionsSpringData prescriptionsRepo, MedicationsSpringData medicationsRepo, AppointmentsSpringData appointmentsRepo) {
         this.prescriptionsRepo = prescriptionsRepo;
         this.medicationsRepo = medicationsRepo;
         this.appointmentsRepo = appointmentsRepo;

@@ -1,11 +1,11 @@
-package com.example.clinicmanagementsystem.presentation.PatientDetails;
+package com.example.clinicmanagementsystem.controllers.PatientDetails;
 
 import com.example.clinicmanagementsystem.Exceptions.NationalNumberExistException;
 import com.example.clinicmanagementsystem.domain.Appointment;
 import com.example.clinicmanagementsystem.domain.Doctor;
 import com.example.clinicmanagementsystem.domain.Patient;
 import com.example.clinicmanagementsystem.domain.SessionHistory;
-import com.example.clinicmanagementsystem.services.stakeholdersServices.StakeholderService;
+import com.example.clinicmanagementsystem.services.stakeholdersServices.IStakeholderService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -26,11 +26,11 @@ import java.util.List;
 public class PatientDetailsController {
 
 
-    private final StakeholderService service;
+    private final IStakeholderService service;
     private final Logger logger;
 
     @Autowired
-    public PatientDetailsController(StakeholderService service) {
+    public PatientDetailsController(IStakeholderService service) {
         this.service = service;
         this.logger = LoggerFactory.getLogger(PatientDetailsController.class);
     }
