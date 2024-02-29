@@ -41,10 +41,11 @@ function getAllDoctors() {
                 const deleteBtn = document.createElement('td');
                 deleteBtn.className = "bi bi-trash-fill text-danger";
                 deleteBtn.addEventListener('click', event => {
+                    event.stopPropagation();
                     deleteDoctor(doctor.id)
                 })
                 doctor_row.appendChild(deleteBtn)
-                doctor_row.addEventListener('click',() => {
+                doctor_row.addEventListener('click', () => {
                         window.location.href = `doctor_details_page.html?doctor_id=${doctor.id}`
                     }
                 );
@@ -67,7 +68,6 @@ function deleteDoctor(delete_doctor_id) {
             } else if (response.status === 204) {
                 console.log("DOCTOR DELETED!");
                 document.querySelector('.doctorsTbody').innerHTML = '';
-
                 getAllDoctors();
             }
         }).catch(err => {
