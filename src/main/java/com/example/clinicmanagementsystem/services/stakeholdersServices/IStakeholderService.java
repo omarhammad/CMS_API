@@ -3,6 +3,7 @@ package com.example.clinicmanagementsystem.services.stakeholdersServices;
 import com.example.clinicmanagementsystem.domain.Appointment;
 import com.example.clinicmanagementsystem.domain.Doctor;
 import com.example.clinicmanagementsystem.domain.Patient;
+import com.example.clinicmanagementsystem.dtos.doctors.DoctorDetailsResponseDTO;
 import com.example.clinicmanagementsystem.dtos.doctors.DoctorResponseDTO;
 
 import java.util.List;
@@ -15,6 +16,8 @@ public interface IStakeholderService {
     List<Patient> getAllPatients();
 
     DoctorResponseDTO getADoctor(int doctorId);
+
+    DoctorDetailsResponseDTO getFullDoctorData(int doctorId);
 
     Patient getAPatient(int patientId);
 

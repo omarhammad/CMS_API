@@ -5,7 +5,9 @@ import com.example.clinicmanagementsystem.Exceptions.NationalNumberExistExceptio
 import com.example.clinicmanagementsystem.domain.Appointment;
 import com.example.clinicmanagementsystem.domain.Doctor;
 import com.example.clinicmanagementsystem.domain.Patient;
+import com.example.clinicmanagementsystem.dtos.doctors.DoctorDetailsResponseDTO;
 import com.example.clinicmanagementsystem.dtos.doctors.DoctorResponseDTO;
+import com.example.clinicmanagementsystem.dtos.patients.PatientResponseDTO;
 import com.example.clinicmanagementsystem.repository.appointmentsRepo.AppointmentsSpringData;
 import com.example.clinicmanagementsystem.repository.stakeholdersRepo.StakeholdersSpringData;
 import org.modelmapper.ModelMapper;
@@ -63,6 +65,19 @@ public class StakeholderSvc implements IStakeholderService {
             return null;
         }
         return modelMapper.map(doctor, DoctorResponseDTO.class);
+    }
+
+    @Override
+    public DoctorDetailsResponseDTO getFullDoctorData(int doctorId) {
+        Doctor doctor = ((Doctor) stakeholdersRepo.findById(doctorId).orElse(null));
+        DoctorDetailsResponseDTO doctorDetailsResponseDTO = modelMapper.map(doctor, DoctorDetailsResponseDTO.class);
+        List<PatientResponseDTO> patientResponseDTOS = new ArrayList<>();
+        for (Patient patient : getDoctorPatients(doctorId)) {
+            patientResponseDTOS.add(modelMapper.map(patient, PatientResponseDTO.class));
+        }
+
+        doctorDetailsResponseDTO.setHisPatients(patientResponseDTOS);
+        return doctorDetailsResponseDTO;
     }
 
     @Override

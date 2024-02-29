@@ -1,7 +1,9 @@
 package com.example.clinicmanagementsystem.controllers.doctor;
 
 import com.example.clinicmanagementsystem.Exceptions.ContactInfoExistException;
+import com.example.clinicmanagementsystem.domain.Doctor;
 import com.example.clinicmanagementsystem.dtos.doctors.CreateDoctorRequestDTO;
+import com.example.clinicmanagementsystem.dtos.doctors.DoctorDetailsResponseDTO;
 import com.example.clinicmanagementsystem.dtos.doctors.DoctorResponseDTO;
 import com.example.clinicmanagementsystem.services.stakeholdersServices.IStakeholderService;
 import jakarta.validation.Valid;
@@ -20,6 +22,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:63342")
 @RequestMapping("/api/doctors")
 public class DoctorController {
 
@@ -57,9 +60,8 @@ public class DoctorController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<DoctorResponseDTO> getDoctorById(@PathVariable int id) {
-        DoctorResponseDTO doctor = service.getADoctor(id);
-        logger.debug("Reached!");
+    public ResponseEntity<DoctorDetailsResponseDTO> getDoctorById(@PathVariable int id) {
+        DoctorDetailsResponseDTO doctor = service.getFullDoctorData(id);
         if (doctor == null) {
             return ResponseEntity.notFound().build();
         }

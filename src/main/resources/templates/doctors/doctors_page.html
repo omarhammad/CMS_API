@@ -1,46 +1,37 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title th:text="#{doctor.title1}"></title>
+    <title>Doctor</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.2/css/bootstrap.min.css}">
-    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../static/css/common.css">
 </head>
 <body>
-<div th:insert="fragments/navbar::naviagtion_bar(2)"></div>
-<div th:class="'container-fluid p-3'">
-    <table th:class="'table table-light table-hover'">
-        <thead th:class="'table-header '">
+<div class="container-fluid p-3">
+    <table class="table table-light table-hover">
+        <thead class="table-header">
         <tr>
-            <th th:text="#{doctor.first_name}"></th>
-            <th th:text="#{doctor.last_name}" }></th>
-            <th th:text="#{doctor.specialization}"></th>
-            <th th:text="#{doctor.phone_number}"></th>
-            <th th:text="#{doctor.email}"></th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Specialization</th>
+            <th>PhoneNumber</th>
+            <th>Email</th>
             <th></th>
         </tr>
         </thead>
-
-        <tr th:each="doctor:${doctors}"
-            th:attr="details_page=@{/doctors/details/{id}(id=${doctor.getId()})}"
-            onclick="window.location.href=this.getAttribute('details_page')">
-
-            <td th:text="${doctor.getFirstName()}"></td>
-            <td th:text="${doctor.getLastName()}"></td>
-            <td th:text="${doctor.getSpecialization()}"></td>
-            <td th:each="contact:${doctor.getContactInfo().split(',')}" th:text="${contact}"></td>
-            <td><a th:href="@{/doctors/delete/{id}(id=${doctor.getId()})}"><i
-                    th:class="'bi bi-trash-fill text-danger'"></i></a></td>
-
-        </tr>
+        <tbody class="doctorsTbody">
+        </tbody>
     </table>
-    <a th:class="'btn btn-primary'" th:href="@{'/doctors/add'}" th:text="#{doctor.title2}"></a>
+    <a class="btn btn-primary" href="../../templates/doctors/add_new_doctor.html">Add Doctor</a>
 
 </div>
-<div th:insert="fragments/footer::copy_rights"></div>
 
 
-<script th:src="@{/webjars/bootstrap/5.3.2/js/bootstrap.min.js}"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+<script src="../../static/js/doctors/get_doctors.js"></script>
 </body>
 </html>
