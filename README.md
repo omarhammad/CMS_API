@@ -59,9 +59,9 @@ appointment scheduling, medical records management, and prescription tracking.
     - host port 5434 mapped with container 5432 port to access the sql server
 
 - ### Project - week 2
-    - DoctorController has (GET ALL, GET ONE, POST, DELETE) endpoints
+    - DoctorController has (GET ALL, GET ONE, DELETE) endpoints
     - test.http file initiated in "test" package has tests for each endpoint and any potential status code.
-    - a js file in statics folder in the resources package named "doctor.js" has functions that calls each endpoint using Ajax (fetch) and ready to be used. 
+    -  js files in statics/js/doctors folder  has functions that calls each endpoint using Ajax (fetch) and ready to be used and fill the html pages. 
 
 #### <span style ="color:orange">Thanks for reading my Project description.</span>
 
