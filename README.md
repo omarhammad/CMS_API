@@ -61,7 +61,8 @@ appointment scheduling, medical records management, and prescription tracking.
 - ### Project - week 2
     - DoctorController has (GET ALL, GET ONE, DELETE) endpoints
     - test.http file initiated in "test" package has tests for each endpoint and any potential status code.
-    -  js files in statics/js/doctors folder  has functions that calls each endpoint using Ajax (fetch) and ready to be used and fill the html pages. 
+    - js files in statics/js/doctors folder, in each js file i call the endpoints to fill in each page using Ajax (
+      fetch).
 
 #### <span style ="color:orange">Thanks for reading my Project description.</span>
 
