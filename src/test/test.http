@@ -1,6 +1,9 @@
 ### 200 Retrieved
 GET http://localhost:8080/api/doctors
 
+### 204 NO CONTETNT
+GET http://localhost:8080/api/doctors
+
 ### 200 Retrieved
 GET http://localhost:8080/api/doctors/1
 
@@ -10,8 +13,8 @@ GET http://localhost:8080/api/doctors/20
 ###  204 DELETED
 DELETE http://localhost:8080/api/doctors/1
 
-###  404 NOT FOUND
-DELETE http://localhost:8080/api/doctors/1
+### 404 NOT FOUND
+DELETE http://localhost:8080/api/doctors/20
 
 ### 200 ADDED
 POST http://localhost:8080/api/doctors
@@ -48,4 +51,70 @@ Content-Type: application/json
   "specialization": "Urology",
   "phoneNumber": "+32465358794",
   "email": "omar.hammad@student.kd.be"
+}
+
+### 204 UPDATED
+PUT http://localhost:8080/api/doctors/1
+Content-Type: application/json
+
+{
+  "id": 1,
+  "firstName": "Hasan",
+  "lastName": "Alkhatib",
+  "specialization": "Optician",
+  "phoneNumber": "+32123456789",
+  "email": "hasan.alkhatib@gmail.com"
+}
+
+### 409 ID CONFLICT
+PUT http://localhost:8080/api/doctors/2
+Content-Type: application/json
+
+{
+  "id": 1,
+  "firstName": "Hasan",
+  "lastName": "Alkhatib",
+  "specialization": "Optician",
+  "phoneNumber": "+32123456789",
+  "email": "hasan.alkhatib@gmail.com"
+}
+
+### 400 BAD REQUEST DUE TO FIELDS ERRORS
+PUT http://localhost:8080/api/doctors/2
+Content-Type: application/json
+
+{
+  "id": 1,
+  "firstName": "",
+  "lastName": "",
+  "specialization": "Optician",
+  "phoneNumber": "+32465358792",
+  "email": "hasan.alkhatib@gmail.com"
+}
+
+### 400 BAD REQUEST DUE TO CONTACT INFO USED BY OTHER DOCTORS
+PUT http://localhost:8080/api/doctors/2
+Content-Type: application/json
+
+{
+  "id": 2,
+  "firstName": "Sara",
+  "lastName": "Lee",
+  "specialization": "Optician",
+  "phoneNumber": "+32123456789",
+  "email": "hasan.alkhatib@gmail.com"
+}
+
+
+### 404 DOCTOR NOT FOUND !
+PUT http://localhost:8080/api/doctors/20
+Content-Type: application/json
+
+{
+  "id": 20,
+  "firstName": "Sara",
+  "lastName": "Lee",
+  "specialization": "Optician",
+  "phoneNumber": "+32123456789",
+  "email": "omar.johnson@email.com"
 }

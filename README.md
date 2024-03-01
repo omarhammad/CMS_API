@@ -61,8 +61,113 @@ appointment scheduling, medical records management, and prescription tracking.
 - ### Project - week 2
     - DoctorController has (GET ALL, GET ONE, DELETE) endpoints
     - test.http file initiated in "test" package has tests for each endpoint and any potential status code.
-    - js files in statics/js/doctors folder, in each js file i call the endpoints to fill in each page using Ajax (
+    - js files in statics/js/doctors folder called {get_doctors.js "has the delete request",get_one_doctor.js}, in each
+      js file i call the endpoints to fill in each page using Ajax (
       fetch).
+    - > GET http://localhost:8080/api/doctors :  "Fetching all doctors : Response is OK"
+    - > GET http://localhost:8080/api/doctors :  "Fetching all doctors : Response is NO_CONTENT (EMPTY LIST)"
+    - > GET http://localhost:8080/api/doctors/1 :  "Fetching one doctor : Response is OK"
+    - > GET http://localhost:8080/api/doctors/20 :  "Fetching one doctor : Response is NOT FOUND"
+    - > DELETE http://localhost:8080/api/doctors/1 :  "Deleting one doctor : Response is NO_CONTENT (DELETED!)"
+    - > DELETE http://localhost:8080/api/doctors/20 :  "Deleting one doctor : Response is NOT_FOUND"
+
+
+- ### Project - week 3
+    - DoctorController hsa (POST,PUT) endpoints
+    - test.http file handles all status codes for PUT,POST requests.
+    - post_doctor.js & put_doctor.js files are in static/js/doctors folder to make the request using "fetch" and handel
+      add_new_doctor.html & update_doctor_page.hml pages.
+    - > POST http://localhost:8080/api/doctors :  "Posting a new doctor: Response is OK"
+      >> Content-Type: application/json
+      >
+      >> {
+      "firstName": "Omar",
+      "lastName": "Hammad",
+      "specialization": "Urology",
+      "phoneNumber": "+32465358794",
+      "email": "omar.hammad@student.kd.be"
+      }
+    - > POST http://localhost:8080/api/doctors :  "Posting a new doctor: Response is Bad Request as fields are not
+      valid!"
+      >> Content-Type: application/json
+      >
+      >> {
+      "firstName": " ",
+      "lastName": " ",
+      "specialization": " ",
+      "phoneNumber": " ",
+      "email": " "
+      }
+    - > POST http://localhost:8080/api/doctors :  "Posting a new doctor: Response is Bad Request as the contact already"
+      exists!"
+      >> Content-Type: application/json
+      >
+      >> {
+      "firstName": "Omar",
+      "lastName": "Hammad",
+      "specialization": "Urology",
+      "phoneNumber": "+32465358794",
+      "email": "omar.hammad@student.kd.be"
+      }
+    - > PUT http://localhost:8080/api/doctors/1 :  "Updating a doctor: Response is NO_CONTENT (UPDATED!)"
+      >> Content-Type: application/json
+      >
+      >> {
+      "id": 1,
+      "firstName": "Omar",
+      "lastName": "Hammad",
+      "specialization": "Urology",
+      "phoneNumber": "+32465358794",
+      "email": "omar.hammad@student.kd.be"
+      }    
+  
+    - > PUT http://localhost:8080/api/doctors/2 :  "Updating a doctor: Response is CONFLICT"
+      >> Content-Type: application/json
+      >
+      >> {
+      "id": 1,
+      "firstName": "Omar",
+      "lastName": "Hammad",
+      "specialization": "Urology",
+      "phoneNumber": "+32465358794",
+      "email": "omar.hammad@student.kd.be"
+      }  
+  
+    - > PUT http://localhost:8080/api/doctors/1 :  "Updating a doctor: Response is Bad Request as fields are not
+      valid!"
+      >> Content-Type: application/json
+      >
+      >> {
+      "id": 1,
+      "firstName": " ",
+      "lastName": " ",
+      "specialization": "Urology",
+      "phoneNumber": "+32465358794",
+      "email": "omar.hammad@student.kd.be"
+      }   
+    - > PUT http://localhost:8080/api/doctors/2 :  "Updating a doctor: Response is BAD REQUEST DUE TO CONTACT INFO USED BY OTHER DOCTORS"
+      >> Content-Type: application/json
+      >
+      >> {
+      "id": 2,
+      "firstName": "Hasan",
+      "lastName": "Alkhatib",
+      "specialization": "Urology",
+      "phoneNumber": "+32465358794",
+      "email": "omar.hammad@student.kd.be"
+      }  
+  
+    - > PUT http://localhost:8080/api/doctors/20 : "Updating a doctor: Response is DOCTOR NOT FOUND"
+      >> Content-Type: application/json
+      >
+      >> {
+      "id": 20,
+      "firstName": "Hasan",
+      "lastName": "Alkhatib",
+      "specialization": "Urology",
+      "phoneNumber": "+32465358794",
+      "email": "omar.hammad@student.kd.be"
+      }
 
 #### <span style ="color:orange">Thanks for reading my Project description.</span>
 

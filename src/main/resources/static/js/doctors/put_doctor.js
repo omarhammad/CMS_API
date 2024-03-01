@@ -1,26 +1,57 @@
-
-const submitBtn = document.getElementById('submit_btn');
-submitBtn.addEventListener('click', createDoctor)
+const doctor_id = new URLSearchParams(window.location.search).get('doctor_id');
 
 
-async function createDoctor(event) {
+window.addEventListener('DOMContentLoaded', async () => {
+    const doctor = await getOneDoctor(doctor_id);
+    const form = document.getElementById('updateForm');
+
+    for (const key in doctor) {
+        if (key === 'contactInfo') {
+            const contactInfo = doctor[key].split(',');
+            form.elements['phoneNumber'].value = contactInfo[0];
+            form.elements['email'].value = contactInfo[1];
+            continue;
+        } else if (key === 'hisPatients') {
+            continue;
+        }
+        const input = form.elements[key];
+        input.value = doctor[key];
+    }
+});
+
+export async function getOneDoctor(doctor_id) {
+    try {
+        const response = await fetch(`http://localhost:8080/api/doctors/${doctor_id}`);
+        if (response.status === 404) {
+            console.log("NOT FOUND");
+        }
+        return await response.json();
+    } catch (exc) {
+        console.error(exc);
+        return null;
+    }
+}
+
+
+document.getElementById('submit_btn').addEventListener('click', updateDoctor);
+
+async function updateDoctor(event) {
     event.preventDefault();
     const doctorJson = getFormData();
 
     try {
-        const response = await fetch('http://localhost:8080/api/doctors',
-            {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: doctorJson
-            });
+        const response = await fetch(`http://localhost:8080/api/doctors/${doctor_id}`, {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: doctorJson
+        });
 
-        const data = await response.json();
-
+        let data = {};
         if (response.status === 400) {
+            data = await response.json();
             if (data.hasOwnProperty('exceptionMsg')) {
                 console.log('Exception Msg')
                 showToast(data.exceptionMsg);
@@ -28,27 +59,36 @@ async function createDoctor(event) {
                 console.log('Fields Errors')
                 handleFieldsError(data);
             }
-        } else if (response.ok) {
-            console.log(data)
+
+        } else if (response.status === 409) {
+            showToast("CONFLICT IN THE REQUEST!")
+
+        } else if (response.status === 404) {
+            showToast("DOCTOR NOT FOUND!");
+
+        } else if (response.status === 204) {
             window.location.href = 'doctors_page.html';
         } else {
-            console.error('Error : ', response.status)
+            console.error('Error : ', response.status);
         }
     } catch (exc) {
-        console.error('Sys Exception', exc);
+        console.error("SYS ERROR : ", exc);
     }
-
 }
 
 function getFormData() {
 
-    const form = document.getElementById('form');
+    const form = document.getElementById('updateForm');
     const formData = new FormData(form);
-    const formJson = {};
-    for (const [key, value] of formData.entries()) {
-        formJson[key] = value;
+
+    const dataJson = {};
+
+    dataJson['id'] = parseInt(doctor_id);
+
+    for (const [key, value] of formData) {
+        dataJson[key] = value;
     }
-    return JSON.stringify(formJson);
+    return JSON.stringify(dataJson);
 }
 
 function showToast(message) {
@@ -62,7 +102,6 @@ function showToast(message) {
     toast.show();
 
 }
-
 
 
 function handleFieldsError(fieldsError) {

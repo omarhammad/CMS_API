@@ -1,9 +1,12 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const toastElList = [].slice.call(document.querySelectorAll('.toast'));
-    const toastList = toastElList.map(function (toastEl) {
-        return new bootstrap.Toast(toastEl, {
-            autohide: false
-        });
+function showToast(message) {
+    let toastElement = document.querySelector('.toast');
+    let toastBody = toastElement.querySelector('.toast-body');
+    toastBody.innerText = message;
+
+    let toast = new bootstrap.Toast(toastElement, {
+        autohide: false
     });
-    toastList.forEach(toast => toast.show());
-});
+    toast.show();
+
+}
+

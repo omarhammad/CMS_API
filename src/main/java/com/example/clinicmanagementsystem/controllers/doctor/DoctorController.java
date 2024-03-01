@@ -5,8 +5,10 @@ import com.example.clinicmanagementsystem.domain.Doctor;
 import com.example.clinicmanagementsystem.dtos.doctors.CreateDoctorRequestDTO;
 import com.example.clinicmanagementsystem.dtos.doctors.DoctorDetailsResponseDTO;
 import com.example.clinicmanagementsystem.dtos.doctors.DoctorResponseDTO;
+import com.example.clinicmanagementsystem.dtos.doctors.UpdateDoctorRequestDTO;
 import com.example.clinicmanagementsystem.services.stakeholdersServices.IStakeholderService;
 import jakarta.validation.Valid;
+import jakarta.websocket.server.PathParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +50,15 @@ public class DoctorController {
 
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<DoctorDetailsResponseDTO> getDoctorById(@PathVariable int id) {
+        DoctorDetailsResponseDTO doctor = service.getFullDoctorData(id);
+        if (doctor == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(doctor);
+    }
+
 
     @PostMapping("")
     public ResponseEntity<DoctorResponseDTO> addNewDoctor(@RequestBody @Valid CreateDoctorRequestDTO createDoctorRequestDTO) {
@@ -59,13 +70,22 @@ public class DoctorController {
 
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<DoctorDetailsResponseDTO> getDoctorById(@PathVariable int id) {
-        DoctorDetailsResponseDTO doctor = service.getFullDoctorData(id);
-        if (doctor == null) {
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> updateDoctor(@RequestBody @Valid UpdateDoctorRequestDTO updateDoctorRequestDTO, @PathVariable("id") int id) {
+        logger.debug("Reached! PUT");
+
+        if (id != updateDoctorRequestDTO.getId()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+        if (service.getADoctor(updateDoctorRequestDTO.getId()) == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(doctor);
+
+        String contactInfo = updateDoctorRequestDTO.getPhoneNumber() + "," + updateDoctorRequestDTO.getEmail();
+
+        service.updateADoctor(updateDoctorRequestDTO.getId(), updateDoctorRequestDTO.getFirstName(),
+                updateDoctorRequestDTO.getLastName(), updateDoctorRequestDTO.getSpecialization(), contactInfo);
+        return ResponseEntity.noContent().build();
     }
 
 

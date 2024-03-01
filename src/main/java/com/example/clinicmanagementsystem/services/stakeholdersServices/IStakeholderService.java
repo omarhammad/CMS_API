@@ -23,6 +23,7 @@ public interface IStakeholderService {
 
     DoctorResponseDTO addNewDoctor(String firstName, String lastName, String specialization, String contactInfo);
 
+    void updateADoctor(int id, String firstName, String lastName, String specialization, String contactInfo);
 
     boolean addNewPatient(String firstName, String lastName, String gender, String nationalNumber);
 

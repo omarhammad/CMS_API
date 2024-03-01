@@ -105,6 +105,22 @@ public class StakeholderSvc implements IStakeholderService {
     }
 
     @Override
+    public void updateADoctor(int id, String firstName, String lastName, String specialization, String contactInfo) {
+        Doctor doctor = new Doctor();
+        doctor.setId(id);
+        doctor.setFirstName(firstName);
+        doctor.setLastName(lastName);
+        doctor.setSpecialization(specialization);
+        doctor.setContactInfo(contactInfo);
+
+        try {
+            stakeholdersRepo.save(doctor);
+        } catch (DataIntegrityViolationException e) {
+            throw new ContactInfoExistException(contactInfo);
+        }
+    }
+
+    @Override
     public boolean addNewPatient(String firstName, String lastName, String gender, String nationalNumber) {
         Patient patient = new Patient();
         patient.setFirstName(firstName);

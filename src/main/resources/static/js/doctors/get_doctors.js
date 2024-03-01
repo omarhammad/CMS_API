@@ -8,7 +8,7 @@ function getAllDoctors() {
                 let noContentRow = document.createElement('tr');
                 let noContentCell = document.createElement('td');
                 noContentCell.innerHTML = "NO DOCTORS !";
-                noContentCell.colSpan = 6;
+                noContentCell.colSpan = 7;
                 noContentRow.appendChild(noContentCell);
                 doctorsBody.appendChild(noContentRow);
             } else if (response.ok) {
@@ -38,13 +38,26 @@ function getAllDoctors() {
                     cell.innerText = doctor[key];
                     doctor_row.appendChild(cell);
                 }
+
+                // DELETE BUTTON
                 const deleteBtn = document.createElement('td');
                 deleteBtn.className = "bi bi-trash-fill text-danger";
                 deleteBtn.addEventListener('click', event => {
                     event.stopPropagation();
                     deleteDoctor(doctor.id)
                 })
+
+                //EDIT BUTTON
+                const editBtn = document.createElement('td');
+                editBtn.className = "bi bi-pencil-fill text-primary"
+                editBtn.addEventListener('click', event => {
+                    event.stopPropagation();
+                    window.location.href = `update_doctor_page.html?doctor_id=${doctor.id}`
+                })
+
+
                 doctor_row.appendChild(deleteBtn)
+                doctor_row.appendChild(editBtn)
                 doctor_row.addEventListener('click', () => {
                         window.location.href = `doctor_details_page.html?doctor_id=${doctor.id}`
                     }
