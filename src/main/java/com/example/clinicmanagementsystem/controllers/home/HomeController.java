@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.LocaleResolver;
 
@@ -28,17 +29,14 @@ public class HomeController {
         logger = LoggerFactory.getLogger(HomeController.class);
     }
 
-    @RequestMapping("/")
-    public String root(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+    @GetMapping("/")
+    public String root(HttpServletRequest request, HttpServletResponse response) {
 
-        if (session.getAttribute("sessionHistory") == null) {
-            session.setAttribute("sessionHistory", new ArrayList<SessionHistory>());
-        }
         // Set locale to Dutch
         Locale locale = new Locale(LANG);
         this.localeResolver.setLocale(request, response, locale);
         logger.debug("Current Locale: {}", localeResolver.resolveLocale(request));
-        return "redirect:/appointments/";
+        return "home/home";
     }
 
 }

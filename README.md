@@ -169,6 +169,17 @@ appointment scheduling, medical records management, and prescription tracking.
       "email": "omar.hammad@student.kd.be"
       }
 
+- ### Project - week 4
+    - I've created a signIn and signUp pages also a Landing page.
+    - Users already in the system : 
+        - username: "Omar" with Password "omar1997" 
+        - username: "Othman" with Password "othman1993" 
+        - username: "Mahmoud" with Password "mahmoud1998" 
+        - username: "Fadi" with Password "fadi1998"
+    - SignIn page (/signin) , SignUp(/signup) and Landing page (/) can be accessed by anyone.
+    - Appointments (/appointments) , Patients (/patients) , Doctors (/doctors) and Medications (/medications)  requires authentication to be accessible.
+
+
 #### <span style ="color:orange">Thanks for reading my Project description.</span>
 
 <div style="color: darkgreen">
