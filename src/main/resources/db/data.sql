@@ -35,8 +35,9 @@ INSERT INTO appointments (appointment_date_time, purpose, doctor_id, patient_id,
 VALUES ('2023-01-15 10:00:00', 'Routine Checkup', 1, 6, 'CONSULTATION', 1),
        ('2023-01-20 14:30:00', 'Follow-up', 2, 7, 'FOLLOW_UP', 2),
        ('2023-02-05 09:00:00', 'Annual Physical', 3, 8, 'DIAGNOSTIC_TESTING', 3),
-       ('2023-02-10 16:00:00', 'Consultation for Symptoms', 4, 9, 'CONSULTATION', 4),
-       ('2023-02-18 11:30:00', 'Emergency Visit', 5, 6, 'EMERGENCY', 5);
+       ('2024-03-20 16:00:00', 'Consultation for Symptoms', 4, 9, 'CONSULTATION', 4);
+INSERT INTO appointments (appointment_date_time, purpose, doctor_id, patient_id, appointment_type)
+VALUES ('2023-02-18 11:30:00', 'Emergency Visit', 5, 6, 'EMERGENCY');
 
 INSERT INTO medications (name, form, unit, quantity, frequencies, days_duration, notes)
 VALUES ('MedicationA', 'Tablets', 'MG', 500, 2, 14, 'Take after meals'),
@@ -57,6 +58,7 @@ VALUES ('2023-06-30'),
 INSERT INTO prescriptions_medications (prescription_prescription_id, medications_medication_id)
 VALUES (1, 1),
        (2, 2),
+       (2, 1),
        (3, 3),
        (4, 4),
        (5, 5);

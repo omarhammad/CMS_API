@@ -8,12 +8,6 @@ import jakarta.validation.constraints.Size;
 public class Stakeholder {
 
 
-    public Stakeholder(int id) {
-        this.id = id;
-    }
-
-    public Stakeholder() {
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,6 +19,14 @@ public class Stakeholder {
     @Column(nullable = false)
     @Size(max = 30)
     private String lastName;
+
+
+    public Stakeholder(int id) {
+        this.id = id;
+    }
+
+    public Stakeholder() {
+    }
 
 
     public int getId() {

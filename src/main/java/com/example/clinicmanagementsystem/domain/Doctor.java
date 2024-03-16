@@ -1,5 +1,6 @@
 package com.example.clinicmanagementsystem.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 
@@ -16,6 +17,8 @@ public class Doctor extends Stakeholder {
     @Column(nullable = false, unique = true)
     private String contactInfo;
 
+
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "doctor")
     private List<Appointment> appointment;
 

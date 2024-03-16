@@ -11,7 +11,7 @@ import java.util.List;
 public interface ITreatmentService {
 
 
-    boolean addNewPrescription(List<Medication> medications, LocalDate expireDate, int appointmentId);
+    boolean addNewPrescription(List<Medication> medications, LocalDate expireDate, long appointmentId);
 
     boolean removePrescription(int prescriptionId);
 

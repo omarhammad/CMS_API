@@ -12,12 +12,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface AppointmentsSpringData extends JpaRepository<Appointment, Integer> {
+public interface AppointmentsSpringData extends JpaRepository<Appointment, Long> {
 
 
     @Override
     @NotNull
-    Optional<Appointment> findById(@NotNull Integer integer);
+    Optional<Appointment> findById(@NotNull Long id);
 
     @Override
     <S extends Appointment> @NotNull S save(@NotNull S entity) throws InvalidAppointmentException;
@@ -27,7 +27,7 @@ public interface AppointmentsSpringData extends JpaRepository<Appointment, Integ
 
 
     @Override
-    void deleteById(@NotNull Integer integer);
+    void deleteById(@NotNull Long id);
 
     @Query("SELECT a " +
             "FROM Appointment a " +

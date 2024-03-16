@@ -12,6 +12,9 @@ public class DoctorDetailsResponseDTO {
     private String specialization;
     private String contactInfo;
 
+    private List<PatientResponseDTO> hisPatients;
+
+
     public List<PatientResponseDTO> getHisPatients() {
         return hisPatients;
     }
@@ -20,7 +23,6 @@ public class DoctorDetailsResponseDTO {
         this.hisPatients = hisPatients;
     }
 
-    private List<PatientResponseDTO> hisPatients;
 
 
     public String getFirstName() {

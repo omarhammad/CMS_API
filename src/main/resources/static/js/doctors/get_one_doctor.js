@@ -13,7 +13,9 @@ async function getOneDoctor(doctor_id) {
 
 
 window.addEventListener('DOMContentLoaded', async event => { // Add async keyword here
-    const doctor_id = new URLSearchParams(window.location.search).get('doctor_id');
+    const pathname = window.location.pathname;
+    const segments = pathname.split('/');
+    const doctor_id = segments.pop();
     const data = await getOneDoctor(doctor_id);
     if (data) {
         document.getElementById('fullName').innerText = data.firstName + ' ' + data.lastName;

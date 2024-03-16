@@ -21,50 +21,43 @@
 </div>
 
 <div th:class="'container-fluid width-s-90 width-m-75 shadow p-3'">
-    <form method="post" action="http://localhost:8080/appointments/add" th:object="${appointmentModel}">
+    <form method="post" action="http://localhost:8080/appointments/add">
         <div th:class="mt-3">
             <label th:class="form-label" for="doctor" th:for="doctor" th:text="#{appointment_form.doctor}"></label>
-            <select th:class="form-select" id="doctor" th:field="*{doctorId}">
+            <select th:class="form-select" id="doctor">
                 <option th:each="doctor : ${doctors}" th:text="${'Dr. '+doctor.getFirstName()+' '+doctor.getLastName()}"
                         th:value="${doctor.getId()}"></option>
             </select>
+
         </div>
         <div th:class="mt-3">
             <label th:class="'form-label d-inline'" th:for="patient"
                    th:text="#{appointment_form.patientNumber}"></label>
-            <input th:class="${#fields.hasErrors('patientNationalNumber')}? 'form-control border border-2 border-danger ' : 'form-control'"
+            <input th:class="'form-control'"
                    type="text" th:placeholder="#{appointment_form.patientNumber.hint}"
-                   id="patient"
-                   th:field="*{patientNationalNumber}"/>
-            <ul th:class="custom-bullet" th:if="${#fields.hasErrors('patientNationalNumber')}">
-                <li th:class="'form-error'" th:each="error : ${#fields.errors('patientNationalNumber')}"
-                    th:text="${error}"></li>
-            </ul>
+                   id="patient"/>
+
 
         </div>
         <div th:class="mt-3">
             <label th:class="'form-label'" th:for="appointment_date_time" th:text="#{appointment_form.time}"></label>
-            <input id="appointment_date_time" th:field="*{appointmentDateTime}"
-                   th:class="${#fields.hasErrors('appointmentDateTime')}? 'form-control border border-2 border-danger ' : 'form-control'"
+            <input id="appointment_date_time"
+                   th:class="'form-control'"
                    type="datetime-local"
                    placeholder="HH:mm a">
-            <ul th:class="custom-bullet" th:if="${#fields.hasErrors('appointmentDateTime')}">
-                <li th:class="'form-error'" th:each="error : ${#fields.errors('appointmentDateTime')}"
-                    th:text="${error}"></li>
-            </ul>
+
         </div>
         <div th:class="mt-3">
             <label th:class="'form-label'" for="purpose" th:text="#{appointment_form.purpose}"></label>
             <input th:class="form-control" type="text" placeholder="Love issue" id="purpose"
-                   th:field="*{purpose}"/>
+            />
         </div>
         <div th:class="mt-3">
             <label th:class="'form-label'" for="appointment_type"
                    th:text="#{appointment_form.type}"></label>
 
             <select th:class="form-select"
-                    id="appointment_type"
-                    th:field="*{appointmentType}">
+                    id="appointment_type">
                 <option th:each="type : ${appointmentTypes}"
                         th:value="${type}"
                         th:text="${type.getLabel()}">
@@ -79,7 +72,7 @@
     </form>
 </div>
 <script th:src="@{/webjars/bootstrap/5.3.2/js/bootstrap.bundle.min.js}"></script>
-<script th:src="@{/js/toast.js}"></script>
+<script th:src="@{/js/appointments/post_appointment.js}"></script>
 
 </body>
 </html>

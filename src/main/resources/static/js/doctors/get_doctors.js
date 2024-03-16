@@ -52,14 +52,15 @@ function getAllDoctors() {
                 editBtn.className = "bi bi-pencil-fill text-primary"
                 editBtn.addEventListener('click', event => {
                     event.stopPropagation();
-                    window.location.href = `update_doctor_page.html?doctor_id=${doctor.id}`
+                    window.location.href = `/doctors/update/${doctor.id}`;
+
                 })
 
 
                 doctor_row.appendChild(deleteBtn)
                 doctor_row.appendChild(editBtn)
                 doctor_row.addEventListener('click', () => {
-                        window.location.href = `doctor_details_page.html?doctor_id=${doctor.id}`
+                        window.location.href = `/doctors/details/${doctor.id}`;
                     }
                 );
                 doctorsBody.appendChild(doctor_row);
@@ -72,8 +73,14 @@ function getAllDoctors() {
 }
 
 function deleteDoctor(delete_doctor_id) {
+    const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+    const headers = new Headers({
+        [csrfHeader]: csrfToken
+    });
     fetch(`http://localhost:8080/api/doctors/${delete_doctor_id}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers: headers
     })
         .then(response => {
             if (response.status === 404) {
@@ -87,8 +94,6 @@ function deleteDoctor(delete_doctor_id) {
         console.error('Omar', err);
     });
 }
-
-
 
 
 

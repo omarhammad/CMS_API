@@ -13,7 +13,7 @@ public class Appointment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int appointmentId;
+    private long appointmentId;
     @Column(nullable = false)
     private LocalDateTime appointmentDateTime;
     private String purpose;
@@ -62,11 +62,11 @@ public class Appointment {
     }
 
 
-    public int getAppointmentId() {
+    public long getAppointmentId() {
         return appointmentId;
     }
 
-    public void setAppointmentId(int appointmentId) {
+    public void setAppointmentId(long appointmentId) {
         this.appointmentId = appointmentId;
     }
 

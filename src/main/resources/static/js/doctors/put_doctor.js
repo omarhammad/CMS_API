@@ -1,6 +1,6 @@
-const doctor_id = new URLSearchParams(window.location.search).get('doctor_id');
-
-
+const pathname = window.location.pathname;
+const segments = pathname.split('/');
+const doctor_id = segments.pop();
 window.addEventListener('DOMContentLoaded', async () => {
     const doctor = await getOneDoctor(doctor_id);
     const form = document.getElementById('updateForm');
@@ -40,12 +40,16 @@ async function updateDoctor(event) {
     const doctorJson = getFormData();
 
     try {
+        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+        const headers = new Headers({
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            [csrfHeader]: csrfToken
+        });
         const response = await fetch(`http://localhost:8080/api/doctors/${doctor_id}`, {
             method: 'PUT',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
+            headers: headers,
             body: doctorJson
         });
 
@@ -67,7 +71,7 @@ async function updateDoctor(event) {
             showToast("DOCTOR NOT FOUND!");
 
         } else if (response.status === 204) {
-            window.location.href = 'doctors_page.html';
+            window.location.href = '/doctors/';
         } else {
             console.error('Error : ', response.status);
         }

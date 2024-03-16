@@ -1,5 +1,6 @@
 package com.example.clinicmanagementsystem.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.antlr.v4.runtime.misc.Interval;
 
@@ -19,6 +20,7 @@ public class Prescription {
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE})
     private List<Medication> medications;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "prescription", fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     private Appointment appointment;
 

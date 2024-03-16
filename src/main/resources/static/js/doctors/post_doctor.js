@@ -1,4 +1,3 @@
-
 const submitBtn = document.getElementById('submit_btn');
 submitBtn.addEventListener('click', createDoctor)
 
@@ -6,15 +5,18 @@ submitBtn.addEventListener('click', createDoctor)
 async function createDoctor(event) {
     event.preventDefault();
     const doctorJson = getFormData();
-
+    const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+    const headers = new Headers({
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        [csrfHeader]: csrfToken
+    });
     try {
         const response = await fetch('http://localhost:8080/api/doctors',
             {
                 method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
+                headers: headers,
                 body: doctorJson
             });
 
@@ -62,7 +64,6 @@ function showToast(message) {
     toast.show();
 
 }
-
 
 
 function handleFieldsError(fieldsError) {

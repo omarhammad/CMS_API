@@ -33,7 +33,7 @@ public class TreatmentSvc implements ITreatmentService {
     }
 
     @Override
-    public boolean addNewPrescription(List<Medication> medications, LocalDate expireDate, int appointmentId) {
+    public boolean addNewPrescription(List<Medication> medications, LocalDate expireDate, long appointmentId) {
         Prescription prescription = new Prescription();
         prescription.setExpireDate(expireDate);
         prescription.setMedications(medications);

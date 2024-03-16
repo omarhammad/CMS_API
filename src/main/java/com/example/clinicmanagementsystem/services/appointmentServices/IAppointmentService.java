@@ -3,6 +3,7 @@ package com.example.clinicmanagementsystem.services.appointmentServices;
 import com.example.clinicmanagementsystem.domain.Appointment;
 import com.example.clinicmanagementsystem.domain.util.AppointmentType;
 import com.example.clinicmanagementsystem.domain.Doctor;
+import com.example.clinicmanagementsystem.dtos.appointments.AppointmentResponseDTO;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -10,17 +11,20 @@ import java.util.List;
 public interface IAppointmentService {
 
 
-    List<Appointment> getAllAppointment();
+    List<AppointmentResponseDTO> getAllAppointment();
 
 
     List<Doctor> getDoctorsNames();
 
-    Appointment getAppointment(int appointmentId);
+    AppointmentResponseDTO getAppointment(long appointmentId);
 
     boolean changeAppointmentDate(LocalDateTime newAppointmentDate);
 
-    boolean addNewAppointment(int doctorId, String patientNationalNumber, LocalDateTime appointmentDateTime, String purpose, AppointmentType type);
+    AppointmentResponseDTO addNewAppointment(int doctorId, String patientNationalNumber, LocalDateTime appointmentDateTime, String purpose, AppointmentType type);
 
-    boolean removeAppointment(int appointmentId);
+    void updateAppointment(long appointmentId, int doctorId, String patientNationalNumber, LocalDateTime appointmentDateTime, String purpose, AppointmentType type);
+
+
+    boolean removeAppointment(long appointmentId);
 
 }
