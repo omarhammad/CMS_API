@@ -21,8 +21,23 @@ const HttpStatus = {
     SERVICE_UNAVAILABLE: 503,
     GATEWAY_TIMEOUT: 504
 };
+let appointment_deleted = false;
 
 function loadAllAppointments() {
+
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('created')) {
+        removeQueryParam('created')
+        showToast("New Appointment added!")
+
+    } else if (urlParams.has('updated')) {
+        removeQueryParam('updated')
+        showToast("Appointment updated!");
+    } else if (appointment_deleted) {
+        showToast("Appointment Deleted!");
+        appointment_deleted = false
+    }
+
 
     const appointmentTableBody = document.getElementById('appointments_table_body');
     fetch('http://localhost:8080/api/appointments/')
@@ -82,7 +97,7 @@ function loadAllAppointments() {
             editBtn.className = "bi bi-pencil-fill text-primary"
             editBtn.addEventListener('click', event => {
                 event.stopPropagation();
-                window.location.href = `/doctors/update/${appointment.appointmentId}`;
+                window.location.href = `/appointments/update/${appointment.appointmentId}`;
 
             })
 
@@ -131,6 +146,18 @@ function formatDate(date) {
     return `${day}/${month}/${year}`;
 }
 
+function showToast(message) {
+    let toastElement = document.querySelector('.toast');
+    let toastBody = toastElement.querySelector('.toast-body');
+    toastBody.innerText = message;
+
+    let toast = new bootstrap.Toast(toastElement, {
+        autohide: false
+    });
+    toast.show();
+
+}
+
 function deleteAppointment(appointmentId) {
     const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
     const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
@@ -144,6 +171,7 @@ function deleteAppointment(appointmentId) {
         .then(response => {
             if (response.status === HttpStatus.NO_CONTENT) {
                 document.getElementById('appointments_table_body').innerHTML = ''
+                appointment_deleted = true;
                 loadAllAppointments();
             }
         }).catch(err => {
@@ -152,4 +180,19 @@ function deleteAppointment(appointmentId) {
 
 
 }
+
+function removeQueryParam(paramToRemove) {
+    // Create a URL object based on the current location
+    const url = new URL(window.location);
+
+    // Use URLSearchParams to work with the query string easily
+    const queryParams = url.searchParams;
+
+    // Remove the specified query parameter
+    queryParams.delete(paramToRemove);
+
+    // Update the URL without reloading the page
+    history.pushState(null, '', url.pathname + '?' + queryParams.toString() + url.hash);
+}
+
 

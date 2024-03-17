@@ -2,6 +2,7 @@ package com.example.clinicmanagementsystem.controllers.api.appointment;
 
 import com.example.clinicmanagementsystem.Exceptions.InvalidAppointmentException;
 import com.example.clinicmanagementsystem.Exceptions.NationalNumberNotFoundException;
+import com.example.clinicmanagementsystem.domain.util.AppointmentType;
 import com.example.clinicmanagementsystem.dtos.appointments.AppointmentResponseDTO;
 import com.example.clinicmanagementsystem.dtos.appointments.CreateAppointmentRequestDTO;
 import com.example.clinicmanagementsystem.dtos.appointments.UpdateAppointmentRequestDTO;
@@ -60,27 +61,28 @@ public class AppointmentRestController {
 
     }
 
-    @PostMapping("")
+    @PostMapping({"", "/"})
     public ResponseEntity<AppointmentResponseDTO> addNewAppointment(@RequestBody @Valid CreateAppointmentRequestDTO requestDTO) {
+
+        logger.debug("DTO : {}", requestDTO);
 
         // Adding a new appointment and return a response ok with the appointment that contains the ID.
         AppointmentResponseDTO appointmentResponseDTO = service.addNewAppointment(requestDTO.getDoctor(), requestDTO.getPatientNN(),
-                requestDTO.getAppointmentDateTime(), requestDTO.getPurpose(), requestDTO.getAppointmentType());
-
+                requestDTO.getAppointmentDateTime(), requestDTO.getPurpose(), AppointmentType.valueOf(requestDTO.getAppointmentType()));
         return ResponseEntity.status(HttpStatus.CREATED).body(appointmentResponseDTO);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateAppointment(@PathVariable long id, @RequestBody @Valid UpdateAppointmentRequestDTO requestDTO) {
-        if (requestDTO.getId() != id) {
+        if (requestDTO.getAppointmentId() != id) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
         if (service.getAppointment(id) == null) {
             return ResponseEntity.notFound().build();
         }
 
-        service.updateAppointment(requestDTO.getId(), requestDTO.getDoctor(), requestDTO.getPatientNN(),
-                requestDTO.getAppointmentDateTime(), requestDTO.getPurpose(), requestDTO.getAppointmentType());
+        service.updateAppointment(requestDTO.getAppointmentId(), requestDTO.getDoctor(), requestDTO.getPatientNN(),
+                requestDTO.getAppointmentDateTime(), requestDTO.getPurpose(), AppointmentType.valueOf(requestDTO.getAppointmentType()));
         return ResponseEntity.noContent().build();
     }
 

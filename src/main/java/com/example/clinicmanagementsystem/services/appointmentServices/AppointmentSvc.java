@@ -80,6 +80,7 @@ public class AppointmentSvc implements IAppointmentService {
         try {
             savedAppointment = appointmentRepo.save(appointment);
         } catch (DataIntegrityViolationException e) {
+            System.out.println(appointment.getDoctor());
             String doctorName = appointment.getDoctor().getFirstName() + " " + appointment.getDoctor().getLastName();
             String patientName = appointment.getPatient().getFirstName() + " " + appointment.getPatient().getLastName();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM hh:mm a");

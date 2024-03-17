@@ -50,4 +50,14 @@ public class AppointmentController {
     public String loadAppointmentDetailsPage(@PathVariable long id) {
         return "appointments/appointment_details_page";
     }
+
+
+    @GetMapping(value = {"/update/{id}"})
+    public String showUpdateAppointmentPage(Model model, @PathVariable String id) {
+        model.addAttribute("doctors", service.getDoctorsNames());
+        model.addAttribute("appointmentTypes", AppointmentType.values());
+
+        return "appointments/update_appointment_page";
+    }
+
 }

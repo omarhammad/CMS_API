@@ -73,14 +73,13 @@
 
         </div>
 
-        <button th:class="'btn btn-primary mt-3'" type="button" id="submitBtn"
-                th:text="#{appointments.title2}"></button>
+        <button th:class="'btn btn-primary mt-3'" type="button" id="submitBtn">Update Appointment</button>
         <a th:class="'btn btn-danger mt-3'" th:href="@{'/appointments/'}" th:text="#{button.back}"></a>
 
     </form>
 </div>
 <script th:src="@{/webjars/bootstrap/5.3.2/js/bootstrap.bundle.min.js}"></script>
-<script th:src="@{/js/appointments/post_appointment.js}"></script>
+<script th:src="@{/js/appointments/put_appointment.js}"></script>
 
 </body>
 </html>

@@ -20,7 +20,7 @@ public class CreateAppointmentRequestDTO {
     @Pattern(regexp = "^\\d{2}\\.\\d{2}\\.\\d{2}-\\d{3}\\.\\d{2}$", message = "National Number must be provided e.g 'yy.mm.dd-xxx.cd' ")
     private String patientNN;
 
-    private AppointmentType appointmentType;
+    private String appointmentType;
 
 
     public LocalDateTime getAppointmentDateTime() {
@@ -55,11 +55,22 @@ public class CreateAppointmentRequestDTO {
         this.patientNN = patientNN;
     }
 
-    public AppointmentType getAppointmentType() {
+    public String getAppointmentType() {
         return appointmentType;
     }
 
-    public void setAppointmentType(AppointmentType appointmentType) {
+    public void setAppointmentType(String appointmentType) {
         this.appointmentType = appointmentType;
+    }
+
+    @Override
+    public String toString() {
+        return "CreateAppointmentRequestDTO{" +
+                "appointmentDateTime=" + appointmentDateTime +
+                ", purpose='" + purpose + '\'' +
+                ", doctor=" + doctor +
+                ", patientNN='" + patientNN + '\'' +
+                ", appointmentType=" + appointmentType +
+                '}';
     }
 }
