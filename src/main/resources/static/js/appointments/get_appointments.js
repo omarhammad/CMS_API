@@ -1,3 +1,4 @@
+
 window.addEventListener("DOMContentLoaded", loadAllAppointments);
 
 const HttpStatus = {
@@ -146,17 +147,6 @@ function formatDate(date) {
     return `${day}/${month}/${year}`;
 }
 
-function showToast(message) {
-    let toastElement = document.querySelector('.toast');
-    let toastBody = toastElement.querySelector('.toast-body');
-    toastBody.innerText = message;
-
-    let toast = new bootstrap.Toast(toastElement, {
-        autohide: false
-    });
-    toast.show();
-
-}
 
 function deleteAppointment(appointmentId) {
     const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
@@ -195,4 +185,15 @@ function removeQueryParam(paramToRemove) {
     history.pushState(null, '', url.pathname + '?' + queryParams.toString() + url.hash);
 }
 
+ function showToast(message) {
+    let toastElement = document.querySelector('.toast');
+    let toastBody = toastElement.querySelector('.toast-body');
+    toastBody.innerText = message;
+
+    let toast = new bootstrap.Toast(toastElement, {
+        autohide: false
+    });
+    toast.show();
+
+}
 

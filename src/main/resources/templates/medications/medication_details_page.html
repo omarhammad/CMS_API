@@ -15,36 +15,29 @@
         <div th:class="'card-body m-3'">
             <div>
                 <i th:class="'bi bi-heart-pulse-fill me-3 details-icons' " th:text="' '+#{medications.name}+':'"></i>
-
-                <p th:class="'d-inline-block details-text'"
-                   th:text="${medication.getName().toUpperCase()}"></p>
+                <p th:class="'d-inline-block details-text'" id="name"></p>
             </div>
             <div>
                 <i th:class="'bi  bi-capsule me-3 details-icons text-info' " th:text="' '+#{medications.type}+':'"></i>
-                <p th:class="'d-inline-block details-text text-center'"
-                   th:text="${#strings.concat(medication.getForm(),'( ',medication.getForm().getUsage(),' )')}"></p>
+                <p th:class="'d-inline-block details-text text-center'" id="form_usage"></p>
             </div>
             <div>
                 <i th:class="'bi bi-prescription2 me-3 details-icons text-success' " th:text="' '+#{medications.dosage}+':'">
                     Dosage: </i>
-                <p th:class="'d-inline-block details-text'"
-                   th:text="${medication.getDosage()}"></p>
+                <p th:class="'d-inline-block details-text'" id="dosage"></p>
             </div>
             <div>
                 <i th:class="'bi bi-arrow-counterclockwise me-3 details-icons text-primary' " th:text="' '+#{medications.freq}+':'"></i>
-                <p th:class="'d-inline-block details-text'"
-                   th:text="${#strings.concat(medication.getFrequencies(),' times per day')}"></p>
+                <p th:class="'d-inline-block details-text'" id="freq"></p><!--times per day-->
             </div>
             <div>
                 <i th:class="'bi bi-calendar2-heart-fill me-3 details-icons text-primary' " th:text="' '+#{medications.duration}+':'"></i>
-                <p th:class="'d-inline-block details-text'"
-                   th:text="${#strings.concat(medication.getDaysDuration(),' days')}"></p>
+                <p th:class="'d-inline-block details-text'" id="duration"></p>
             </div>
 
             <div>
-                <i th:class="'bi bi-journal-check me-3 details-icons text-primary' " th:text="' '+#{medications.note}+':'"></i>
-                <p th:class="'d-inline-block details-text text-center'"
-                   th:text="${medication.getNotes()}"></p>
+                <i th:class="'bi bi-journal-check me-3 details-icons text-primary' " th:text="' '+#{medications.note}+':'"></i><br>
+                <p th:class="'d-inline-block details-text text-center'" id="notes"></p>
             </div>
         </div>
         <div th:class="'card-footer text-center'"><a th:class="'btn btn-danger'" th:href="@{/medications/}">Back</a>
@@ -55,5 +48,6 @@
 
 </div>
 <script th:src="@{/webjars/bootstrap/5.3.2/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/js/medications/get_one_medication.js}"></script>
 </body>
 </html>

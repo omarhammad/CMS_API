@@ -20,12 +20,12 @@
         </div>
 
         <div th:class="mt-3">
-            <label th:class="'form-label d-inline'" th:for="form"
+            <label th:class="'form-label d-inline'" th:for="med_form"
                    th:text="#{medications.type}"></label>
             <select th:class="'form-select'"
-                    type="text" id="med_id" name="medicationForm">
+                    type="text" id="med_form" name="medicationForm">
                 <option th:each="form : ${medicationForms}"
-                        th:value="${form}"
+                        th:value="${form.name()}"
                         th:text="${form}">
                 </option>
             </select>
@@ -40,7 +40,8 @@
                        type="number" id="quantity" name="quantity"/>
                 <select th:class="'input-group-text col-3'"
                         type="number" id="unit" name="unit">
-                    <option th:each="unit:${units}" th:text="${unit.getLabel().toUpperCase()}" th:value="${unit.name()}"></option>
+                    <option th:each="unit:${units}" th:text="${unit.getLabel().toUpperCase()}"
+                            th:value="${unit.name()}"></option>
                 </select>
             </div>
             <div>
@@ -71,7 +72,7 @@
         </div>
 
 
-        <button th:class="'btn btn-primary mt-3'" type="button" id="submitBtn" th:text="#{medications.title2}"></button>
+        <button th:class="'btn btn-primary mt-3'" type="button" id="submitBtn">Update Medication</button>
         <a th:class="'btn btn-danger mt-3'" th:href="@{/medications/}" th:text="#{button.back}"></a>
 
     </form>
@@ -79,6 +80,6 @@
 
 
 <script th:src="@{/webjars/bootstrap/5.3.2/js/bootstrap.bundle.min.js}"></script>
-<script th:src="@{/js/medications/post_medication.js}"></script>
+<script th:src="@{/js/medications/put_medication.js}"></script>
 </body>
 </html>

@@ -20,13 +20,15 @@ const HttpStatus = {
     GATEWAY_TIMEOUT: 504
 };
 window.addEventListener('DOMContentLoaded', loadAppointmentData)
-
+const appointment_id = window.location.pathname.split('/').pop();
 
 async function loadAppointmentData() {
 
-    const pathname = window.location.pathname;
-    const segments = pathname.split('/');
-    const appointment_id = segments.pop();
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('created')) {
+        removeQueryParam('created')
+        showToast('Prescription added  !')
+    }
 
     try {
         const response = await fetch(`http://localhost:8080/api/appointments/${appointment_id}`);
@@ -42,9 +44,8 @@ async function loadAppointmentData() {
             document.getElementById('doctor_fullname').innerText = appointment.doctor.firstName + ' ' + appointment.doctor.lastName;
             document.getElementById('patient_fullname').innerText = appointment.patient.firstName + ' ' + appointment.patient.lastName;
             const prescription_body = document.getElementById('prescription_body');
-
+            prescription_body.innerHTML = null;
             if (appointment.prescription !== null) {
-                console.log("Entered!")
                 const prescription_header = document.getElementById('prescription_section');
                 const delete_button = document.createElement('a');
                 delete_button.className = ' text-danger h4 bi bi-trash d-inline position-absolute end-0 mt-3 me-3';
@@ -52,6 +53,7 @@ async function loadAppointmentData() {
                     deletePrescription(appointment.prescription.prescriptionId);
                 });
                 prescription_header.appendChild(delete_button);
+                console.log(appointment.prescription.medications)
                 for (const medication of appointment.prescription.medications) {
                     const medications_body = document.createElement('div');
                     medications_body.className = 'bg-body-tertiary rounded-3 p-2 m-2';
@@ -122,8 +124,54 @@ function formatDate(date) {
     return `${day}/${month}/${year}`;
 }
 
-function deletePrescription(prescriptionId) {
+async function deletePrescription(prescriptionId) {
+    const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+    const headers = new Headers({
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        [csrfHeader]: csrfToken
+    });
+    const response = await fetch(`http://localhost:8080/api/appointments/${appointment_id}/prescription/${prescriptionId}`,
+        {
+            method: 'DELETE',
+            headers: headers
+        });
 
+    if (response.status === HttpStatus.NOT_FOUND) {
+        console.log(response.statusText);
+    } else if (response.status === HttpStatus.NO_CONTENT) {
+        await loadAppointmentData();
+        showToast("Prescription deleted!");
+    }
+
+}
+
+
+function showToast(message) {
+    let toastElement = document.querySelector('.toast');
+    let toastBody = toastElement.querySelector('.toast-body');
+    toastBody.innerText = message;
+
+    let toast = new bootstrap.Toast(toastElement, {
+        autohide: false
+    });
+    toast.show();
+
+}
+
+function removeQueryParam(paramToRemove) {
+    // Create a URL object based on the current location
+    const url = new URL(window.location);
+
+    // Use URLSearchParams to work with the query string easily
+    const queryParams = url.searchParams;
+
+    // Remove the specified query parameter
+    queryParams.delete(paramToRemove);
+
+    // Update the URL without reloading the page
+    history.pushState(null, '', url.pathname + '?' + queryParams.toString() + url.hash);
 }
 
 

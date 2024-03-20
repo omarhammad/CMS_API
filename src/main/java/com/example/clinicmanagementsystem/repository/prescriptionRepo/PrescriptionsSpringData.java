@@ -14,13 +14,13 @@ import java.util.Optional;
 
 @Repository
 
-public interface PrescriptionsSpringData extends JpaRepository<Prescription, Integer> {
+public interface PrescriptionsSpringData extends JpaRepository<Prescription, Long> {
     @Override
     <S extends Prescription> @NotNull List<S> findAll(@NotNull Example<S> example);
 
     @Override
     @NotNull
-    Optional<Prescription> findById(@NotNull Integer integer);
+    Optional<Prescription> findById(@NotNull Long id);
 
 
     @Query("SELECT p " +
@@ -34,7 +34,7 @@ public interface PrescriptionsSpringData extends JpaRepository<Prescription, Int
 
 
     @Override
-    void deleteById(@NotNull Integer integer);
+    void deleteById(@NotNull Long id);
 
     @Modifying
     @Transactional

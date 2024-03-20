@@ -7,13 +7,17 @@ import com.example.clinicmanagementsystem.domain.Prescription;
 import com.example.clinicmanagementsystem.domain.util.Dosage;
 import com.example.clinicmanagementsystem.domain.util.MedicationForm;
 import com.example.clinicmanagementsystem.domain.util.Unit;
+import com.example.clinicmanagementsystem.dtos.medications.MedicationResponseDTO;
+import com.example.clinicmanagementsystem.dtos.prescriptions.PrescriptionResponseDTO;
 import com.example.clinicmanagementsystem.repository.appointmentsRepo.AppointmentsSpringData;
 import com.example.clinicmanagementsystem.repository.medicationsRepo.MedicationsSpringData;
 import com.example.clinicmanagementsystem.repository.prescriptionRepo.PrescriptionsSpringData;
+import org.modelmapper.ModelMapper;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -21,21 +25,28 @@ import java.util.Objects;
 public class TreatmentSvc implements ITreatmentService {
 
 
-    PrescriptionsSpringData prescriptionsRepo;
-    MedicationsSpringData medicationsRepo;
+    private final PrescriptionsSpringData prescriptionsRepo;
+    private final MedicationsSpringData medicationsRepo;
 
-    AppointmentsSpringData appointmentsRepo;
+    private final AppointmentsSpringData appointmentsRepo;
+    private final ModelMapper modelMapper;
 
-    public TreatmentSvc(PrescriptionsSpringData prescriptionsRepo, MedicationsSpringData medicationsRepo, AppointmentsSpringData appointmentsRepo) {
+
+    public TreatmentSvc(PrescriptionsSpringData prescriptionsRepo, MedicationsSpringData medicationsRepo, AppointmentsSpringData appointmentsRepo, ModelMapper modelMapper) {
         this.prescriptionsRepo = prescriptionsRepo;
         this.medicationsRepo = medicationsRepo;
         this.appointmentsRepo = appointmentsRepo;
+        this.modelMapper = modelMapper;
     }
 
     @Override
-    public boolean addNewPrescription(List<Medication> medications, LocalDate expireDate, long appointmentId) {
+    public void addNewPrescription(List<Integer> medicationsIds, LocalDate expireDate, long appointmentId) {
         Prescription prescription = new Prescription();
         prescription.setExpireDate(expireDate);
+        List<Medication> medications = new ArrayList<>();
+        for (Integer medId : medicationsIds) {
+            medications.add(medicationsRepo.findById(medId).orElse(null));
+        }
         prescription.setMedications(medications);
         Appointment appointment = appointmentsRepo.findById(appointmentId).orElse(null);
         prescription.setAppointment(appointment);
@@ -44,18 +55,17 @@ public class TreatmentSvc implements ITreatmentService {
 
         prescriptionsRepo.save(prescription);
         appointmentsRepo.save(appointment);
-        return true;
     }
 
     @Override
-    public boolean removePrescription(int prescriptionId) {
+    public boolean removePrescription(long prescriptionId) {
         prescriptionsRepo.findById(prescriptionId).ifPresent(prescription -> prescription.getAppointment().setPrescription(null));
         prescriptionsRepo.deleteById(prescriptionId);
         return prescriptionsRepo.findById(prescriptionId).isEmpty();
     }
 
     @Override
-    public boolean changePrescription(int prescriptionId, List<Medication> medications, LocalDate expireDate) {
+    public boolean changePrescription(long prescriptionId, List<Medication> medications, LocalDate expireDate) {
         Prescription prescription = prescriptionsRepo.findById(prescriptionId).orElse(null);
         if (prescription != null) {
             prescription.setMedications(medications);
@@ -67,12 +77,13 @@ public class TreatmentSvc implements ITreatmentService {
     }
 
     @Override
-    public Prescription getPrescription(int prescriptionId) {
-        return prescriptionsRepo.findById(prescriptionId).orElse(null);
+    public PrescriptionResponseDTO getPrescription(long prescriptionId) {
+        Prescription prescription = prescriptionsRepo.findById(prescriptionId).orElse(null);
+        return modelMapper.map(prescription, PrescriptionResponseDTO.class);
     }
 
     @Override
-    public boolean addNewMedication(String name, MedicationForm type, int quantity, Unit unit, int frequencies, int daysDuration, String notes) {
+    public Medication addNewMedication(String name, MedicationForm type, int quantity, Unit unit, int frequencies, int daysDuration, String notes) {
         Medication medication = new Medication();
         medication.setName(name);
         medication.setForm(type);
@@ -80,8 +91,20 @@ public class TreatmentSvc implements ITreatmentService {
         medication.setFrequencies(frequencies);
         medication.setDaysDuration(daysDuration);
         medication.setNotes(notes);
-        medicationsRepo.save(medication);
-        return true;
+        return medicationsRepo.save(medication);
+    }
+
+    @Override
+    public Medication updateMedication(int medId, String name, MedicationForm type, int quantity, Unit unit, int frequencies, int daysDuration, String notes) {
+        Medication medication = new Medication();
+        medication.setMedicationId(medId);
+        medication.setName(name);
+        medication.setForm(type);
+        medication.setDosage(new Dosage(unit, quantity));
+        medication.setFrequencies(frequencies);
+        medication.setDaysDuration(daysDuration);
+        medication.setNotes(notes);
+        return medicationsRepo.save(medication);
     }
 
     @Override
@@ -96,8 +119,17 @@ public class TreatmentSvc implements ITreatmentService {
     }
 
     @Override
-    public List<Medication> getAllMedications() {
-        return medicationsRepo.findAll();
+    public List<MedicationResponseDTO> getAllMedications() {
+        List<Medication> medications = medicationsRepo.findAll();
+
+        List<MedicationResponseDTO> medicationResponseDTOS = new ArrayList<>();
+        for (Medication medication : medications) {
+
+            MedicationResponseDTO medicationResponseDTO = modelMapper.map(medication, MedicationResponseDTO.class);
+            medicationResponseDTO.setUsage(medicationResponseDTO.getForm().getUsage());
+            medicationResponseDTOS.add(medicationResponseDTO);
+        }
+        return medicationResponseDTOS;
     }
 
     @Override
@@ -106,7 +138,21 @@ public class TreatmentSvc implements ITreatmentService {
     }
 
     @Override
-    public Medication getMedication(int medicationId) {
-        return medicationsRepo.findById(medicationId).orElse(null);
+    public MedicationResponseDTO getMedication(int medicationId) {
+        Medication medication = medicationsRepo.findById(medicationId).orElse(null);
+        MedicationResponseDTO medicationResponseDTO = modelMapper.map(medication, MedicationResponseDTO.class);
+        medicationResponseDTO.setUsage(medicationResponseDTO.getForm().getUsage());
+        return medicationResponseDTO;
+    }
+
+    @Override
+    public List<PrescriptionResponseDTO> getAllPrescriptions() {
+        List<Prescription> prescriptions = prescriptionsRepo.findAll();
+        List<PrescriptionResponseDTO> prescriptionResponseDTOS = new ArrayList<>();
+        for (Prescription prescription : prescriptions) {
+            prescriptionResponseDTOS.add(modelMapper.map(prescription, PrescriptionResponseDTO.class));
+        }
+
+        return prescriptionResponseDTOS;
     }
 }

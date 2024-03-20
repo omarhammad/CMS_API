@@ -44,7 +44,8 @@ VALUES ('MedicationA', 'Tablets', 'MG', 500, 2, 14, 'Take after meals'),
        ('MedicationB', 'Liquids', 'ML', 10, 3, 7, 'Shake well before use'),
        ('MedicationC', 'Tablets', 'MG', 250, 1, 10, 'Take before bedtime'),
        ('MedicationD', 'Capsules', 'MG', 100, 4, 5, 'With plenty of water'),
-       ('MedicationE', 'Injections', 'ML', 1, 1, 3, 'Administered by healthcare professional');
+       ('MedicationE', 'Injections', 'ML', 1, 1, 3, 'Administered by healthcare professional'),
+       ('MedicationF', 'Injections', 'ML', 1, 1, 3, 'Administered by healthcare professional');
 
 
 INSERT INTO prescriptions (expire_date)

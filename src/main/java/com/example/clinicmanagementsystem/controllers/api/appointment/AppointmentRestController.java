@@ -6,7 +6,10 @@ import com.example.clinicmanagementsystem.domain.util.AppointmentType;
 import com.example.clinicmanagementsystem.dtos.appointments.AppointmentResponseDTO;
 import com.example.clinicmanagementsystem.dtos.appointments.CreateAppointmentRequestDTO;
 import com.example.clinicmanagementsystem.dtos.appointments.UpdateAppointmentRequestDTO;
+import com.example.clinicmanagementsystem.dtos.prescriptions.PrescriptionResponseDTO;
+import com.example.clinicmanagementsystem.dtos.prescriptions.PrescriptionsRequestDTO;
 import com.example.clinicmanagementsystem.services.appointmentServices.IAppointmentService;
+import com.example.clinicmanagementsystem.services.treatementServices.ITreatmentService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,11 +31,13 @@ public class AppointmentRestController {
 
 
     private final Logger logger;
-    private final IAppointmentService service;
+    private final IAppointmentService appointmentService;
+    private final ITreatmentService treatmentService;
 
-    public AppointmentRestController(IAppointmentService service) {
+    public AppointmentRestController(IAppointmentService service, ITreatmentService treatmentService) {
+        this.treatmentService = treatmentService;
         this.logger = LoggerFactory.getLogger(AppointmentRestController.class);
-        this.service = service;
+        this.appointmentService = service;
     }
 
 
@@ -40,7 +45,7 @@ public class AppointmentRestController {
     public ResponseEntity<List<AppointmentResponseDTO>> getAppointments() {
 
         logger.debug("LOADING ALL APPOINTMENTS");
-        List<AppointmentResponseDTO> appointments = service.getAllAppointment();
+        List<AppointmentResponseDTO> appointments = appointmentService.getAllAppointment();
         // If the list is empty I return a response with noContent status
         if (appointments.isEmpty()) {
             return ResponseEntity.noContent().build();
@@ -53,12 +58,34 @@ public class AppointmentRestController {
     public ResponseEntity<AppointmentResponseDTO> getAppointment(@PathVariable long id) {
 
         logger.debug("Loading Appointment with id : {}", id);
-        AppointmentResponseDTO appointmentResponseDTO = service.getAppointment(id);
+        AppointmentResponseDTO appointmentResponseDTO = appointmentService.getAppointment(id);
         if (appointmentResponseDTO == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(appointmentResponseDTO);
+        if (appointmentResponseDTO.getPrescription() != null) {
+            logger.debug("{}", appointmentResponseDTO.getPrescription().getMedications());
 
+
+        }
+        return ResponseEntity.ok(appointmentResponseDTO);
+    }
+
+    @GetMapping("/{appId}/prescription/{id}")
+    public ResponseEntity<PrescriptionResponseDTO> getAppointmentPrescription(@PathVariable int appId, @PathVariable long id) {
+        PrescriptionResponseDTO responseDTO = treatmentService.getPrescription(id);
+        AppointmentResponseDTO appointment = appointmentService.getAppointment(appId);
+
+        if (responseDTO == null || appointment == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(responseDTO);
+    }
+
+    @PostMapping("/{appId}/prescription")
+    public ResponseEntity<Void> addAppointmentPrescription(@RequestBody @Valid PrescriptionsRequestDTO requestDTO, @PathVariable String appId) {
+        logger.debug("{}", requestDTO);
+        treatmentService.addNewPrescription(requestDTO.getMedicationsIds(), requestDTO.getExpireDate(), requestDTO.getAppointmentId());
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PostMapping({"", "/"})
@@ -67,7 +94,7 @@ public class AppointmentRestController {
         logger.debug("DTO : {}", requestDTO);
 
         // Adding a new appointment and return a response ok with the appointment that contains the ID.
-        AppointmentResponseDTO appointmentResponseDTO = service.addNewAppointment(requestDTO.getDoctor(), requestDTO.getPatientNN(),
+        AppointmentResponseDTO appointmentResponseDTO = appointmentService.addNewAppointment(requestDTO.getDoctor(), requestDTO.getPatientNN(),
                 requestDTO.getAppointmentDateTime(), requestDTO.getPurpose(), AppointmentType.valueOf(requestDTO.getAppointmentType()));
         return ResponseEntity.status(HttpStatus.CREATED).body(appointmentResponseDTO);
     }
@@ -77,11 +104,11 @@ public class AppointmentRestController {
         if (requestDTO.getAppointmentId() != id) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
-        if (service.getAppointment(id) == null) {
+        if (appointmentService.getAppointment(id) == null) {
             return ResponseEntity.notFound().build();
         }
 
-        service.updateAppointment(requestDTO.getAppointmentId(), requestDTO.getDoctor(), requestDTO.getPatientNN(),
+        appointmentService.updateAppointment(requestDTO.getAppointmentId(), requestDTO.getDoctor(), requestDTO.getPatientNN(),
                 requestDTO.getAppointmentDateTime(), requestDTO.getPurpose(), AppointmentType.valueOf(requestDTO.getAppointmentType()));
         return ResponseEntity.noContent().build();
     }
@@ -89,17 +116,35 @@ public class AppointmentRestController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAppointment(@PathVariable long id) {
 
-        AppointmentResponseDTO appointment = service.getAppointment(id);
+        AppointmentResponseDTO appointment = appointmentService.getAppointment(id);
         if (appointment == null) {
             return ResponseEntity.notFound().build();
         }
-        service.removeAppointment(id);
+        appointmentService.removeAppointment(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{appId}/prescription/{presId}")
+    public ResponseEntity<Void> deleteAppointmentPrescription(@PathVariable long appId, @PathVariable long presId) {
+
+        AppointmentResponseDTO appointment = appointmentService.getAppointment(appId);
+        PrescriptionResponseDTO prescription = treatmentService.getPrescription(presId);
+
+        if (appointment == null || prescription == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        boolean isRemoved = treatmentService.removePrescription(presId);
+        if (!isRemoved) {
+            return ResponseEntity.internalServerError().build();
+        }
         return ResponseEntity.noContent().build();
     }
 
 
     @ExceptionHandler(InvalidAppointmentException.class)
     public ResponseEntity<HashMap<String, String>> handleInvalidAppointmentException(InvalidAppointmentException e, RedirectAttributes redirectAttributes) {
+
         HashMap<String, String> errors = new HashMap<>();
         errors.put("exceptionMsg", e.getMessage());
         return ResponseEntity.badRequest().body(errors);
@@ -119,7 +164,7 @@ public class AppointmentRestController {
                 .collect(Collectors.toMap(
                         FieldError::getField,
                         FieldError::getDefaultMessage,
-                        (existingValue, newValue) -> existingValue + "; " + newValue
+                        (existingValue, newValue) -> existingValue + ";" + newValue
                 ));
 
         return ResponseEntity.badRequest().body(errors);

@@ -74,8 +74,6 @@ function getFormData() {
     }
     return JSON.stringify(formJson);
 }
-
-
 function showToast(message) {
     let toastElement = document.querySelector('.toast');
     let toastBody = toastElement.querySelector('.toast-body');
@@ -87,8 +85,6 @@ function showToast(message) {
     toast.show();
 
 }
-
-
 function handleFieldsError(fieldsErrors) {
 
     const ulElements = document.querySelectorAll('ul');

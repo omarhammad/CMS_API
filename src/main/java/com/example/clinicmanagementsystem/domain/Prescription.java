@@ -15,7 +15,7 @@ public class Prescription {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int prescriptionId;
+    private long prescriptionId;
     private LocalDate expireDate;
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE})
     private List<Medication> medications;
@@ -28,18 +28,18 @@ public class Prescription {
     public Prescription() {
     }
 
-    public Prescription(int prescriptionId, LocalDate expireDate, List<Medication> medications, Appointment appointment) {
+    public Prescription(long prescriptionId, LocalDate expireDate, List<Medication> medications, Appointment appointment) {
         this.prescriptionId = prescriptionId;
         this.expireDate = expireDate;
         this.medications = medications;
         this.appointment = appointment;
     }
 
-    public int getPrescriptionId() {
+    public long getPrescriptionId() {
         return prescriptionId;
     }
 
-    public void setPrescriptionId(int prescriptionId) {
+    public void setPrescriptionId(long prescriptionId) {
         this.prescriptionId = prescriptionId;
     }
 

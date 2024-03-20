@@ -1,29 +1,27 @@
-package com.example.clinicmanagementsystem.controllers.mvc.medcations;
+package com.example.clinicmanagementsystem.dtos.medications;
 
+import com.example.clinicmanagementsystem.domain.util.Dosage;
 import com.example.clinicmanagementsystem.domain.util.MedicationForm;
-import com.example.clinicmanagementsystem.domain.util.Unit;
-import jakarta.validation.constraints.*;
 
-public class MedicationViewModel {
+public class MedicationResponseDTO {
 
-    @NotNull
-    @NotBlank(message = "The medication name must be provided!")
+    private int medicationId;
     private String name;
-
-
-    @NotNull
     private MedicationForm form;
-    @Min(value = 1, message = "Dosage can't be negative or Zero!")
-    private int quantity;
-    @NotNull(message = "you must specify the unit for the medication!")
-    private Unit unit;
-    @Min(value = 1, message = "Freq can't be negative or Zero!")
+    private String usage;
+    private Dosage dosage;
     private int frequencies;
-    @Min(value = 1, message = "Duration of days can't be negative or Zero!")
     private int daysDuration;
-
     private String notes;
 
+
+    public int getMedicationId() {
+        return medicationId;
+    }
+
+    public void setMedicationId(int medicationId) {
+        this.medicationId = medicationId;
+    }
 
     public String getName() {
         return name;
@@ -41,20 +39,12 @@ public class MedicationViewModel {
         this.form = form;
     }
 
-    public int getQuantity() {
-        return quantity;
+    public Dosage getDosage() {
+        return dosage;
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
-    public Unit getUnit() {
-        return unit;
-    }
-
-    public void setUnit(Unit unit) {
-        this.unit = unit;
+    public void setDosage(Dosage dosage) {
+        this.dosage = dosage;
     }
 
     public int getFrequencies() {
@@ -79,5 +69,13 @@ public class MedicationViewModel {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public String getUsage() {
+        return usage;
+    }
+
+    public void setUsage(String usage) {
+        this.usage = usage;
     }
 }

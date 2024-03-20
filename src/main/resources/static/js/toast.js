@@ -1,4 +1,4 @@
-function showToast(message) {
+ function showToast(message) {
     let toastElement = document.querySelector('.toast');
     let toastBody = toastElement.querySelector('.toast-body');
     toastBody.innerText = message;
@@ -9,4 +9,6 @@ function showToast(message) {
     toast.show();
 
 }
+
+
 
