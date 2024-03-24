@@ -15,8 +15,7 @@ import static org.springframework.security.web.util.matcher.AntPathRequestMatche
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
-
+    
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         //@formatter:off
@@ -45,7 +44,7 @@ public class SecurityConfig {
                         })));
 
         //@formatter:on
-      //  httpSecurity.csrf(AbstractHttpConfigurer::disable);
+        //  httpSecurity.csrf(AbstractHttpConfigurer::disable);
         return httpSecurity.build();
     }
 

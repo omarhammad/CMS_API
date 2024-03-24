@@ -15,52 +15,30 @@
         <div th:class="'card-body m-3'">
             <div>
                 <i th:class="'bi bi bi-person-fill me-3 details-icons' "></i>
-                <p th:class="'d-inline-block details-text'"
-                   th:text="${#strings.concat(patient.getFirstName(),' ',patient.getLastName()).toUpperCase()}"></p>
+                <p th:class="'d-inline-block details-text'" id="patient_name"></p>
             </div>
             <div>
                 <i th:class="'bi bi-gender-ambiguous me-3 details-icons text-info' "></i>
-                <p th:class="'d-inline-block details-text'"
-                   th:text="${patient.getGender().toUpperCase()}"></p>
+                <p th:class="'d-inline-block details-text'" id="gender"></p>
             </div>
             <div>
                 <i th:class="'bi bi-balloon-fill me-3 details-icons text-success' "></i>
-                <p th:class="'d-inline-block details-text'"
-                   th:text="${patient.getAge()}"></p>
+                <p th:class="'d-inline-block details-text'" id="age"></p>
             </div>
             <div>
                 <i th:class="'bi bi-person-vcard me-3 details-icons text-primary' "></i>
-                <p th:class="'d-inline-block details-text'"
-                   th:text="${patient.getNationalNumber()}"></p>
+                <p th:class="'d-inline-block details-text'" id="patient_nn"></p>
             </div>
             <div>
                 <p th:class="details-icons-texts"><i th:class="'bi bi-calendar-heart me-3 text-success' "></i>
                     Appointment with Doctors: </p>
-                <div th:class="text-center">
-                    <p th:if="${hisDoctors.isEmpty()}" th:class="'h4 m-3'" th:text="'There is No appointments'"></p>
-                    <p th:class="'d-block details-text'" th:each="doctor: ${hisDoctors}"
-                       th:text="${#strings.concat(doctor.getFirstName(),' ',doctor.getLastName())}"></p>
+                <div th:class="text-center" id="hisDoctors">
                 </div>
             </div>
             <!--Medical Records-->
             <div th:class="card">
                 <div CLASS="card-header"><h3>Medical Records</h3></div>
-                <div th:class="card-body">
-                    <div th:class="'card-text text-center h5'" th:if="${lastAppointments.isEmpty()}">
-                        NO MEDICAL RECORDS
-                    </div>
-                    <div th:class="'card-text m-2 mb-4 h5'" th:each="lastAppointment, status : ${lastAppointments}">
-                        <span th:text="|${status.count}. On ${lastAppointment.getAppointmentDateTime().toLocalDate()} saw Dr. ${lastAppointment.getDoctor().getFirstName()} ${lastAppointment.getDoctor().getLastName()} for ${lastAppointment.getPurpose()} and prescribed him: |"></span>
-                        <span th:if="${lastAppointment.getPrescription() != null}">
-                            <span th:each="medication : ${lastAppointment.getPrescription().getMedications()}">
-                                <span th:text="${medication.name}" th:unless="${medicationStat.last}"></span>
-                                <span th:text="${medication.name + '.'}" th:if="${medicationStat.last}"></span>
-                            </span>
-    </span>
-                        <span th:if="${lastAppointment.getPrescription() == null}">nothing.</span>
-                    </div>
-
-
+                <div th:class="card-body" id="medical_records">
                 </div>
 
             </div>
@@ -72,5 +50,6 @@
 
 </div>
 <script th:src="@{/webjars/bootstrap/5.3.2/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/js/patients/get_one_patients.js}"></script>
 </body>
 </html>

@@ -5,6 +5,7 @@ import com.example.clinicmanagementsystem.domain.Doctor;
 import com.example.clinicmanagementsystem.domain.Patient;
 import com.example.clinicmanagementsystem.dtos.doctors.DoctorDetailsResponseDTO;
 import com.example.clinicmanagementsystem.dtos.doctors.DoctorResponseDTO;
+import com.example.clinicmanagementsystem.dtos.patients.PatientResponseDTO;
 
 import java.util.List;
 
@@ -13,19 +14,19 @@ public interface IStakeholderService {
 
     List<DoctorResponseDTO> getAllDoctors();
 
-    List<Patient> getAllPatients();
+    List<PatientResponseDTO> getAllPatients();
 
     DoctorResponseDTO getADoctor(int doctorId);
 
     DoctorDetailsResponseDTO getFullDoctorData(int doctorId);
 
-    Patient getAPatient(int patientId);
+    PatientResponseDTO getAPatient(int patientId);
 
     DoctorResponseDTO addNewDoctor(String firstName, String lastName, String specialization, String contactInfo);
 
     void updateADoctor(int id, String firstName, String lastName, String specialization, String contactInfo);
 
-    boolean addNewPatient(String firstName, String lastName, String gender, String nationalNumber);
+    PatientResponseDTO addNewPatient(String firstName, String lastName, String gender, String nationalNumber);
 
     int removeDoctor(int doctorId);
 
@@ -36,4 +37,7 @@ public interface IStakeholderService {
     List<Doctor> getPatientDoctors(int id);
 
     List<Appointment> getPatientOldAppointments(int patientId);
+
+
+    void updatePatient(int patientId, String firstName, String lastName, String gender, String nationalNumber);
 }

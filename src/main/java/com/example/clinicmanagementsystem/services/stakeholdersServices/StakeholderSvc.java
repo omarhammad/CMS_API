@@ -5,6 +5,7 @@ import com.example.clinicmanagementsystem.Exceptions.NationalNumberExistExceptio
 import com.example.clinicmanagementsystem.domain.Appointment;
 import com.example.clinicmanagementsystem.domain.Doctor;
 import com.example.clinicmanagementsystem.domain.Patient;
+import com.example.clinicmanagementsystem.dtos.appointments.AppointmentResponseDTO;
 import com.example.clinicmanagementsystem.dtos.doctors.DoctorDetailsResponseDTO;
 import com.example.clinicmanagementsystem.dtos.doctors.DoctorResponseDTO;
 import com.example.clinicmanagementsystem.dtos.patients.PatientResponseDTO;
@@ -14,12 +15,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
-import javax.print.Doc;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class StakeholderSvc implements IStakeholderService {
@@ -51,11 +50,18 @@ public class StakeholderSvc implements IStakeholderService {
     }
 
     @Override
-    public List<Patient> getAllPatients() {
-        return stakeholdersRepo.findAll().stream()
+    public List<PatientResponseDTO> getAllPatients() {
+        List<Patient> patients = stakeholdersRepo.findAll().stream()
                 .filter(Patient.class::isInstance)
                 .map(Patient.class::cast)
-                .collect(Collectors.toList());
+                .toList();
+
+        List<PatientResponseDTO> patientResponseDTOS = new ArrayList<>();
+
+        for (Patient patient : patients) {
+            patientResponseDTOS.add(modelMapper.map(patient, PatientResponseDTO.class));
+        }
+        return patientResponseDTOS;
     }
 
     @Override
@@ -81,8 +87,31 @@ public class StakeholderSvc implements IStakeholderService {
     }
 
     @Override
-    public Patient getAPatient(int patientId) {
-        return ((Patient) stakeholdersRepo.findById(patientId).orElse(null));
+    public PatientResponseDTO getAPatient(int patientId) {
+        Patient patient = ((Patient) stakeholdersRepo.findById(patientId).orElse(null));
+
+        if (patient == null) {
+            return null;
+        }
+
+        List<Doctor> doctors = getPatientDoctors(patientId);
+
+        List<DoctorResponseDTO> doctorResponseDTOS = new ArrayList<>();
+        for (Doctor doctor : doctors) {
+            doctorResponseDTOS.add(modelMapper.map(doctor, DoctorResponseDTO.class));
+        }
+
+        PatientResponseDTO responseDTO = modelMapper.map(patient, PatientResponseDTO.class);
+        responseDTO.setHisDoctors(doctorResponseDTOS);
+
+        List<Appointment> oldAppointments = appointmentsRepo.getPatientOldAppointments(patientId);
+
+        List<AppointmentResponseDTO> oldAppointmentResponseDTOS = new ArrayList<>();
+        for (Appointment appointment : oldAppointments) {
+            oldAppointmentResponseDTOS.add(modelMapper.map(appointment, AppointmentResponseDTO.class));
+        }
+        responseDTO.setOldAppointments(oldAppointmentResponseDTOS);
+        return responseDTO;
     }
 
     @Override
@@ -121,7 +150,7 @@ public class StakeholderSvc implements IStakeholderService {
     }
 
     @Override
-    public boolean addNewPatient(String firstName, String lastName, String gender, String nationalNumber) {
+    public PatientResponseDTO addNewPatient(String firstName, String lastName, String gender, String nationalNumber) {
         Patient patient = new Patient();
         patient.setFirstName(firstName);
         patient.setLastName(lastName);
@@ -136,12 +165,16 @@ public class StakeholderSvc implements IStakeholderService {
         LocalDate current = LocalDate.now();
         int age = Period.between(patientDob, current).getYears();
         patient.setAge(age);
+
+        PatientResponseDTO patientResponseDTO = null;
+
         try {
-            stakeholdersRepo.save(patient);
+            Patient savedPatient = stakeholdersRepo.save(patient);
+            patientResponseDTO = modelMapper.map(savedPatient, PatientResponseDTO.class);
         } catch (DataIntegrityViolationException e) {
             throw new NationalNumberExistException(nationalNumber);
         }
-        return true;
+        return patientResponseDTO;
     }
 
     @Override
@@ -172,5 +205,32 @@ public class StakeholderSvc implements IStakeholderService {
     @Override
     public List<Appointment> getPatientOldAppointments(int patientId) {
         return appointmentsRepo.getPatientOldAppointments(patientId);
+    }
+
+    @Override
+    public void updatePatient(int patientId, String firstName, String lastName, String gender, String nationalNumber) {
+        Patient patient = new Patient();
+        patient.setId(patientId);
+        patient.setFirstName(firstName);
+        patient.setLastName(lastName);
+        patient.setGender(gender);
+        patient.setNationalNumber(nationalNumber);
+
+        String[] nDateOfBirth = nationalNumber.split("-")[0].split("\\.");
+        int currentYearDigits = LocalDate.now().getYear() % 100;
+        int century = (Integer.parseInt(nDateOfBirth[0]) <= currentYearDigits) ? 2000 : 1900;
+        int year = century + Integer.parseInt(nDateOfBirth[0]);
+        LocalDate patientDob = LocalDate.of(year, Integer.parseInt(nDateOfBirth[1]), Integer.parseInt(nDateOfBirth[2]));
+        LocalDate current = LocalDate.now();
+        int age = Period.between(patientDob, current).getYears();
+        patient.setAge(age);
+
+
+        try {
+
+            stakeholdersRepo.save(patient);
+        } catch (DataIntegrityViolationException e) {
+            throw new NationalNumberExistException(nationalNumber);
+        }
     }
 }

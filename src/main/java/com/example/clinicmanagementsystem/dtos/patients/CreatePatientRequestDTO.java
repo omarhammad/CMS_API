@@ -1,9 +1,10 @@
-package com.example.clinicmanagementsystem.controllers.mvc.patient;
+package com.example.clinicmanagementsystem.dtos.patients;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 
-public class PatientViewModel {
+public class CreatePatientRequestDTO {
+
 
 
     @NotBlank(message = "First Name must be provided!")
@@ -15,7 +16,6 @@ public class PatientViewModel {
     @NotBlank(message = "National Number must be provided!")
     @Pattern(regexp = "^\\d{2}\\.\\d{2}\\.\\d{2}-\\d{3}\\.\\d{2}$", message = "National Number must be provided e.g 'yy.mm.dd-xxx.cd' ")
     private String nationalNumber;
-
 
     public String getFirstName() {
         return firstName;
@@ -40,7 +40,6 @@ public class PatientViewModel {
     public void setGender(String gender) {
         this.gender = gender;
     }
-
 
     public String getNationalNumber() {
         return nationalNumber;

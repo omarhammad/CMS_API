@@ -32,10 +32,6 @@
                         <a th:class="${active==4?'nav-link active link-underline' :'nav-link'}"
                            th:href="@{/medications/}" th:text="#{navbar.medications}"></a>
                     </li>
-                    <li th:class=" nav-item" sec:authorize="isAuthenticated()">
-                        <a th:class="${active==5?'nav-link active link-underline' :'nav-link'}"
-                           th:href="@{/sessions/}" th:text="#{navbar.sessions}"></a>
-                    </li>
                 </ul>
                 <ul class="navbar-nav align-items-lg-center ms-auto" sec:authorize="isAuthenticated()">
                     <li class="nav-item d-flex align-items-center me-2">
