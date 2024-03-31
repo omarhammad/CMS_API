@@ -15,7 +15,7 @@ import static org.springframework.security.web.util.matcher.AntPathRequestMatche
 
 @Configuration
 @EnableWebSecurity
-@Profile("prod")
+@Profile("!test")
 public class SecurityConfig {
 
     @Bean
