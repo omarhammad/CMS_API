@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="_csrf" th:content="${_csrf.token}"/>
@@ -24,14 +24,14 @@
             <th>Specialization</th>
             <th>PhoneNumber</th>
             <th>Email</th>
-            <th></th>
-            <th></th>
+            <th sec:authorize="!hasAnyRole('ROLE_PATIENT','ROLE_DOCTOR','ROLE_SECRETARY')"></th>
+            <th sec:authorize="!hasAnyRole('ROLE_PATIENT','ROLE_DOCTOR','ROLE_SECRETARY')"></th>
         </tr>
         </thead>
         <tbody class="doctorsTbody">
         </tbody>
     </table>
-    <a class="btn btn-primary" th:href="@{/doctors/add}">Add Doctor</a>
+    <a class="btn btn-primary" th:href="@{/doctors/add}" sec:authorize="!hasAnyRole('ROLE_PATIENT','ROLE_DOCTOR','ROLE_SECRETARY')">Add Doctor</a>
 
 </div>
 

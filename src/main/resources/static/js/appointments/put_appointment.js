@@ -34,9 +34,20 @@ async function loadAppointmentData() {
             console.log("NOT FOUND !");
         } else if (response.ok) {
             const appointment = await response.json();
+
+            const current_user = await getcurrentUser();
+
+            if (current_user.userRoles.includes('ROLE_PATIENT')) {
+                const patient_nn_input = document.getElementById('patient_nn');
+                patient_nn_input.value = appointment.patient.nationalNumber;
+                patient_nn_input.disabled = true
+
+            } else if (current_user.userRoles.includes('ROLE_DOCTOR')) {
+                const doctor_input = document.getElementById('doctor');
+                doctor_input.value = appointment.doctor.id
+                doctor_input.disabled = true;
+            }
             document.getElementById('appointment_date_time').value = appointment.appointmentDateTime
-            document.getElementById('patient_nn').value = appointment.patient.nationalNumber
-            document.getElementById('doctor').value = appointment.doctor.id
             document.getElementById('appointment_type').value = appointment.appointmentType
             document.getElementById('purpose').value = appointment.purpose
         }
@@ -93,6 +104,8 @@ async function put_appointments() {
 }
 
 function getFormData() {
+    document.getElementById('doctor').disabled = false;
+    document.getElementById('patient_nn').disabled = false;
 
     const form = document.getElementById('form');
     const formData = new FormData(form);
@@ -158,3 +171,14 @@ function getFieldsErrorElementList(errors) {
 
 }
 
+
+async function getcurrentUser() {
+    const response = await fetch('http://localhost:8080/api/auth/user/current');
+
+    if (response.status === HttpStatus.UNAUTHORIZED) {
+        window.location.href = '/signIn'
+    } else if (response.status === HttpStatus.OK) {
+        return await response.json();
+    }
+
+}

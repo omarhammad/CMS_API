@@ -6,9 +6,13 @@ import com.example.clinicmanagementsystem.domain.util.AppointmentType;
 import com.example.clinicmanagementsystem.dtos.appointments.AppointmentResponseDTO;
 import com.example.clinicmanagementsystem.dtos.appointments.CreateAppointmentRequestDTO;
 import com.example.clinicmanagementsystem.dtos.appointments.UpdateAppointmentRequestDTO;
+import com.example.clinicmanagementsystem.dtos.doctors.DoctorResponseDTO;
+import com.example.clinicmanagementsystem.dtos.patients.PatientResponseDTO;
+import com.example.clinicmanagementsystem.dtos.patients.UpdatePatientRequestDTO;
 import com.example.clinicmanagementsystem.dtos.prescriptions.PrescriptionResponseDTO;
 import com.example.clinicmanagementsystem.dtos.prescriptions.PrescriptionsRequestDTO;
 import com.example.clinicmanagementsystem.services.appointmentServices.IAppointmentService;
+import com.example.clinicmanagementsystem.services.stakeholdersServices.IStakeholderService;
 import com.example.clinicmanagementsystem.services.treatementServices.ITreatmentService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -32,9 +36,11 @@ public class AppointmentRestController {
 
     private final Logger logger;
     private final IAppointmentService appointmentService;
+    private final IStakeholderService stakeholderService;
     private final ITreatmentService treatmentService;
 
-    public AppointmentRestController(IAppointmentService service, ITreatmentService treatmentService) {
+    public AppointmentRestController(IAppointmentService service, IStakeholderService stakeholderService, ITreatmentService treatmentService) {
+        this.stakeholderService = stakeholderService;
         this.treatmentService = treatmentService;
         this.logger = LoggerFactory.getLogger(AppointmentRestController.class);
         this.appointmentService = service;
@@ -52,6 +58,34 @@ public class AppointmentRestController {
         }
         // Return a response with all appointments
         return ResponseEntity.ok(appointments);
+    }
+
+    @GetMapping("/patient/{id}")
+    public ResponseEntity<List<AppointmentResponseDTO>> getPatientAppointment(@PathVariable int id) {
+
+        PatientResponseDTO patient = stakeholderService.getAPatient(id);
+        if (patient == null) {
+            return ResponseEntity.notFound().build();
+        }
+        List<AppointmentResponseDTO> responseDTOS = appointmentService.getPatientAppointments(id);
+        if (responseDTOS.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(responseDTOS);
+    }
+
+    @GetMapping("/doctor/{id}")
+    public ResponseEntity<List<AppointmentResponseDTO>> getDoctorAppointment(@PathVariable int id) {
+
+        boolean doctorExists = stakeholderService.getADoctor(id) != null;
+        if (!doctorExists) {
+            return ResponseEntity.notFound().build();
+        }
+        List<AppointmentResponseDTO> responseDTOS = appointmentService.getDoctorAppointments(id);
+        if (responseDTOS.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(responseDTOS);
     }
 
     @GetMapping("/{id}")

@@ -2,12 +2,17 @@ ALTER TABLE appointments
     ALTER CONSTRAINT fkdcu22gag6dshn4gm1lhta0bpv DEFERRABLE INITIALLY DEFERRED;
 BEGIN;
 SET CONSTRAINTS ALL DEFERRED;
-INSERT INTO stakeholder (first_name, last_name)
-VALUES ('Omar', 'Johnson'),
-       ('Sara', 'Lee'),
-       ('Kevin', 'Miller'),
-       ('Nora', 'Davis'),
-       ('Felix', 'Brown');
+INSERT INTO stakeholder (first_name, last_name, username, role, password)
+VALUES ('Omar', 'Johnson', 'omar_johnson', 'DOCTOR',
+        '$2a$10$l7OaNsKv6s9FkonaKSdMquYrRvF1kWLC51w.I62RM4yFkfpdLjNGe'),
+       ('Sara', 'Lee', 'sara_lee', 'DOCTOR',
+        '$2a$10$l7OaNsKv6s9FkonaKSdMquYrRvF1kWLC51w.I62RM4yFkfpdLjNGe'),
+       ('Kevin', 'Miller', 'kevin_miller', 'DOCTOR',
+        '$2a$10$l7OaNsKv6s9FkonaKSdMquYrRvF1kWLC51w.I62RM4yFkfpdLjNGe'),
+       ('Nora', 'Davis', 'nora_davis', 'DOCTOR',
+        '$2a$10$l7OaNsKv6s9FkonaKSdMquYrRvF1kWLC51w.I62RM4yFkfpdLjNGe'),
+       ('Felix', 'Brown', 'felix_brown', 'DOCTOR',
+        '$2a$10$l7OaNsKv6s9FkonaKSdMquYrRvF1kWLC51w.I62RM4yFkfpdLjNGe');
 
 
 INSERT INTO doctors (id, specialization, contact_info)
@@ -17,11 +22,11 @@ VALUES (1, 'Cardiology', '+32123456789,omar.johnson@email.com'),
        (4, 'Pediatrics', '+32456789012,nora.davis@email.com'),
        (5, 'Dermatology', '+32567890123,felix.brown@email.com');
 
-INSERT INTO stakeholder (first_name, last_name)
-VALUES ('Lily', 'Smith'),
-       ('Max', 'Taylor'),
-       ('Emma', 'Jones'),
-       ('Noah', 'Anderson');
+INSERT INTO stakeholder (first_name, last_name, username, password, role)
+VALUES ('Lily', 'Smith', 'lily_smith', '$2a$10$l7OaNsKv6s9FkonaKSdMquYrRvF1kWLC51w.I62RM4yFkfpdLjNGe', 'PATIENT'),
+       ('Max', 'Taylor', 'max_taylor', '$2a$10$l7OaNsKv6s9FkonaKSdMquYrRvF1kWLC51w.I62RM4yFkfpdLjNGe', 'PATIENT'),
+       ('Emma', 'Jones', 'emma_jones', '$2a$10$l7OaNsKv6s9FkonaKSdMquYrRvF1kWLC51w.I62RM4yFkfpdLjNGe', 'PATIENT'),
+       ('Noah', 'Anderson', 'noah_andreson', '$2a$10$l7OaNsKv6s9FkonaKSdMquYrRvF1kWLC51w.I62RM4yFkfpdLjNGe', 'PATIENT');
 
 INSERT INTO patients (id, age, gender, national_number)
 VALUES (6, 30, 'F', '91.07.23-543.21'),
@@ -29,6 +34,9 @@ VALUES (6, 30, 'F', '91.07.23-543.21'),
        (8, 36, 'F', '87.03.15-321.98'),
        (9, 29, 'M', '94.08.26-432.76');
 
+INSERT INTO stakeholder (first_name, last_name, username, password, role)
+VALUES ('Mahmoud', 'Hammad', 'secretary', '$2a$10$l7OaNsKv6s9FkonaKSdMquYrRvF1kWLC51w.I62RM4yFkfpdLjNGe', 'SECRETARY'),
+       ('Omar', 'Hammad', 'admin', '$2a$10$l7OaNsKv6s9FkonaKSdMquYrRvF1kWLC51w.I62RM4yFkfpdLjNGe', 'ADMIN');
 
 
 INSERT INTO appointments (appointment_date_time, purpose, doctor_id, patient_id, appointment_type, prescription_id)

@@ -1,6 +1,30 @@
+const HttpStatus = {
+    OK: 200,
+    CREATED: 201,
+    ACCEPTED: 202,
+    NO_CONTENT: 204,
+    MOVED_PERMANENTLY: 301,
+    FOUND: 302,
+    SEE_OTHER: 303,
+    NOT_MODIFIED: 304,
+    BAD_REQUEST: 400,
+    UNAUTHORIZED: 401,
+    FORBIDDEN: 403,
+    NOT_FOUND: 404,
+    METHOD_NOT_ALLOWED: 405,
+    CONFLICT: 409,
+    INTERNAL_SERVER_ERROR: 500,
+    NOT_IMPLEMENTED: 501,
+    BAD_GATEWAY: 502,
+    SERVICE_UNAVAILABLE: 503,
+    GATEWAY_TIMEOUT: 504
+};
+
 window.addEventListener('DOMContentLoaded', getAllDoctors);
 
-function getAllDoctors() {
+async function getAllDoctors() {
+
+    const current_user = await getcurrentUser();
     const doctorsBody = document.querySelector('.doctorsTbody');
     fetch('http://localhost:8080/api/doctors')
         .then(response => {
@@ -19,6 +43,9 @@ function getAllDoctors() {
         })
         .then(doctors => {
             for (const doctor of doctors) {
+
+                if (doctor.id === current_user.userId) continue
+
                 let doctor_row = document.createElement('tr');
                 for (const key in doctor) {
 
@@ -39,26 +66,30 @@ function getAllDoctors() {
                     doctor_row.appendChild(cell);
                 }
 
-                // DELETE BUTTON
-                const deleteBtn = document.createElement('td');
-                deleteBtn.className = "bi bi-trash-fill text-danger";
-                deleteBtn.addEventListener('click', event => {
-                    event.stopPropagation();
-                    deleteDoctor(doctor.id)
-                })
+                const hasDoctorOrPatient = current_user.userRoles.some(role =>
+                    role === 'ROLE_PATIENT' || role === 'ROLE_DOCTOR' || role ==='ROLE_SECRETARY')
+                if (!hasDoctorOrPatient) {
+                    // DELETE BUTTON
+                    const deleteBtn = document.createElement('td');
+                    deleteBtn.className = "bi bi-trash-fill text-danger";
+                    deleteBtn.addEventListener('click', event => {
+                        event.stopPropagation();
+                        deleteDoctor(doctor.id)
+                    })
 
-                //EDIT BUTTON
-                const editBtn = document.createElement('td');
-                editBtn.className = "bi bi-pencil-fill text-primary"
-                editBtn.addEventListener('click', event => {
-                    event.stopPropagation();
-                    window.location.href = `/doctors/update/${doctor.id}`;
+                    //EDIT BUTTON
+                    const editBtn = document.createElement('td');
+                    editBtn.className = "bi bi-pencil-fill text-primary"
+                    editBtn.addEventListener('click', event => {
+                        event.stopPropagation();
+                        window.location.href = `/doctors/update/${doctor.id}`;
 
-                })
+                    })
 
 
-                doctor_row.appendChild(deleteBtn)
-                doctor_row.appendChild(editBtn)
+                    doctor_row.appendChild(deleteBtn)
+                    doctor_row.appendChild(editBtn)
+                }
                 doctor_row.addEventListener('click', () => {
                         window.location.href = `/doctors/details/${doctor.id}`;
                     }
@@ -96,5 +127,13 @@ function deleteDoctor(delete_doctor_id) {
 }
 
 
+async function getcurrentUser() {
+    const response = await fetch('http://localhost:8080/api/auth/user/current');
 
+    if (response.status === HttpStatus.UNAUTHORIZED) {
+        window.location.href = '/signIn'
+    } else if (response.status === HttpStatus.OK) {
+        return await response.json();
+    }
 
+}

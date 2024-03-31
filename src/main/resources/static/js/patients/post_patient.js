@@ -25,6 +25,7 @@ submitBtn.addEventListener('click', addNewPatient);
 async function addNewPatient() {
 
     const patientJson = getFormData();
+    console.log(patientJson)
     const csrf_token = document.querySelector('meta[name="_csrf"]').getAttribute('content')
     const csrf_header = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
 
@@ -100,6 +101,25 @@ function handleFieldsError(fieldsErrors) {
     if (fieldsErrors.hasOwnProperty('nationalNumber')) {
         document.getElementById('national_num')
             .parentElement.appendChild(getFieldsErrorElementList(fieldsErrors.nationalNumber));
+
+    }
+
+
+    if (fieldsErrors.hasOwnProperty('username')) {
+        document.getElementById('username')
+            .parentElement.appendChild(getFieldsErrorElementList(fieldsErrors.username));
+
+    }
+
+    if (fieldsErrors.hasOwnProperty('password')) {
+        document.getElementById('password')
+            .parentElement.appendChild(getFieldsErrorElementList(fieldsErrors.password));
+
+    }
+
+    if (fieldsErrors.hasOwnProperty('confirmPassword')) {
+        document.getElementById('confirm_password')
+            .parentElement.appendChild(getFieldsErrorElementList(fieldsErrors.confirmPassword));
 
     }
 

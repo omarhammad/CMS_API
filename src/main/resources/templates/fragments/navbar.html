@@ -24,12 +24,27 @@
                         <a th:class="${active==2?'nav-link active link-underline' :'nav-link'}" th:href="@{/doctors/}"
                            th:text="#{navbar.doctors}"></a>
                     </li>
-                    <li th:class=" nav-item" sec:authorize="isAuthenticated()">
+                    <li th:class=" nav-item" sec:authorize="isAuthenticated() and !hasRole('ROLE_PATIENT')" >
                         <a th:class="${active==3?'nav-link active link-underline' :'nav-link'}"
                            th:href="@{/patients/}" th:text="#{navbar.patient}"></a>
                     </li>
-                    <li th:class=" nav-item" sec:authorize="isAuthenticated()">
+                    <!-- FOR PATIENT ONLY-->
+                    <li th:class="nav-item" sec:authorize="isAuthenticated() and hasRole('ROLE_PATIENT')">
+                        <a th:class="${active==3 ? 'nav-link active link-underline' : 'nav-link'}"
+                           th:href="@{/patients/details}">Profile</a>
+                    </li>
+
+                    <li th:class="nav-item" sec:authorize="isAuthenticated() and hasRole('ROLE_DOCTOR')">
+                        <a th:class="${active==4 ? 'nav-link active link-underline' : 'nav-link'}"
+                           th:href="@{/doctors/details}">Profile</a>
+                    </li>
+
+                    <li th:class=" nav-item" sec:authorize="isAuthenticated() and !hasAnyRole('ROLE_SECRETARY','ROLE_DOCTOR')">
                         <a th:class="${active==4?'nav-link active link-underline' :'nav-link'}"
+                           th:href="@{/medications/}" th:text="#{navbar.medications}"></a>
+                    </li>
+                    <li th:class=" nav-item" sec:authorize="isAuthenticated() and hasRole('ROLE_DOCTOR')">
+                        <a th:class="${active==5?'nav-link active link-underline' :'nav-link'}"
                            th:href="@{/medications/}" th:text="#{navbar.medications}"></a>
                     </li>
                 </ul>

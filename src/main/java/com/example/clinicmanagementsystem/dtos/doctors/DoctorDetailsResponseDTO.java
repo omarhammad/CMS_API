@@ -1,6 +1,7 @@
 package com.example.clinicmanagementsystem.dtos.doctors;
 
 import com.example.clinicmanagementsystem.domain.Patient;
+import com.example.clinicmanagementsystem.dtos.appointments.AppointmentResponseDTO;
 import com.example.clinicmanagementsystem.dtos.patients.PatientResponseDTO;
 
 import java.util.List;
@@ -12,18 +13,15 @@ public class DoctorDetailsResponseDTO {
     private String specialization;
     private String contactInfo;
 
-    private List<PatientResponseDTO> hisPatients;
+    private List<AppointmentResponseDTO> appointments;
 
-
-    public List<PatientResponseDTO> getHisPatients() {
-        return hisPatients;
+    public List<AppointmentResponseDTO> getAppointments() {
+        return appointments;
     }
 
-    public void setHisPatients(List<PatientResponseDTO> hisPatients) {
-        this.hisPatients = hisPatients;
+    public void setAppointments(List<AppointmentResponseDTO> appointments) {
+        this.appointments = appointments;
     }
-
-
 
     public String getFirstName() {
         return firstName;

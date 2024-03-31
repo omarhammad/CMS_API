@@ -23,6 +23,18 @@ public class CreateAppointmentRequestDTO {
     private String appointmentType;
 
 
+    public CreateAppointmentRequestDTO() {
+
+    }
+
+    public CreateAppointmentRequestDTO(LocalDateTime appointmentDateTime, String purpose, int doctor, String patientNN, String appointmentType) {
+        this.appointmentDateTime = appointmentDateTime;
+        this.purpose = purpose;
+        this.doctor = doctor;
+        this.patientNN = patientNN;
+        this.appointmentType = appointmentType;
+    }
+
     public LocalDateTime getAppointmentDateTime() {
         return appointmentDateTime;
     }

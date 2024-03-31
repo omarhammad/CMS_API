@@ -20,11 +20,11 @@ const HttpStatus = {
     GATEWAY_TIMEOUT: 504
 };
 const submitBtn = document.getElementById('submitBtn');
-submitBtn.addEventListener('click', postNewAppointment);
+submitBtn.addEventListener('click', signUpNewPatient);
 
-
-async function postNewAppointment() {
-
+async function signUpNewPatient() {
+    const patientJson = getFormData();
+    console.log(patientJson)
     const csrf_token = document.querySelector('meta[name="_csrf"]').getAttribute('content')
     const csrf_header = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
 
@@ -34,40 +34,34 @@ async function postNewAppointment() {
         [csrf_header]: csrf_token
     }
 
-    const appointmentData = getFormData()
-    console.log(appointmentData)
     try {
-        const response = await fetch('http://localhost:8080/api/appointments/',
+        const response = await fetch('http://localhost:8080/api/auth/signup',
             {
                 method: 'POST',
                 headers: headers,
-                body: appointmentData
+                body: patientJson
             });
-        console.log("Entered 1")
-        const data = await response.json();
+
+
         if (response.status === HttpStatus.BAD_REQUEST) {
-            console.log("Entered 2")
+            const data = await response.json();
             if (data.hasOwnProperty('exceptionMsg')) {
                 showToast(data.exceptionMsg);
             } else {
                 handleFieldsError(data);
             }
         } else if (response.status === HttpStatus.CREATED) {
-            console.log("Entered 3")
-            console.log(data);
-            window.location.href = '/appointments?created=true';
-        } else {
-            console.error("MyError:" + response.status)
+            window.location.href = "/"
         }
-
     } catch (error) {
-        console.error(error.message)
+        console.error(error)
     }
+
 }
 
+
 function getFormData() {
-    document.getElementById('doctor').disabled = false;
-    document.getElementById('patient_nn').disabled = false;
+
     const form = document.getElementById('form');
     const formData = new FormData(form);
     const formJson = {};
@@ -97,24 +91,48 @@ function handleFieldsError(fieldsErrors) {
     })
 
 
-    if (fieldsErrors.hasOwnProperty('appointmentDateTime')) {
-        document.getElementById('appointment_date_time')
-            .parentElement.appendChild(getFieldsErrorElementList(fieldsErrors.appointmentDateTime));
+    if (fieldsErrors.hasOwnProperty('firstName')) {
+        document.getElementById('first_name')
+            .parentElement.parentElement.appendChild(getFieldsErrorElementList(fieldsErrors.firstName));
+
+    }
+    if (fieldsErrors.hasOwnProperty('lastName')) {
+        document.getElementById('last_name')
+            .parentElement.parentElement.appendChild(getFieldsErrorElementList(fieldsErrors.lastName));
 
     }
 
-    if (fieldsErrors.hasOwnProperty('patientNN')) {
-        document.getElementById('patient_nn')
-            .parentElement.appendChild(getFieldsErrorElementList(fieldsErrors.patientNN))
+    if (fieldsErrors.hasOwnProperty('nationalNumber')) {
+        document.getElementById('national_number')
+            .parentElement.parentElement.appendChild(getFieldsErrorElementList(fieldsErrors.nationalNumber));
+
+    }
+
+    if (fieldsErrors.hasOwnProperty('username')) {
+        document.getElementById('username')
+            .parentElement.parentElement.appendChild(getFieldsErrorElementList(fieldsErrors.username));
+
+    }
+
+    if (fieldsErrors.hasOwnProperty('password')) {
+        document.getElementById('password')
+            .parentElement.parentElement.appendChild(getFieldsErrorElementList(fieldsErrors.password));
+
+    }
+
+    if (fieldsErrors.hasOwnProperty('confirmPassword')) {
+        document.getElementById('confirm_password')
+            .parentElement.parentElement.appendChild(getFieldsErrorElementList(fieldsErrors.confirmPassword));
+
     }
 
 
 }
 
 function getFieldsErrorElementList(errors) {
-
+    const ulElementDiv = document.createElement('div');
     const ulElement = document.createElement('ul');
-    ulElement.className = "custom-bullet";
+    ulElement.className = "custom-bullet ";
     errors = errors.split(';');
     for (const error of errors) {
         const ilElement = document.createElement('il');
@@ -124,47 +142,10 @@ function getFieldsErrorElementList(errors) {
 
         ulElement.appendChild(document.createElement('br'))
     }
-
-    return ulElement;
-
-}
-
-
-window.addEventListener('DOMContentLoaded', prepareAddPage)
-
-async function prepareAddPage() {
-    const current_user = await getcurrentUser();
-
-    if (current_user.userRoles.includes('ROLE_PATIENT')) {
-
-        fetch(`http://localhost:8080/api/patients/${current_user.userId}`)
-            .then(response => {
-                if (response.ok) {
-                    return response.json();
-                }
-            }).then(patient => {
-            const patient_nn_input = document.getElementById('patient_nn');
-            patient_nn_input.value = patient.nationalNumber;
-            patient_nn_input.disabled = true;
-
-        });
-
-    } else if (current_user.userRoles.includes('ROLE_DOCTOR')) {
-        const doctor_input = document.getElementById('doctor');
-        doctor_input.value = current_user.userId;
-        doctor_input.disabled = true;
-    }
-
+    ulElementDiv.appendChild(ulElement)
+    return ulElementDiv;
 
 }
 
-async function getcurrentUser() {
-    const response = await fetch('http://localhost:8080/api/auth/user/current');
 
-    if (response.status === HttpStatus.UNAUTHORIZED) {
-        window.location.href = '/signIn'
-    } else if (response.status === HttpStatus.OK) {
-        return await response.json();
-    }
 
-}

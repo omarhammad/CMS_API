@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="_csrf" th:content="${_csrf.token}">
@@ -9,7 +9,7 @@
     <link rel="stylesheet" th:href="@{/css/common.css}">
 </head>
 <body>
-
+<div sec:au></div>
 <div class="toast-container">
     <div
             class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive"
@@ -52,8 +52,12 @@
 
         </div>
 
-        <button th:class="'btn btn-primary m-2'" type="button" id="submitBtn" th:text="#{patient.title2}">Add Patient</button>
-        <a th:class="'btn btn-danger'" th:href="@{'/patients/'}" th:text="#{button.back}">Back</a>
+        <button th:class="'btn btn-primary m-2'" type="button" id="submitBtn" th:text="#{patient.title2}">Update Patient
+        </button>
+        <a th:class="'btn btn-danger'" sec:authorize="!hasRole('ROLE_PATIENT')" th:href="@{/patients/}"
+           th:text="#{button.back}">Back</a>
+        <a th:class="'btn btn-danger'" sec:authorize="hasRole('ROLE_PATIENT')" th:href="@{/patients/details}"
+           th:text="#{button.back}">Back</a>
 
 
     </form>

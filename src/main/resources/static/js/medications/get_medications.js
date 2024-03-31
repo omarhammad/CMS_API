@@ -47,7 +47,7 @@ async function loadAllMedications() {
             medications_tbody.appendChild(noContentRow);
         } else if (response.status === HttpStatus.OK) {
             const medications = await response.json();
-            fillMedicationsTable(medications)
+            await fillMedicationsTable(medications)
         }
     } catch (error) {
         console.error(error)
@@ -55,7 +55,8 @@ async function loadAllMedications() {
 
 }
 
-function fillMedicationsTable(medications) {
+async function fillMedicationsTable(medications) {
+    const current_user = await getcurrentUser();
 
     for (const medication of medications) {
         const medication_row = document.createElement('tr')
@@ -76,31 +77,33 @@ function fillMedicationsTable(medications) {
         const duration_td = document.createElement('td')
         duration_td.innerText = medication.daysDuration;
 
-        // DELETE BUTTON
-        const deleteBtn = document.createElement('td');
-        deleteBtn.className = "bi bi-trash-fill text-danger";
-        deleteBtn.addEventListener('click', event => {
-            event.stopPropagation();
-            deleteMedication(medication.medicationId, medication.name)
-        })
-
-        //EDIT BUTTON
-        const editBtn = document.createElement('td');
-        editBtn.className = "bi bi-pencil-fill text-primary"
-        editBtn.addEventListener('click', event => {
-            event.stopPropagation();
-            window.location.href = `/medications/update/${medication.medicationId}`;
-
-        })
 
 
-        medication_row.appendChild(name_td)
+        medication_row.appendChild(name_td);
         medication_row.appendChild(med_form_td)
         medication_row.appendChild(dosage_td)
         medication_row.appendChild(freq_td)
         medication_row.appendChild(duration_td)
-        medication_row.appendChild(deleteBtn)
-        medication_row.appendChild(editBtn)
+        if (!current_user.userRoles.includes('ROLE_PATIENT')) {
+            // DELETE BUTTON
+            const deleteBtn = document.createElement('td');
+            deleteBtn.className = "bi bi-trash-fill text-danger";
+            deleteBtn.addEventListener('click', event => {
+                event.stopPropagation();
+                deleteMedication(medication.medicationId, medication.name)
+            })
+
+            //EDIT BUTTON
+            const editBtn = document.createElement('td');
+            editBtn.className = "bi bi-pencil-fill text-primary"
+            editBtn.addEventListener('click', event => {
+                event.stopPropagation();
+                window.location.href = `/medications/update/${medication.medicationId}`;
+
+            })
+            medication_row.appendChild(deleteBtn)
+            medication_row.appendChild(editBtn)
+        }
 
         medication_row.addEventListener('click', event => {
             window.location.href = `/medications/details/${medication.medicationId}`;
@@ -165,4 +168,14 @@ function removeQueryParam(paramToRemove) {
     history.pushState(null, '', url.pathname + '?' + queryParams.toString() + url.hash);
 }
 
+async function getcurrentUser() {
+    const response = await fetch('http://localhost:8080/api/auth/user/current');
+
+    if (response.status === HttpStatus.UNAUTHORIZED) {
+        window.location.href = '/signIn'
+    } else if (response.status === HttpStatus.OK) {
+        return await response.json();
+    }
+
+}
 

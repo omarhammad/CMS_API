@@ -27,4 +27,6 @@ public interface IAppointmentService {
 
     boolean removeAppointment(long appointmentId);
 
+    List<AppointmentResponseDTO> getPatientAppointments(int id);
+    List<AppointmentResponseDTO> getDoctorAppointments(int id);
 }

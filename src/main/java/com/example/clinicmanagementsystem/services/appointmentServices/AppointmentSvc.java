@@ -121,4 +121,24 @@ public class AppointmentSvc implements IAppointmentService {
         appointmentRepo.deleteById(appointmentId);
         return appointmentRepo.findById(appointmentId).isEmpty();
     }
+
+    @Override
+    public List<AppointmentResponseDTO> getPatientAppointments(int id) {
+        List<Appointment> patientAppointments = appointmentRepo.getAppointmentByPatientId(id);
+        List<AppointmentResponseDTO> responseDTOS = new ArrayList<>();
+        for (Appointment appointment : patientAppointments) {
+            responseDTOS.add(modelMapper.map(appointment, AppointmentResponseDTO.class));
+        }
+        return responseDTOS;
+    }
+
+    @Override
+    public List<AppointmentResponseDTO> getDoctorAppointments(int id) {
+        List<Appointment> patientAppointments = appointmentRepo.findAppointmentByDoctor_Id(id);
+        List<AppointmentResponseDTO> responseDTOS = new ArrayList<>();
+        for (Appointment appointment : patientAppointments) {
+            responseDTOS.add(modelMapper.map(appointment, AppointmentResponseDTO.class));
+        }
+        return responseDTOS;
+    }
 }

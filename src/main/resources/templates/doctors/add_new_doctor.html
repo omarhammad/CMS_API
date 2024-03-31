@@ -55,6 +55,27 @@
             <input class="form-control" name="email"
                    placeholder="example@gmail.com" type="text" id="email"/>
         </div>
+
+        <div th:class="m-2">
+            <label th:class="form-label" for="username">Username</label>
+            <input th:class="form-control"
+                   placeholder="username"
+                   id="username" name="username"/>
+        </div>
+
+        <div th:class="m-2">
+            <label th:class="form-label" for="password">Password</label>
+            <input th:class="form-control" type="password"
+                   placeholder="password"
+                   id="password" name="password"/>
+        </div>
+
+        <div th:class="m-2">
+            <label th:class="form-label"  for="confirm_password">Confirm Password</label>
+            <input th:class="form-control" type="password"
+                   placeholder="confirm password"
+                   id="confirm_password" name="confirmPassword"/>
+        </div>
         <button class="btn btn-primary m-2" id="submit_btn">Add Doctor</button>
         <a class="btn btn-danger" th:href="@{/doctors/}">Back</a>
 

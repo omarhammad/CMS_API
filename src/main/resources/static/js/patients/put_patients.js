@@ -60,6 +60,7 @@ submitBtn.addEventListener('click', updatePatient);
 
 async function updatePatient() {
 
+    const current_user = await getcurrentUser();
     const patientJson = getFormData();
     const csrf_token = document.querySelector('meta[name="_csrf"]').getAttribute('content')
     const csrf_header = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
@@ -85,7 +86,12 @@ async function updatePatient() {
             handleFieldsError(data);
         }
     } else if (response.status === HttpStatus.NO_CONTENT) {
-        window.location.href = "/patients?updated=true"
+        if (current_user.userRoles.includes('ROLE_PATIENT')) {
+            window.location.href = '/patients/details?updated=true';
+        } else {
+            window.location.href = '/patients?updated=true';
+
+        }
     }
 
 }
@@ -159,6 +165,18 @@ function getFieldsErrorElementList(errors) {
     }
 
     return ulElement;
+
+}
+
+
+async function getcurrentUser() {
+    const response = await fetch('http://localhost:8080/api/auth/user/current');
+
+    if (response.status === HttpStatus.UNAUTHORIZED) {
+        window.location.href = '/signIn'
+    } else if (response.status === HttpStatus.OK) {
+        return await response.json();
+    }
 
 }
 

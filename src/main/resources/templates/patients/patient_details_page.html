@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title th:text="#{patient.title3}"></title>
@@ -8,7 +8,10 @@
     <link rel="stylesheet" th:href="@{/css/common.css}"/>
 </head>
 <body>
-<div th:class="'container-fluid width-s-90  width-m-50 shadow p-3'">
+
+<div th:insert="fragments/navbar::naviagtion_bar(3)" sec:authorize="hasRole('ROLE_PATIENT')"></div>
+
+<div th:class="'container-fluid width-s-90 mt-3 width-m-50 shadow p-3'">
 
     <div th:class="card">
         <div th:class="'card-header text-center'"><h4 th:class="'fw-bold'">Patient</h4></div>
@@ -36,15 +39,20 @@
                 </div>
             </div>
             <!--Medical Records-->
-            <div th:class="card">
+            <div th:class="card" sec:authorize="isAuthenticated() and !hasAnyRole('ROLE_SECRETARY','ROLE_ADMIN')">
                 <div CLASS="card-header"><h3>Medical Records</h3></div>
                 <div th:class="card-body" id="medical_records">
                 </div>
 
             </div>
         </div>
-        <div th:class="'card-footer text-center'"><a th:class="'btn btn-danger'" th:href="@{/patients/}">Back</a></div>
+        <div th:class="'card-footer text-center'">
+            <a sec:authorize="hasRole('ROLE_PATIENT')"
+               th:class="'btn btn-primary'" th:href="@{/patients/update/{id}(id=${patient_id})}">UPDATE</a>
+            <a th:class="'btn btn-danger'"  sec:authorize="!hasRole('ROLE_PATIENT')" th:href="@{/patients/}">Back</a>
+            <a th:class="'btn btn-danger'"  sec:authorize="hasRole('ROLE_PATIENT')" th:href="@{/}">Back</a>
 
+        </div>
     </div>
 
 

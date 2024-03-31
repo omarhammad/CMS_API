@@ -49,10 +49,31 @@
             <input th:class="form-control"
                    th:placeholder="#{patient_form.nationalRegistryNumber.hint}"
                    id="national_num" name="nationalNumber"/>
-
         </div>
 
-        <button th:class="'btn btn-primary m-2'" type="button" id="submitBtn" th:text="#{patient.title2}">Add Patient</button>
+        <div th:class="m-2">
+            <label th:class="form-label" for="username">Username</label>
+            <input th:class="form-control"
+                   placeholder="username"
+                   id="username" name="username"/>
+        </div>
+
+        <div th:class="m-2">
+            <label th:class="form-label" for="password">Password</label>
+            <input th:class="form-control" type="password"
+                   placeholder="password"
+                   id="password" name="password"/>
+        </div>
+
+        <div th:class="m-2">
+            <label th:class="form-label"  for="confirm_password">Confirm Password</label>
+            <input th:class="form-control" type="password"
+                   placeholder="confirm password"
+                   id="confirm_password" name="confirmPassword"/>
+        </div>
+
+        <button th:class="'btn btn-primary m-2'" type="button" id="submitBtn" th:text="#{patient.title2}">Add Patient
+        </button>
         <a th:class="'btn btn-danger'" th:href="@{'/patients/'}" th:text="#{button.back}">Back</a>
 
 

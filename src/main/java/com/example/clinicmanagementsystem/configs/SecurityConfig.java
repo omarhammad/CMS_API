@@ -2,6 +2,7 @@ package com.example.clinicmanagementsystem.configs;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,8 +15,9 @@ import static org.springframework.security.web.util.matcher.AntPathRequestMatche
 
 @Configuration
 @EnableWebSecurity
+@Profile("prod")
 public class SecurityConfig {
-    
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         //@formatter:off
@@ -26,7 +28,7 @@ public class SecurityConfig {
                                   antMatcher(HttpMethod.GET, "/media/**"),
                                   antMatcher(HttpMethod.GET, "/"),
                                   antMatcher(HttpMethod.GET,"/signup"),
-                                  antMatcher(HttpMethod.POST,"/signup")).permitAll()
+                                  antMatcher(HttpMethod.POST,"/api/auth/**")).permitAll()
                                  .anyRequest().authenticated();
         })
                 .formLogin(formLogin -> formLogin.loginPage("/signin").permitAll().defaultSuccessUrl("/",true).failureUrl("/signin?error=true"))

@@ -41,4 +41,7 @@ public interface AppointmentsSpringData extends JpaRepository<Appointment, Long>
             "AND a.appointmentDateTime > current_timestamp ")
     List<Appointment> getDoctorUpComingAppointments(int doctorId);
 
+    List<Appointment> getAppointmentByPatientId(long patient_id);
+    List<Appointment> findAppointmentByDoctor_Id(long doctor_id);
+
 }

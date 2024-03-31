@@ -24,6 +24,7 @@ const appointment_id = window.location.pathname.split('/').pop();
 
 async function loadAppointmentData() {
 
+    const current_user = await getcurrentUser();
     const params = new URLSearchParams(window.location.search);
     if (params.has('created')) {
         removeQueryParam('created')
@@ -47,13 +48,16 @@ async function loadAppointmentData() {
             prescription_body.innerHTML = null;
             if (appointment.prescription !== null) {
                 const prescription_header = document.getElementById('prescription_section');
-                const delete_button = document.createElement('a');
-                delete_button.className = ' text-danger h4 bi bi-trash d-inline position-absolute end-0 mt-3 me-3';
-                delete_button.addEventListener('click', event => {
-                    deletePrescription(appointment.prescription.prescriptionId);
-                });
-                prescription_header.appendChild(delete_button);
-                console.log(appointment.prescription.medications)
+
+                if (!current_user.userRoles.includes('ROLE_PATIENT')) {
+                    const delete_button = document.createElement('a');
+                    delete_button.className = ' text-danger h4 bi bi-trash d-inline position-absolute end-0 mt-3 me-3';
+                    delete_button.addEventListener('click', event => {
+                        deletePrescription(appointment.prescription.prescriptionId);
+                    });
+                    prescription_header.appendChild(delete_button);
+                }
+                console.log(appointment.prescription.medications);
                 for (const medication of appointment.prescription.medications) {
                     const medications_body = document.createElement('div');
                     medications_body.className = 'bg-body-tertiary rounded-3 p-2 m-2';
@@ -86,13 +90,19 @@ async function loadAppointmentData() {
             } else {
                 const noContent = document.createElement('div');
                 noContent.className = 'text-center';
-                const add_button = document.createElement('a')
-                add_button.className = 'btn btn-primary';
-                add_button.innerHTML = '<i class="bi bi-plus-circle-fill"> Add Prescription</i>';
-                add_button.addEventListener('click', event => {
-                    window.location.href = `/prescriptions/add/${appointment.appointmentId}`
-                });
-                noContent.appendChild(add_button);
+                if (!current_user.userRoles.includes('ROLE_PATIENT')) {
+                    const add_button = document.createElement('a');
+                    add_button.className = 'btn btn-primary';
+                    add_button.innerHTML = '<i class="bi bi-plus-circle-fill"> Add Prescription</i>';
+                    add_button.addEventListener('click', event => {
+                        window.location.href = `/prescriptions/add/${appointment.appointmentId}`
+                    });
+                    noContent.appendChild(add_button);
+                } else {
+                    const no_prescription = document.createElement('h6');
+                    no_prescription.innerText = "NO PRESCRIPTION YET!"
+                    noContent.appendChild(no_prescription)
+                }
                 prescription_body.appendChild(noContent);
 
             }
@@ -172,6 +182,17 @@ function removeQueryParam(paramToRemove) {
 
     // Update the URL without reloading the page
     history.pushState(null, '', url.pathname + '?' + queryParams.toString() + url.hash);
+}
+
+async function getcurrentUser() {
+    const response = await fetch('http://localhost:8080/api/auth/user/current');
+
+    if (response.status === HttpStatus.UNAUTHORIZED) {
+        window.location.href = '/signIn'
+    } else if (response.status === HttpStatus.OK) {
+        return await response.json();
+    }
+
 }
 
 

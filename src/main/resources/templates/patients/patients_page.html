@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="_csrf" th:content="${_csrf.token}"/>
@@ -34,7 +34,7 @@
             <th th:text="#{patient.gender}"></th>
             <th th:text="#{patient.age}"></th>
             <th th:text="#{patient.national_number}"></th>
-            <th></th>
+            <th sec:authorize="isAuthenticated() and !hasAnyRole('ROLE_DOCTOR','ROLE_SECRETARY')"></th>
             <th></th>
         </tr>
         </thead>

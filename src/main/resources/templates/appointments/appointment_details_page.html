@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="_csrf" th:content="${_csrf.token}"/>
@@ -51,12 +51,12 @@
             </div>
             <!--Prescription Section-->
 
-            <div th:class="'card m-3'" id="prescription_section">
+            <div th:class="'card m-3'" id="prescription_section" sec:authorize="isAuthenticated() and !hasRole('ROLE_SECRETARY')">
                 <div th:class="'card-header'" id="prescription_header">
                     <h3 th:class="d-inline-block">Prescription</h3>
                 </div>
 
-                <div th:class="'card-body'" id="prescription_body"></div>
+                <div th:class="'card-body'" id="prescription_body" \></div>
             </div>
 
 

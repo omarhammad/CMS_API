@@ -65,12 +65,20 @@
                         <li class="nav-item">
                             <a class="nav-link" th:href="@{/doctors}" sec:authorize="isAuthenticated()">Doctors</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item" sec:authorize="!hasRole('ROLE_PATIENT')">
                             <a class="nav-link" th:href="@{/patients}" sec:authorize="isAuthenticated()">Patients</a>
+                        </li>
+
+                        <li class="nav-item" sec:authorize="hasRole('ROLE_PATIENT')">
+                            <a class="nav-link" th:href="@{/patients/details}" sec:authorize="isAuthenticated()">Profile</a>
+                        </li>
+
+                        <li class="nav-item" sec:authorize="hasRole('ROLE_DOCTOR')">
+                            <a class="nav-link" th:href="@{/doctors/details}" sec:authorize="isAuthenticated()">Profile</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" th:href="@{/medications}"
-                               sec:authorize="isAuthenticated()">Medications</a>
+                               sec:authorize="isAuthenticated() and !hasRole('ROLE_SECRETARY')">Medications</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" th:href="@{/signin}"  sec:authorize="!isAuthenticated()">Sign In</a>

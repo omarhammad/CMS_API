@@ -1,9 +1,13 @@
 package com.example.clinicmanagementsystem.dtos.doctors;
 
+import com.example.clinicmanagementsystem.customAnotations.PasswordsMatch;
+import com.example.clinicmanagementsystem.customAnotations.UniqueUsername;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
+@PasswordsMatch(password = "password", confirmPassword = "confirmPassword", message = "Passwords do not match")
 public class CreateDoctorRequestDTO {
 
     @NotBlank(message = "First name must be provided!")
@@ -19,6 +23,19 @@ public class CreateDoctorRequestDTO {
     @NotBlank(message = "Email must be provided!")
     @Email(message = "Email format should be 'example@email.com' ")
     private String email;
+
+    @NotBlank(message = "Username must be provided!")
+    @UniqueUsername(message = "Username already exists!")
+    private String username;
+
+    @NotBlank(message = "password must be provided!")
+    @Size(min = 8, max = 20, message = "Password must be at least 8 characters!")
+    private String password;
+
+
+    @NotBlank(message = "password must be provided!")
+    @Size(min = 8, max = 20, message = "Password must be at least 8 characters!")
+    private String confirmPassword;
 
     public String getFirstName() {
         return firstName;
@@ -60,15 +77,27 @@ public class CreateDoctorRequestDTO {
         this.email = email;
     }
 
+    public String getUsername() {
+        return username;
+    }
 
-    @Override
-    public String toString() {
-        return "CreateDoctorRequestDTO{" +
-                "firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", specialization='" + specialization + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", email='" + email + '\'' +
-                '}';
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getConfirmPassword() {
+        return confirmPassword;
+    }
+
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
     }
 }

@@ -31,11 +31,11 @@ public class Patient extends Stakeholder {
     }
 
     public Patient(int id) {
-        super(id);
+        super(id, UserRole.PATIENT);
     }
 
     public Patient(int id, String firstName, String lastName, String nationalNumber, int age, String gender) {
-        super(id);
+        super(id, UserRole.PATIENT);
         super.setFirstName(firstName);
         super.setLastName(lastName);
         this.nationalNumber = nationalNumber;

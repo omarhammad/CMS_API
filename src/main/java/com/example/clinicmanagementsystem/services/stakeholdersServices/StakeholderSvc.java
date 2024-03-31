@@ -2,9 +2,7 @@ package com.example.clinicmanagementsystem.services.stakeholdersServices;
 
 import com.example.clinicmanagementsystem.Exceptions.ContactInfoExistException;
 import com.example.clinicmanagementsystem.Exceptions.NationalNumberExistException;
-import com.example.clinicmanagementsystem.domain.Appointment;
-import com.example.clinicmanagementsystem.domain.Doctor;
-import com.example.clinicmanagementsystem.domain.Patient;
+import com.example.clinicmanagementsystem.domain.*;
 import com.example.clinicmanagementsystem.dtos.appointments.AppointmentResponseDTO;
 import com.example.clinicmanagementsystem.dtos.doctors.DoctorDetailsResponseDTO;
 import com.example.clinicmanagementsystem.dtos.doctors.DoctorResponseDTO;
@@ -13,6 +11,7 @@ import com.example.clinicmanagementsystem.repository.appointmentsRepo.Appointmen
 import com.example.clinicmanagementsystem.repository.stakeholdersRepo.StakeholdersSpringData;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -28,10 +27,14 @@ public class StakeholderSvc implements IStakeholderService {
     AppointmentsSpringData appointmentsRepo;
     ModelMapper modelMapper;
 
-    public StakeholderSvc(StakeholdersSpringData stakeholdersRepo, AppointmentsSpringData appointmentsRepo, ModelMapper modelMapper) {
+    private final BCryptPasswordEncoder encoder;
+
+
+    public StakeholderSvc(StakeholdersSpringData stakeholdersRepo, AppointmentsSpringData appointmentsRepo, ModelMapper modelMapper, BCryptPasswordEncoder encoder) {
         this.stakeholdersRepo = stakeholdersRepo;
         this.appointmentsRepo = appointmentsRepo;
         this.modelMapper = modelMapper;
+        this.encoder = encoder;
     }
 
     @Override
@@ -77,12 +80,12 @@ public class StakeholderSvc implements IStakeholderService {
     public DoctorDetailsResponseDTO getFullDoctorData(int doctorId) {
         Doctor doctor = ((Doctor) stakeholdersRepo.findById(doctorId).orElse(null));
         DoctorDetailsResponseDTO doctorDetailsResponseDTO = modelMapper.map(doctor, DoctorDetailsResponseDTO.class);
-        List<PatientResponseDTO> patientResponseDTOS = new ArrayList<>();
-        for (Patient patient : getDoctorPatients(doctorId)) {
-            patientResponseDTOS.add(modelMapper.map(patient, PatientResponseDTO.class));
+        List<AppointmentResponseDTO> appointmentResponseDTOS = new ArrayList<>();
+        for (Appointment appointment : appointmentsRepo.getDoctorUpComingAppointments(doctorId)) {
+            appointmentResponseDTOS.add(modelMapper.map(appointment, AppointmentResponseDTO.class));
         }
 
-        doctorDetailsResponseDTO.setHisPatients(patientResponseDTOS);
+        doctorDetailsResponseDTO.setAppointments(appointmentResponseDTOS);
         return doctorDetailsResponseDTO;
     }
 
@@ -115,13 +118,15 @@ public class StakeholderSvc implements IStakeholderService {
     }
 
     @Override
-    public DoctorResponseDTO addNewDoctor(String firstName, String lastName, String specialization, String contactInfo) {
+    public DoctorResponseDTO addNewDoctor(String firstName, String lastName, String specialization, String contactInfo, String username, String password) {
         Doctor doctor = new Doctor();
         doctor.setFirstName(firstName);
         doctor.setLastName(lastName);
         doctor.setSpecialization(specialization);
         doctor.setContactInfo(contactInfo);
-
+        doctor.setUsername(username);
+        doctor.setPassword(encoder.encode(password));
+        doctor.setRole(UserRole.DOCTOR);
         Doctor addedDoctor;
 
         try {
@@ -135,8 +140,7 @@ public class StakeholderSvc implements IStakeholderService {
 
     @Override
     public void updateADoctor(int id, String firstName, String lastName, String specialization, String contactInfo) {
-        Doctor doctor = new Doctor();
-        doctor.setId(id);
+        Doctor doctor = ((Doctor) stakeholdersRepo.findById(id).orElse(null));
         doctor.setFirstName(firstName);
         doctor.setLastName(lastName);
         doctor.setSpecialization(specialization);
@@ -150,7 +154,7 @@ public class StakeholderSvc implements IStakeholderService {
     }
 
     @Override
-    public PatientResponseDTO addNewPatient(String firstName, String lastName, String gender, String nationalNumber) {
+    public PatientResponseDTO addNewPatient(String firstName, String lastName, String gender, String nationalNumber, String username, String password) {
         Patient patient = new Patient();
         patient.setFirstName(firstName);
         patient.setLastName(lastName);
@@ -165,6 +169,9 @@ public class StakeholderSvc implements IStakeholderService {
         LocalDate current = LocalDate.now();
         int age = Period.between(patientDob, current).getYears();
         patient.setAge(age);
+        patient.setUsername(username);
+        patient.setPassword(encoder.encode(password));
+        patient.setRole(UserRole.PATIENT);
 
         PatientResponseDTO patientResponseDTO = null;
 
@@ -209,7 +216,7 @@ public class StakeholderSvc implements IStakeholderService {
 
     @Override
     public void updatePatient(int patientId, String firstName, String lastName, String gender, String nationalNumber) {
-        Patient patient = new Patient();
+        Patient patient = ((Patient) stakeholdersRepo.findById(patientId).orElse(null));
         patient.setId(patientId);
         patient.setFirstName(firstName);
         patient.setLastName(lastName);
@@ -233,4 +240,10 @@ public class StakeholderSvc implements IStakeholderService {
             throw new NationalNumberExistException(nationalNumber);
         }
     }
+
+    @Override
+    public Stakeholder getStakeholderByUsername(String username) {
+        return stakeholdersRepo.findStakeholderByUsername(username).orElse(null);
+    }
+
 }

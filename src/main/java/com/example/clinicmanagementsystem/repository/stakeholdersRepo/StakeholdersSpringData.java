@@ -48,4 +48,6 @@ public interface StakeholdersSpringData extends JpaRepository<Stakeholder, Integ
 
     @Override
     void deleteById(@NotNull Integer integer);
+
+    Optional<Stakeholder> findStakeholderByUsername(String username);
 }

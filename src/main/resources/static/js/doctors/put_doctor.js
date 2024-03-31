@@ -1,3 +1,24 @@
+const HttpStatus = {
+    OK: 200,
+    CREATED: 201,
+    ACCEPTED: 202,
+    NO_CONTENT: 204,
+    MOVED_PERMANENTLY: 301,
+    FOUND: 302,
+    SEE_OTHER: 303,
+    NOT_MODIFIED: 304,
+    BAD_REQUEST: 400,
+    UNAUTHORIZED: 401,
+    FORBIDDEN: 403,
+    NOT_FOUND: 404,
+    METHOD_NOT_ALLOWED: 405,
+    CONFLICT: 409,
+    INTERNAL_SERVER_ERROR: 500,
+    NOT_IMPLEMENTED: 501,
+    BAD_GATEWAY: 502,
+    SERVICE_UNAVAILABLE: 503,
+    GATEWAY_TIMEOUT: 504
+};
 const pathname = window.location.pathname;
 const segments = pathname.split('/');
 const doctor_id = segments.pop();
@@ -71,7 +92,13 @@ async function updateDoctor(event) {
             showToast("DOCTOR NOT FOUND!");
 
         } else if (response.status === 204) {
-            window.location.href = '/doctors/';
+            const current_user = await getcurrentUser();
+            if (current_user.userRoles.includes('ROLE_DOCTOR')) {
+                window.location.href = '/doctors/details';
+            } else {
+                window.location.href = '/doctors/';
+
+            }
         } else {
             console.error('Error : ', response.status);
         }
@@ -155,5 +182,16 @@ function getFieldsErrorElementList(errors) {
     }
 
     return ulElement;
+
+}
+
+async function getcurrentUser() {
+    const response = await fetch('http://localhost:8080/api/auth/user/current');
+
+    if (response.status === HttpStatus.UNAUTHORIZED) {
+        window.location.href = '/signIn'
+    } else if (response.status === HttpStatus.OK) {
+        return await response.json();
+    }
 
 }

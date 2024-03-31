@@ -1,4 +1,3 @@
-
 window.addEventListener("DOMContentLoaded", loadAllAppointments);
 
 const HttpStatus = {
@@ -24,7 +23,7 @@ const HttpStatus = {
 };
 let appointment_deleted = false;
 
-function loadAllAppointments() {
+async function loadAllAppointments() {
 
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.has('created')) {
@@ -41,7 +40,17 @@ function loadAllAppointments() {
 
 
     const appointmentTableBody = document.getElementById('appointments_table_body');
-    fetch('http://localhost:8080/api/appointments/')
+    let requestUrl;
+    const current_user = await getcurrentUser();
+    console.log(current_user)
+    if (current_user.userRoles.includes('ROLE_PATIENT')) {
+        requestUrl = `http://localhost:8080/api/appointments/patient/${current_user.userId}`;
+    } else if (current_user.userRoles.includes('ROLE_DOCTOR')) {
+        requestUrl = `http://localhost:8080/api/appointments/doctor/${current_user.userId}`;
+    } else {
+        requestUrl = 'http://localhost:8080/api/appointments/';
+    }
+    fetch(requestUrl)
         .then(response => {
             if (response.status === HttpStatus.NO_CONTENT) {
                 let noContentRow = document.createElement('tr');
@@ -185,7 +194,7 @@ function removeQueryParam(paramToRemove) {
     history.pushState(null, '', url.pathname + '?' + queryParams.toString() + url.hash);
 }
 
- function showToast(message) {
+function showToast(message) {
     let toastElement = document.querySelector('.toast');
     let toastBody = toastElement.querySelector('.toast-body');
     toastBody.innerText = message;
@@ -197,3 +206,13 @@ function removeQueryParam(paramToRemove) {
 
 }
 
+async function getcurrentUser() {
+    const response = await fetch('http://localhost:8080/api/auth/user/current');
+
+    if (response.status === HttpStatus.UNAUTHORIZED) {
+        window.location.href = '/signIn'
+    } else if (response.status === HttpStatus.OK) {
+        return await response.json();
+    }
+
+}

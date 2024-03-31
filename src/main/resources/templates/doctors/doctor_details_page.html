@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Doctor Details</title>
@@ -8,7 +8,10 @@
     <link rel="stylesheet" th:href="@{/css/common.css}">
 </head>
 <body>
-<div class="container-fluid width-s-90  width-m-50 shadow p-3">
+
+<div th:insert="fragments/navbar::naviagtion_bar(4)" th:class="d-none" id="nav_block"></div>
+
+<div class="container-fluid width-s-90  width-m-50 shadow p-3 mt-3">
 
     <div class="card">
         <div class="card-header text-center"><h4 class="fw-bold">Doctor</h4></div>
@@ -29,14 +32,17 @@
                 <i class="bi bi bi-telephone-fill me-3 details-icons text-success"></i>
                 <p class="d-inline-block details-text" id="phone"></p>
             </div>
-            <div id="upcoming-appointments">
+            <div id="upcoming-appointments" sec:authorize="!hasRole('ROLE_PATIENT')">
                 <p class="details-icons-texts"><i
                         class="bi bi-calendar-heart me-3 text-success"></i>
                     Appointment with Patients: </p>
             </div>
         </div>
     </div>
-    <div class="card-footer text-center"><a class="btn btn-danger m-2" th:href="@{/doctors/}">Back</a></div>
+    <div>
+        <div class="card-footer text-center">
+        </div>
+    </div>
 </div>
 
 

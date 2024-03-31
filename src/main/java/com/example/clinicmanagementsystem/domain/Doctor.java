@@ -28,11 +28,11 @@ public class Doctor extends Stakeholder {
     }
 
     public Doctor(int id) {
-        super(id);
+        super(id, UserRole.DOCTOR);
     }
 
     public Doctor(int id, String firstName, String lastName, String specialization, String contactInfo) {
-        super(id);
+        super(id, UserRole.DOCTOR);
         super.setFirstName(firstName);
         super.setLastName(lastName);
         this.specialization = specialization;

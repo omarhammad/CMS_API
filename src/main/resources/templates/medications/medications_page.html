@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="_csrf" th:content="${_csrf.token}">
@@ -11,7 +11,8 @@
 
 </head>
 <body>
-<div th:insert="fragments/navbar::naviagtion_bar(4)"></div>
+<div th:insert="fragments/navbar::naviagtion_bar(4)" sec:authorize="isAuthenticated() and !hasRole('ROLE_DOCTOR')"></div>
+<div th:insert="fragments/navbar::naviagtion_bar(5)" sec:authorize="isAuthenticated() and hasRole('ROLE_DOCTOR')"></div>
 
 <div class="toast-container">
     <div th:class="'toast align-items-center text-bg-success border-0'" role="alert" aria-live="assertive"
@@ -35,15 +36,16 @@
             <th th:text="#{medications.dosage}"></th>
             <th th:text="#{medications.freq}"></th>
             <th th:text="#{medications.duration}"></th>
-            <th></th>
-            <th></th>
+            <th sec:authorize="!hasRole('ROLE_PATIENT')"></th>
+            <th sec:authorize="!hasRole('ROLE_PATIENT')"></th>
         </tr>
         </thead>
         <tbody id="medications_tbody">
 
         </tbody>
     </table>
-    <a th:class="'btn btn-primary'" th:href="@{/medications/add}" th:text="#{medications.title2}"></a>
+    <a th:class="'btn btn-primary'" th:href="@{/medications/add}" sec:authorize="!hasRole('ROLE_PATIENT')"
+       th:text="#{medications.title2}"></a>
 </div>
 
 

@@ -62,7 +62,7 @@ public class PatientRestController {
     public ResponseEntity<PatientResponseDTO> addPatient(@RequestBody @Valid CreatePatientRequestDTO requestDTO) {
 
         PatientResponseDTO responseDTO = service.addNewPatient(requestDTO.getFirstName(), requestDTO.getLastName(),
-                requestDTO.getGender(), requestDTO.getNationalNumber());
+                requestDTO.getGender(), requestDTO.getNationalNumber(), requestDTO.getUsername(), requestDTO.getPassword());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
     }

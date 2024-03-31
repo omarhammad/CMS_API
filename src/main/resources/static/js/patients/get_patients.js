@@ -64,16 +64,45 @@ async function fillInTable(patients) {
         for (const key in patient) {
             const table_cell = document.createElement('td');
             if (key === 'id' || key === 'hisDoctors' || key === 'oldAppointments') continue;
-            table_cell.innerText = patient[key];
+
+            if (key === 'nationalNumber') {
+                table_cell.innerText = patient[key];
+                const clipboard = document.createElement('i');
+                clipboard.className = 'bi bi-clipboard m-2 text-success'
+
+                clipboard.addEventListener('click', async (event) => {
+                    event.stopPropagation()
+                    const textToCopy = table_cell.innerText;
+                    try {
+                        await navigator.clipboard.writeText(textToCopy);
+                        clipboard.className = ''
+                        clipboard.className = 'bi bi-clipboard-check m-2 text-danger'; // Update for Font Awesome if needed
+                        setTimeout(() => {
+                            clipboard.className = 'bi bi-clipboard m-2 text-success'
+                        }, 2000); // Reset after 2 seconds
+                    } catch (err) {
+                        console.error('Failed to copy:', err);
+                    }
+                });
+                table_cell.appendChild(clipboard)
+            } else {
+                table_cell.innerText = patient[key];
+            }
             table_row.appendChild(table_cell)
         }
-        // DELETE BUTTON
-        const deleteBtn = document.createElement('td');
-        deleteBtn.className = "bi bi-trash-fill text-danger";
-        deleteBtn.addEventListener('click', async event => {
-            event.stopPropagation();
-            await deletePatient(patient['id']);
-        })
+
+        const current_user = await getcurrentUser();
+
+        if (!(current_user.userRoles.includes('ROLE_DOCTOR') || current_user.userRoles.includes('ROLE_SECRETARY'))) {
+            // DELETE BUTTON
+            const deleteBtn = document.createElement('td');
+            deleteBtn.className = "bi bi-trash-fill text-danger";
+            deleteBtn.addEventListener('click', async event => {
+                event.stopPropagation();
+                await deletePatient(patient['id']);
+            })
+            table_row.appendChild(deleteBtn)
+        }
 
         //EDIT BUTTON
         const editBtn = document.createElement('td');
@@ -83,7 +112,6 @@ async function fillInTable(patients) {
             window.location.href = `/patients/update/${patient.id}`;
 
         })
-        table_row.appendChild(deleteBtn)
         table_row.appendChild(editBtn)
 
         table_row.addEventListener('click', () => {
@@ -148,4 +176,15 @@ function removeQueryParam(paramToRemove) {
 
     // Update the URL without reloading the page
     history.pushState(null, '', url.pathname + '?' + queryParams.toString() + url.hash);
+}
+
+async function getcurrentUser() {
+    const response = await fetch('http://localhost:8080/api/auth/user/current');
+
+    if (response.status === HttpStatus.UNAUTHORIZED) {
+        window.location.href = '/signIn'
+    } else if (response.status === HttpStatus.OK) {
+        return await response.json();
+    }
+
 }

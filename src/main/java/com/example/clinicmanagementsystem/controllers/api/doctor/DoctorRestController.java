@@ -61,8 +61,8 @@ public class DoctorRestController {
     public ResponseEntity<DoctorResponseDTO> addNewDoctor(@RequestBody @Valid CreateDoctorRequestDTO createDoctorRequestDTO) {
 
         String contactInfo = createDoctorRequestDTO.getPhoneNumber() + "," + createDoctorRequestDTO.getEmail();
-        DoctorResponseDTO doctorResponseDTO = service.addNewDoctor(createDoctorRequestDTO.getFirstName(), createDoctorRequestDTO.getLastName(), createDoctorRequestDTO.getSpecialization(), contactInfo);
-
+        DoctorResponseDTO doctorResponseDTO = service.addNewDoctor(createDoctorRequestDTO.getFirstName(), createDoctorRequestDTO.getLastName()
+                , createDoctorRequestDTO.getSpecialization(), contactInfo, createDoctorRequestDTO.getUsername(), createDoctorRequestDTO.getPassword());
         return ResponseEntity.ok(doctorResponseDTO);
 
     }

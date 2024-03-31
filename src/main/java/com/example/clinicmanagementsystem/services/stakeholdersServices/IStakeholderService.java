@@ -1,8 +1,6 @@
 package com.example.clinicmanagementsystem.services.stakeholdersServices;
 
-import com.example.clinicmanagementsystem.domain.Appointment;
-import com.example.clinicmanagementsystem.domain.Doctor;
-import com.example.clinicmanagementsystem.domain.Patient;
+import com.example.clinicmanagementsystem.domain.*;
 import com.example.clinicmanagementsystem.dtos.doctors.DoctorDetailsResponseDTO;
 import com.example.clinicmanagementsystem.dtos.doctors.DoctorResponseDTO;
 import com.example.clinicmanagementsystem.dtos.patients.PatientResponseDTO;
@@ -22,11 +20,11 @@ public interface IStakeholderService {
 
     PatientResponseDTO getAPatient(int patientId);
 
-    DoctorResponseDTO addNewDoctor(String firstName, String lastName, String specialization, String contactInfo);
+    DoctorResponseDTO addNewDoctor(String firstName, String lastName, String specialization, String contactInfo, String username, String password);
 
     void updateADoctor(int id, String firstName, String lastName, String specialization, String contactInfo);
 
-    PatientResponseDTO addNewPatient(String firstName, String lastName, String gender, String nationalNumber);
+    PatientResponseDTO addNewPatient(String firstName, String lastName, String gender, String nationalNumber, String username, String password);
 
     int removeDoctor(int doctorId);
 
@@ -40,4 +38,8 @@ public interface IStakeholderService {
 
 
     void updatePatient(int patientId, String firstName, String lastName, String gender, String nationalNumber);
+
+    Stakeholder getStakeholderByUsername(String username);
+
+
 }

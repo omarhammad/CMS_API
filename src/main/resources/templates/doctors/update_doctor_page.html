@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="_csrf" th:content="${_csrf.token}"/>
@@ -56,7 +56,8 @@
                    placeholder="example@gmail.com" type="text" id="email"/>
         </div>
         <button class="btn btn-primary m-2" id="submit_btn">UPDATE Doctor</button>
-        <a class="btn btn-danger" th:href="@{/doctors/}">Back</a>
+        <a class="btn btn-danger" sec:authorize="isAuthenticated() and !hasRole('ROLE_DOCTOR')" th:href="@{/doctors/}">Back</a>
+        <a class="btn btn-danger" sec:authorize="isAuthenticated() and hasRole('ROLE_DOCTOR')" th:href="@{/doctors/details}">Back</a>
 
 
     </form>

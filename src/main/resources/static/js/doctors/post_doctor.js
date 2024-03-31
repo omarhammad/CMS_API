@@ -5,6 +5,7 @@ submitBtn.addEventListener('click', createDoctor)
 async function createDoctor(event) {
     event.preventDefault();
     const doctorJson = getFormData();
+    console.log(doctorJson)
     const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
     const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
     const headers = new Headers({
@@ -32,7 +33,7 @@ async function createDoctor(event) {
             }
         } else if (response.ok) {
             console.log(data)
-            window.location.href = 'doctors_page.html';
+            window.location.href = '/doctors';
         } else {
             console.error('Error : ', response.status)
         }
@@ -95,6 +96,24 @@ function handleFieldsError(fieldsError) {
     if (fieldsError.hasOwnProperty('email')) {
         document.getElementById('email')
             .parentElement.appendChild(getFieldsErrorElementList(fieldsError.email));
+    }
+
+    if (fieldsError.hasOwnProperty('username')) {
+        document.getElementById('username')
+            .parentElement.appendChild(getFieldsErrorElementList(fieldsError.username));
+
+    }
+
+    if (fieldsError.hasOwnProperty('password')) {
+        document.getElementById('password')
+            .parentElement.appendChild(getFieldsErrorElementList(fieldsError.password));
+
+    }
+
+    if (fieldsError.hasOwnProperty('confirmPassword')) {
+        document.getElementById('confirm_password')
+            .parentElement.appendChild(getFieldsErrorElementList(fieldsError.confirmPassword));
+
     }
 }
 
