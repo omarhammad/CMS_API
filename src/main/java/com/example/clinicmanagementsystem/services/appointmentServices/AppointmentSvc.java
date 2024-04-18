@@ -64,9 +64,10 @@ public class AppointmentSvc implements IAppointmentService {
     }
 
     @Override
-    public AppointmentResponseDTO addNewAppointment(int doctorId, String patientNationalNumber, LocalDateTime appointmentDateTime, String purpose, AppointmentType type) {
+    public AppointmentResponseDTO addNewAppointment(long doctorId, String patientNationalNumber, LocalDateTime appointmentDateTime, String purpose, AppointmentType type) {
         Appointment appointment = new Appointment();
         appointment.setDoctor((Doctor) stakeholdersRepo.findById(doctorId).orElse(null));
+        System.out.println(appointment.getDoctor());
         appointment.setPatient(stakeholdersRepo.findPatientByNationalNumber(patientNationalNumber));
 
         if (appointment.getPatient() == null) throw new NationalNumberNotFoundException(patientNationalNumber);
@@ -91,7 +92,7 @@ public class AppointmentSvc implements IAppointmentService {
     }
 
     @Override
-    public void updateAppointment(long appointmentId, int doctorId, String patientNationalNumber, LocalDateTime appointmentDateTime, String purpose, AppointmentType type) {
+    public void updateAppointment(long appointmentId, long doctorId, String patientNationalNumber, LocalDateTime appointmentDateTime, String purpose, AppointmentType type) {
         Appointment appointment = new Appointment();
         appointment.setDoctor((Doctor) stakeholdersRepo.findById(doctorId).orElse(null));
         appointment.setPatient(stakeholdersRepo.findPatientByNationalNumber(patientNationalNumber));
@@ -125,6 +126,7 @@ public class AppointmentSvc implements IAppointmentService {
     @Override
     public List<AppointmentResponseDTO> getPatientAppointments(int id) {
         List<Appointment> patientAppointments = appointmentRepo.getAppointmentByPatientId(id);
+        System.out.println(patientAppointments);
         List<AppointmentResponseDTO> responseDTOS = new ArrayList<>();
         for (Appointment appointment : patientAppointments) {
             responseDTOS.add(modelMapper.map(appointment, AppointmentResponseDTO.class));
@@ -133,7 +135,7 @@ public class AppointmentSvc implements IAppointmentService {
     }
 
     @Override
-    public List<AppointmentResponseDTO> getDoctorAppointments(int id) {
+    public List<AppointmentResponseDTO> getDoctorAppointments(long id) {
         List<Appointment> patientAppointments = appointmentRepo.findAppointmentByDoctor_Id(id);
         List<AppointmentResponseDTO> responseDTOS = new ArrayList<>();
         for (Appointment appointment : patientAppointments) {

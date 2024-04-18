@@ -9,6 +9,7 @@ import org.intellij.lang.annotations.RegExp;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "patients")
@@ -99,5 +100,15 @@ public class Patient extends Stakeholder {
 
     public void setAppointments(List<Appointment> appointments) {
         this.appointments = appointments;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Patient{" +
+                "nationalNumber='" + nationalNumber + '\'' +
+                ", age=" + age +
+                ", gender='" + gender + '\'' +
+                '}';
     }
 }

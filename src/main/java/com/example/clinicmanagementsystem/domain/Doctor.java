@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Size;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "doctors")
@@ -88,12 +89,11 @@ public class Doctor extends Stakeholder {
         this.appointment = appointment;
     }
 
+
     @Override
     public String toString() {
         return "Doctor{" +
-                ", firstName='" + this.getFirstName() + '\'' +
-                ", lastName='" + this.getLastName() + '\'' +
-                ", specialization='" + specialization + '\'' +
+                "specialization='" + specialization + '\'' +
                 ", contactInfo='" + contactInfo + '\'' +
                 '}';
     }

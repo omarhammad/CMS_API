@@ -7,6 +7,7 @@ import com.example.clinicmanagementsystem.domain.util.AppointmentType;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Positive;
 
 import java.time.LocalDateTime;
 
@@ -16,9 +17,12 @@ public class CreateAppointmentRequestDTO {
     @Future(message = "Your Appointment Should be in future")
     private LocalDateTime appointmentDateTime;
     private String purpose;
+    @Positive(message = "Doctor id must be provided!")
     private int doctor;
-    @Pattern(regexp = "^\\d{2}\\.\\d{2}\\.\\d{2}-\\d{3}\\.\\d{2}$", message = "National Number must be provided e.g 'yy.mm.dd-xxx.cd' ")
+    @NotNull(message = "National Number must be provided")
+    @Pattern(regexp = "^\\d{2}\\.\\d{2}\\.\\d{2}-\\d{3}\\.\\d{2}$", message = "National Number must be provided e.g 'yy.mm.dd-xxx.cd'")
     private String patientNN;
+
 
     private String appointmentType;
 

@@ -231,33 +231,66 @@ For your Week 6 project update intended for a README file, here's a polished and
 
 ## Project Update - Week 6
 
-### Current Progress:
 
-- Development has primarily focused on implementing critical functionalities within the application. A notable milestone is the creation of the `AppointmentRestControllerTest` class, designed to validate key functionalities of the appointment management system.
+### `AppointmentSvcTest` - Service Layer Testing
 
-### Testing Strategy:
+This class tests various functionalities provided by the `AppointmentSvc` service layer, focusing on the CRUD operations and retrieval of appointment data.
 
-The `AppointmentRestControllerTest` employs Spring Boot's testing framework to ensure the reliability and integrity of appointment-related operations. Here's a glimpse into the testing setup and methodologies:
+#### Features Tested
 
-#### Technologies and Tools:
-- **Spring Boot Test**: Facilitates integration testing with auto-configuration and application context management.
-- **AutoConfigureMockMvc**: Enables testing of Spring MVC controllers without starting a full HTTP server.
-- **MockMvc**: Provides a powerful API for testing MVC controllers by simulating HTTP requests and asserting responses.
+1. **Retrieving All Appointments**
+    - Tests that the list of all appointments is not empty.
 
-#### Test Implementation:
-- **Setup Phase**: Prepares the testing environment by adding sample patients and doctors to the system, ensuring a realistic scenario for appointment functionalities.
-- **Testing Appointment Creation**: Verifies the system's ability to handle new appointment requests correctly, including successful creation and handling of duplicate requests.
+2. **Retrieving an Individual Appointment**
+    - Validates the retrieval of an existing appointment.
+    - Ensures that retrieving a non-existent appointment returns null.
 
-#### Key Test Cases:
-1. **Creating New Appointments**: Confirms that new appointments can be added to the system, asserting a `201 Created` response for successful operations.
-2. **Handling Duplicate Appointments**: Ensures the system correctly identifies and rejects duplicate appointment requests, returning a `400 Bad Request` response.
+3. **Adding a New Appointment**
+    - Tests the addition of a new appointment.
+    - Verifies that the newly added appointment matches the expected values by comparing it with a mapped DTO of the appointment object.
 
-### Future Directions:
+4. **Updating an Appointment**
+    - Confirms that an existing appointment can be updated.
+    - Checks if the update operation correctly modifies the appointment details, such as the purpose of the visit.
 
-- **Comprehensive Component Testing**: While the current focus has been on appointment management, plans are underway to expand testing coverage to other components of the application, enhancing overall robustness and reliability.
----
+5. **Removing an Appointment**
+    - Ensures that an appointment can be deleted.
+    - Verifies that once an appointment is removed, it can no longer be retrieved.
 
+6. **Retrieving Appointments for a Specific Patient**
+    - Tests retrieval of all appointments for a given patient.
+    - Confirms that all retrieved appointments belong to the specified patient.
 
+7. **Retrieving Appointments for a Specific Doctor**
+    - Ensures that all appointments for a given doctor are correctly retrieved.
+    - Checks that each appointment's doctor ID matches the expected doctor.
+
+### `AppointmentRestControllerTest` - Controller Layer Testing
+
+This class tests the RESTful endpoints related to appointment management, simulating various scenarios to validate the appointment API's reliability and security.
+
+#### Features Tested
+
+1. **Creating a New Appointment**
+    - Tests endpoint for adding a new appointment.
+    - Validates response when trying to add the same appointment twice.
+    - Checks handling of invalid input such as missing or incorrect patient national number, appointments in the past, and invalid doctor IDs.
+
+2. **Retrieving Appointments by Patient and Doctor**
+    - Tests endpoint for retrieving appointments for a specific patient, including scenarios where the patient has no appointments or does not exist.
+    - Checks the retrieval of appointments for a doctor, handling cases where the doctor has no appointments or does not exist in the system.
+
+3. **Deleting an Appointment**
+    - Tests endpoint for deleting an appointment.
+    - Validates the response when trying to delete a non-existent appointment.
+
+#### Additional Scenarios
+
+- **Security and Access Control**
+    - Tests are conducted under the assumption that the user performing the operations has administrative rights (`WithUserDetails("admin")`).
+    - Includes CSRF protection to test the security aspect of POST and DELETE requests.
+
+----
 #### <span style ="color:orange">Thanks for reading my Project description.</span>
 
 <div style="color: darkgreen">

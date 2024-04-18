@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface StakeholdersSpringData extends JpaRepository<Stakeholder, Integer> {
+public interface StakeholdersSpringData extends JpaRepository<Stakeholder, Long> {
 
 
     @Override
@@ -22,7 +22,7 @@ public interface StakeholdersSpringData extends JpaRepository<Stakeholder, Integ
 
     @Override
     @NotNull
-    Optional<Stakeholder> findById(@NotNull Integer integer);
+    Optional<Stakeholder> findById(@NotNull Long id);
 
 
     @Query("SELECT p FROM Patient p WHERE p.nationalNumber = :nn")
@@ -34,20 +34,20 @@ public interface StakeholdersSpringData extends JpaRepository<Stakeholder, Integ
             "JOIN a.patient p " +
             "WHERE a.doctor.id = :doctorId " +
             "AND a.appointmentDateTime > current_timestamp ")
-    List<Patient> findDoctorPatients(int doctorId);
+    List<Patient> findDoctorPatients(Long doctorId);
 
     @Query("SELECT DISTINCT d " +
             "FROM Appointment a " +
             "JOIN a.doctor d " +
             "WHERE a.patient.id = :patientId " +
             "AND a.appointmentDateTime > current_timestamp ")
-    List<Doctor> findPatientDoctors(int patientId);
+    List<Doctor> findPatientDoctors(Long patientId);
 
     @Override
     <S extends Stakeholder> @NotNull S save(@NotNull S entity);
 
     @Override
-    void deleteById(@NotNull Integer integer);
+    void deleteById(@NotNull Long id);
 
     Optional<Stakeholder> findStakeholderByUsername(String username);
 }

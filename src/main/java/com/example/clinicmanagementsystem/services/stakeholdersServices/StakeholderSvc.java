@@ -68,7 +68,7 @@ public class StakeholderSvc implements IStakeholderService {
     }
 
     @Override
-    public DoctorResponseDTO getADoctor(int doctorId) {
+    public DoctorResponseDTO getADoctor(long doctorId) {
         Doctor doctor = ((Doctor) stakeholdersRepo.findById(doctorId).orElse(null));
         if (doctor == null) {
             return null;
@@ -77,7 +77,7 @@ public class StakeholderSvc implements IStakeholderService {
     }
 
     @Override
-    public DoctorDetailsResponseDTO getFullDoctorData(int doctorId) {
+    public DoctorDetailsResponseDTO getFullDoctorData(long doctorId) {
         Doctor doctor = ((Doctor) stakeholdersRepo.findById(doctorId).orElse(null));
         DoctorDetailsResponseDTO doctorDetailsResponseDTO = modelMapper.map(doctor, DoctorDetailsResponseDTO.class);
         List<AppointmentResponseDTO> appointmentResponseDTOS = new ArrayList<>();
@@ -90,7 +90,7 @@ public class StakeholderSvc implements IStakeholderService {
     }
 
     @Override
-    public PatientResponseDTO getAPatient(int patientId) {
+    public PatientResponseDTO getAPatient(long patientId) {
         Patient patient = ((Patient) stakeholdersRepo.findById(patientId).orElse(null));
 
         if (patient == null) {
@@ -139,7 +139,7 @@ public class StakeholderSvc implements IStakeholderService {
     }
 
     @Override
-    public void updateADoctor(int id, String firstName, String lastName, String specialization, String contactInfo) {
+    public void updateADoctor(long id, String firstName, String lastName, String specialization, String contactInfo) {
         Doctor doctor = ((Doctor) stakeholdersRepo.findById(id).orElse(null));
         doctor.setFirstName(firstName);
         doctor.setLastName(lastName);
@@ -185,7 +185,7 @@ public class StakeholderSvc implements IStakeholderService {
     }
 
     @Override
-    public int removeDoctor(int doctorId) {
+    public int removeDoctor(long doctorId) {
         if (stakeholdersRepo.findById(doctorId).isEmpty()) {
             return 404;
         }
@@ -194,28 +194,28 @@ public class StakeholderSvc implements IStakeholderService {
     }
 
     @Override
-    public boolean removePatient(int patientId) {
+    public boolean removePatient(long patientId) {
         stakeholdersRepo.deleteById(patientId);
         return stakeholdersRepo.findById(patientId).isEmpty();
     }
 
     @Override
-    public List<Patient> getDoctorPatients(int doctorId) {
+    public List<Patient> getDoctorPatients(long doctorId) {
         return stakeholdersRepo.findDoctorPatients(doctorId);
     }
 
     @Override
-    public List<Doctor> getPatientDoctors(int patientId) {
+    public List<Doctor> getPatientDoctors(long patientId) {
         return stakeholdersRepo.findPatientDoctors(patientId);
     }
 
     @Override
-    public List<Appointment> getPatientOldAppointments(int patientId) {
+    public List<Appointment> getPatientOldAppointments(long patientId) {
         return appointmentsRepo.getPatientOldAppointments(patientId);
     }
 
     @Override
-    public void updatePatient(int patientId, String firstName, String lastName, String gender, String nationalNumber) {
+    public void updatePatient(long patientId, String firstName, String lastName, String gender, String nationalNumber) {
         Patient patient = ((Patient) stakeholdersRepo.findById(patientId).orElse(null));
         patient.setId(patientId);
         patient.setFirstName(firstName);

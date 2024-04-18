@@ -14,30 +14,30 @@ public interface IStakeholderService {
 
     List<PatientResponseDTO> getAllPatients();
 
-    DoctorResponseDTO getADoctor(int doctorId);
+    DoctorResponseDTO getADoctor(long doctorId);
 
-    DoctorDetailsResponseDTO getFullDoctorData(int doctorId);
+    DoctorDetailsResponseDTO getFullDoctorData(long doctorId);
 
-    PatientResponseDTO getAPatient(int patientId);
+    PatientResponseDTO getAPatient(long patientId);
 
     DoctorResponseDTO addNewDoctor(String firstName, String lastName, String specialization, String contactInfo, String username, String password);
 
-    void updateADoctor(int id, String firstName, String lastName, String specialization, String contactInfo);
+    void updateADoctor(long id, String firstName, String lastName, String specialization, String contactInfo);
 
     PatientResponseDTO addNewPatient(String firstName, String lastName, String gender, String nationalNumber, String username, String password);
 
-    int removeDoctor(int doctorId);
+    int removeDoctor(long doctorId);
 
-    boolean removePatient(int patientId);
+    boolean removePatient(long patientId);
 
-    List<Patient> getDoctorPatients(int doctorId);
+    List<Patient> getDoctorPatients(long doctorId);
 
-    List<Doctor> getPatientDoctors(int id);
+    List<Doctor> getPatientDoctors(long id);
 
-    List<Appointment> getPatientOldAppointments(int patientId);
+    List<Appointment> getPatientOldAppointments(long patientId);
 
 
-    void updatePatient(int patientId, String firstName, String lastName, String gender, String nationalNumber);
+    void updatePatient(long patientId, String firstName, String lastName, String gender, String nationalNumber);
 
     Stakeholder getStakeholderByUsername(String username);
 
