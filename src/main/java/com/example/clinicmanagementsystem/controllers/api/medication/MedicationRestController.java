@@ -1,13 +1,12 @@
 package com.example.clinicmanagementsystem.controllers.api.medication;
 
-import com.example.clinicmanagementsystem.Exceptions.ContactInfoExistException;
-import com.example.clinicmanagementsystem.Exceptions.MedicationDeletionException;
+import com.example.clinicmanagementsystem.exceptions.MedicationDeletionException;
 import com.example.clinicmanagementsystem.domain.Medication;
 import com.example.clinicmanagementsystem.domain.util.MedicationForm;
 import com.example.clinicmanagementsystem.domain.util.Unit;
-import com.example.clinicmanagementsystem.dtos.medications.CreateMedicationRequestDTO;
-import com.example.clinicmanagementsystem.dtos.medications.MedicationResponseDTO;
-import com.example.clinicmanagementsystem.dtos.medications.UpdateMedicationRequestDTO;
+import com.example.clinicmanagementsystem.controllers.dtos.medications.CreateMedicationRequestDTO;
+import com.example.clinicmanagementsystem.controllers.dtos.medications.MedicationResponseDTO;
+import com.example.clinicmanagementsystem.controllers.dtos.medications.UpdateMedicationRequestDTO;
 import com.example.clinicmanagementsystem.services.treatementServices.ITreatmentService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;

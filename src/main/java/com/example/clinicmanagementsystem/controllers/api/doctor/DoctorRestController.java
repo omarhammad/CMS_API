@@ -1,10 +1,8 @@
 package com.example.clinicmanagementsystem.controllers.api.doctor;
 
-import com.example.clinicmanagementsystem.Exceptions.ContactInfoExistException;
-import com.example.clinicmanagementsystem.dtos.doctors.CreateDoctorRequestDTO;
-import com.example.clinicmanagementsystem.dtos.doctors.DoctorDetailsResponseDTO;
-import com.example.clinicmanagementsystem.dtos.doctors.DoctorResponseDTO;
-import com.example.clinicmanagementsystem.dtos.doctors.UpdateDoctorRequestDTO;
+import com.example.clinicmanagementsystem.exceptions.ContactInfoExistException;
+import com.example.clinicmanagementsystem.controllers.dtos.doctors.*;
+import com.example.clinicmanagementsystem.exceptions.SlotUsedException;
 import com.example.clinicmanagementsystem.services.stakeholdersServices.IStakeholderService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -12,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
@@ -54,6 +53,45 @@ public class DoctorRestController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(doctor);
+    }
+
+
+    @GetMapping("/{id}/availability")
+    public ResponseEntity<List<AvailabilityResponseDTO>> getDoctorAvailabilities(@PathVariable long id) {
+
+        DoctorResponseDTO doctorResponseDTO = service.getADoctor(id);
+        if (doctorResponseDTO == null) {
+            return ResponseEntity.notFound().build();
+        }
+        List<AvailabilityResponseDTO> availabilityResponseDTOS = service.getDoctorAvailablilities(id);
+        if (availabilityResponseDTOS.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        System.out.println("Reached!");
+        System.out.println(availabilityResponseDTOS);
+        return ResponseEntity.ok(availabilityResponseDTOS);
+    }
+
+    @PostMapping("/{id}/availability")
+    @PreAuthorize("hasRole('ROLE_DOCTOR')")
+    public ResponseEntity<AvailabilityResponseDTO> addDoctorAvailability(@RequestBody @Valid CreateAvailabilityRequestDTO requestDTO,
+                                                                         @PathVariable long id) {
+        System.out.println(requestDTO);
+        AvailabilityResponseDTO responseDTO = service.addDoctorAvailability(id, requestDTO.getSlot());
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
+
+    }
+
+    @DeleteMapping("/availability/{availabilityId}")
+    @PreAuthorize("hasRole('ROLE_DOCTOR')")
+    public ResponseEntity<Void> deleteDoctorAvailabilityById(@PathVariable int availabilityId) {
+        AvailabilityResponseDTO responseDTO = service.getDoctorAvailability(availabilityId);
+        if (responseDTO == null) {
+            return ResponseEntity.notFound().build();
+        }
+        service.removeAvailability(availabilityId);
+        return ResponseEntity.noContent().build();
+
     }
 
 
@@ -103,6 +141,15 @@ public class DoctorRestController {
     @ExceptionHandler(ContactInfoExistException.class)
     public ResponseEntity<HashMap<String, String>> handleContactInfoExistException(ContactInfoExistException exception) {
         logger.debug("Entered to ContactInfoExistException: {}", exception.getMessage());
+        HashMap<String, String> errors = new HashMap<>();
+        errors.put("exceptionMsg", exception.getMessage());
+        return ResponseEntity.badRequest().body(errors);
+    }
+
+
+    @ExceptionHandler(SlotUsedException.class)
+    public ResponseEntity<HashMap<String, String>> handleSlotUsedException(SlotUsedException exception) {
+        logger.debug("Entered to SlotUsedException: {}", exception.getMessage());
         HashMap<String, String> errors = new HashMap<>();
         errors.put("exceptionMsg", exception.getMessage());
         return ResponseEntity.badRequest().body(errors);

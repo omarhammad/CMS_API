@@ -26,7 +26,7 @@ public interface StakeholdersSpringData extends JpaRepository<Stakeholder, Long>
 
 
     @Query("SELECT p FROM Patient p WHERE p.nationalNumber = :nn")
-    public Patient findPatientByNationalNumber(@Param("nn") String nationalNumber);
+    public Optional<Patient> findPatientByNationalNumber(@Param("nn") String nationalNumber);
 
 
     @Query("SELECT DISTINCT p " +

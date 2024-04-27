@@ -73,10 +73,11 @@ VALUES (1, 1),
        (5, 5);
 
 
-INSERT INTO application_user(username, password)
-VALUES ('Omar', '$2a$10$l7OaNsKv6s9FkonaKSdMquYrRvF1kWLC51w.I62RM4yFkfpdLjNGe'),
-       ('Fadi', '$2a$10$da5a0Bpqa3wv6yLT23iFAeTji6tJnCgEDrTi/7KLxsqhte1YKkLGK'),
-       ('Mahmoud', '$2a$10$zs6z57nTK/.BjZcogkrlrugPDZ/Yx1SJ3lDOmvzdfrFT1CtenA51m'),
-       ('Othman', '$2a$10$c6VXz0xGaZDz9wG/HtlauulwBU1Yp.gH16faNjruOe/uz9eaFeKqu');
+
+INSERT INTO availability(slot, used, doctor_id)
+VALUES ('2024-05-20 10:30', FALSE, 2),
+       ('2024-05-20 11:00', FALSE, 2),
+       ('2024-05-20 11:30', FALSE, 2),
+       ('2024-12-20 12:00', FALSE, 2);
 
 COMMIT;

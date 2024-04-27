@@ -1,11 +1,10 @@
 package com.example.clinicmanagementsystem.controllers.api.patient;
 
-import com.example.clinicmanagementsystem.Exceptions.ContactInfoExistException;
-import com.example.clinicmanagementsystem.Exceptions.NationalNumberExistException;
+import com.example.clinicmanagementsystem.exceptions.NationalNumberExistException;
 import com.example.clinicmanagementsystem.controllers.api.doctor.DoctorRestController;
-import com.example.clinicmanagementsystem.dtos.patients.UpdatePatientRequestDTO;
-import com.example.clinicmanagementsystem.dtos.patients.CreatePatientRequestDTO;
-import com.example.clinicmanagementsystem.dtos.patients.PatientResponseDTO;
+import com.example.clinicmanagementsystem.controllers.dtos.patients.UpdatePatientRequestDTO;
+import com.example.clinicmanagementsystem.controllers.dtos.patients.CreatePatientRequestDTO;
+import com.example.clinicmanagementsystem.controllers.dtos.patients.PatientResponseDTO;
 import com.example.clinicmanagementsystem.services.stakeholdersServices.IStakeholderService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;

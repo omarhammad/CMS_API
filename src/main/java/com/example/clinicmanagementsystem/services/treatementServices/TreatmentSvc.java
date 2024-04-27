@@ -1,14 +1,14 @@
 package com.example.clinicmanagementsystem.services.treatementServices;
 
-import com.example.clinicmanagementsystem.Exceptions.MedicationDeletionException;
+import com.example.clinicmanagementsystem.exceptions.MedicationDeletionException;
 import com.example.clinicmanagementsystem.domain.Appointment;
 import com.example.clinicmanagementsystem.domain.Medication;
 import com.example.clinicmanagementsystem.domain.Prescription;
 import com.example.clinicmanagementsystem.domain.util.Dosage;
 import com.example.clinicmanagementsystem.domain.util.MedicationForm;
 import com.example.clinicmanagementsystem.domain.util.Unit;
-import com.example.clinicmanagementsystem.dtos.medications.MedicationResponseDTO;
-import com.example.clinicmanagementsystem.dtos.prescriptions.PrescriptionResponseDTO;
+import com.example.clinicmanagementsystem.controllers.dtos.medications.MedicationResponseDTO;
+import com.example.clinicmanagementsystem.controllers.dtos.prescriptions.PrescriptionResponseDTO;
 import com.example.clinicmanagementsystem.repository.appointmentsRepo.AppointmentsSpringData;
 import com.example.clinicmanagementsystem.repository.medicationsRepo.MedicationsSpringData;
 import com.example.clinicmanagementsystem.repository.prescriptionRepo.PrescriptionsSpringData;

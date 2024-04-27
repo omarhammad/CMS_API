@@ -1,6 +1,6 @@
 package com.example.clinicmanagementsystem.repository.appointmentsRepo;
 
-import com.example.clinicmanagementsystem.Exceptions.InvalidAppointmentException;
+import com.example.clinicmanagementsystem.exceptions.InvalidAppointmentException;
 import com.example.clinicmanagementsystem.domain.Appointment;
 import com.example.clinicmanagementsystem.domain.Doctor;
 import org.jetbrains.annotations.NotNull;

@@ -1,6 +1,6 @@
 package com.example.clinicmanagementsystem.controllers.api.appointment;
 
-import com.example.clinicmanagementsystem.dtos.appointments.CreateAppointmentRequestDTO;
+import com.example.clinicmanagementsystem.controllers.dtos.appointments.CreateAppointmentRequestDTO;
 import com.example.clinicmanagementsystem.services.stakeholdersServices.IStakeholderService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeAll;

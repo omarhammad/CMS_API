@@ -1,12 +1,14 @@
 package com.example.clinicmanagementsystem.services.appointmentServices;
 
 
-import com.example.clinicmanagementsystem.Exceptions.InvalidAppointmentException;
-import com.example.clinicmanagementsystem.Exceptions.NationalNumberNotFoundException;
+import com.example.clinicmanagementsystem.exceptions.AppointmentNotFoundException;
+import com.example.clinicmanagementsystem.exceptions.DoctorNotFoundException;
+import com.example.clinicmanagementsystem.exceptions.InvalidAppointmentException;
+import com.example.clinicmanagementsystem.exceptions.NationalNumberNotFoundException;
 import com.example.clinicmanagementsystem.domain.Appointment;
 import com.example.clinicmanagementsystem.domain.Doctor;
 import com.example.clinicmanagementsystem.domain.util.AppointmentType;
-import com.example.clinicmanagementsystem.dtos.appointments.AppointmentResponseDTO;
+import com.example.clinicmanagementsystem.controllers.dtos.appointments.AppointmentResponseDTO;
 import com.example.clinicmanagementsystem.repository.appointmentsRepo.AppointmentsSpringData;
 import com.example.clinicmanagementsystem.repository.stakeholdersRepo.StakeholdersSpringData;
 import org.modelmapper.ModelMapper;
@@ -67,10 +69,10 @@ public class AppointmentSvc implements IAppointmentService {
     public AppointmentResponseDTO addNewAppointment(long doctorId, String patientNationalNumber, LocalDateTime appointmentDateTime, String purpose, AppointmentType type) {
         Appointment appointment = new Appointment();
         appointment.setDoctor((Doctor) stakeholdersRepo.findById(doctorId).orElse(null));
-        System.out.println(appointment.getDoctor());
-        appointment.setPatient(stakeholdersRepo.findPatientByNationalNumber(patientNationalNumber));
+        appointment.setPatient(stakeholdersRepo.findPatientByNationalNumber(patientNationalNumber).orElse(null));
 
         if (appointment.getPatient() == null) throw new NationalNumberNotFoundException(patientNationalNumber);
+        if (appointment.getDoctor() == null) throw new DoctorNotFoundException("Doctor not found!");
 
 
         appointment.setAppointmentDateTime(appointmentDateTime);
@@ -81,23 +83,45 @@ public class AppointmentSvc implements IAppointmentService {
         try {
             savedAppointment = appointmentRepo.save(appointment);
         } catch (DataIntegrityViolationException e) {
-            System.out.println(appointment.getDoctor());
+            String message = "";
             String doctorName = appointment.getDoctor().getFirstName() + " " + appointment.getDoctor().getLastName();
             String patientName = appointment.getPatient().getFirstName() + " " + appointment.getPatient().getLastName();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM hh:mm a");
             String appDateTime = appointment.getAppointmentDateTime().format(formatter);
-            throw new InvalidAppointmentException(patientName, doctorName, appDateTime);
+
+            if (e.getMessage().contains("appointments_appointment_date_time_doctor_id_patient_id_key")) {
+                System.out.println("doctor and patient has the same appointment slot");
+                message = "Invalid appointment because,  Dr.%s and Pt.%s have the same appointment at [ %s ] , Choose another slot! ".formatted(patientName, doctorName, appDateTime);
+
+            } else if (e.getMessage().contains("appointments_appointment_date_time_patient_id_key")) {
+                System.out.println("patient has the same appointment slot");
+                message = "Invalid appointment because,  Pt.%s have the same appointment at [ %s ] , Choose another slot! ".formatted(patientName, appDateTime);
+
+            } else if (e.getMessage().contains("appointments_appointment_date_time_doctor_id_key")) {
+                System.out.println("doctor has the same appointment slot");
+                message = "Invalid appointment because,  Dr.%s have the same appointment at [ %s ] , Choose another slot! ".formatted(doctorName, appDateTime);
+
+            }
+
+            throw new InvalidAppointmentException(message);
         }
+
         return modelMapper.map(savedAppointment, AppointmentResponseDTO.class);
     }
 
     @Override
-    public void updateAppointment(long appointmentId, long doctorId, String patientNationalNumber, LocalDateTime appointmentDateTime, String purpose, AppointmentType type) {
+    public AppointmentResponseDTO updateAppointment(long appointmentId, long doctorId, String patientNationalNumber, LocalDateTime appointmentDateTime, String purpose, AppointmentType type) {
+
+        if (appointmentRepo.findById(appointmentId).isEmpty())
+            throw new AppointmentNotFoundException("Appointment Not Found!");
+
+
         Appointment appointment = new Appointment();
         appointment.setDoctor((Doctor) stakeholdersRepo.findById(doctorId).orElse(null));
-        appointment.setPatient(stakeholdersRepo.findPatientByNationalNumber(patientNationalNumber));
+        appointment.setPatient(stakeholdersRepo.findPatientByNationalNumber(patientNationalNumber).orElse(null));
 
         if (appointment.getPatient() == null) throw new NationalNumberNotFoundException(patientNationalNumber);
+        if (appointment.getDoctor() == null) throw new DoctorNotFoundException("Doctor Not Found!");
 
 
         appointment.setAppointmentId(appointmentId);
@@ -106,25 +130,45 @@ public class AppointmentSvc implements IAppointmentService {
         appointment.setAppointmentType(type);
 
         try {
-            appointmentRepo.save(appointment);
+            return modelMapper.map(appointmentRepo.save(appointment), AppointmentResponseDTO.class);
         } catch (DataIntegrityViolationException e) {
+            String message = "";
             String doctorName = appointment.getDoctor().getFirstName() + " " + appointment.getDoctor().getLastName();
             String patientName = appointment.getPatient().getFirstName() + " " + appointment.getPatient().getLastName();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM hh:mm a");
             String appDateTime = appointment.getAppointmentDateTime().format(formatter);
-            throw new InvalidAppointmentException(patientName, doctorName, appDateTime);
+
+            if (e.getMessage().contains("appointments_appointment_date_time_doctor_id_patient_id_key")) {
+                System.out.println("doctor and patient has the same appointment slot");
+                message = "Invalid appointment because,  Dr.%s and Pt.%s have the same appointment at [ %s ] , Choose another slot! ".formatted(patientName, doctorName, appDateTime);
+
+            } else if (e.getMessage().contains("appointments_appointment_date_time_patient_id_key")) {
+                System.out.println("patient has the same appointment slot");
+                message = "Invalid appointment because,  Pt.%s have the same appointment at [ %s ] , Choose another slot! ".formatted(patientName, appDateTime);
+
+            } else if (e.getMessage().contains("appointments_appointment_date_time_doctor_id_key")) {
+                System.out.println("doctor has the same appointment slot");
+                message = "Invalid appointment because,  Dr.%s have the same appointment at [ %s ] , Choose another slot! ".formatted(doctorName, appDateTime);
+
+            }
+
+            throw new InvalidAppointmentException(message);
         }
 
     }
 
     @Override
     public boolean removeAppointment(long appointmentId) {
-        appointmentRepo.deleteById(appointmentId);
-        return appointmentRepo.findById(appointmentId).isEmpty();
+        if (appointmentRepo.findById(appointmentId).isPresent()) {
+            appointmentRepo.deleteById(appointmentId);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
-    public List<AppointmentResponseDTO> getPatientAppointments(int id) {
+    public List<AppointmentResponseDTO> getPatientAppointments(long id) {
         List<Appointment> patientAppointments = appointmentRepo.getAppointmentByPatientId(id);
         System.out.println(patientAppointments);
         List<AppointmentResponseDTO> responseDTOS = new ArrayList<>();

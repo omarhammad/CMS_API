@@ -3,8 +3,8 @@ package com.example.clinicmanagementsystem.services.treatementServices;
 import com.example.clinicmanagementsystem.domain.Medication;
 import com.example.clinicmanagementsystem.domain.util.MedicationForm;
 import com.example.clinicmanagementsystem.domain.util.Unit;
-import com.example.clinicmanagementsystem.dtos.medications.MedicationResponseDTO;
-import com.example.clinicmanagementsystem.dtos.prescriptions.PrescriptionResponseDTO;
+import com.example.clinicmanagementsystem.controllers.dtos.medications.MedicationResponseDTO;
+import com.example.clinicmanagementsystem.controllers.dtos.prescriptions.PrescriptionResponseDTO;
 
 import java.time.LocalDate;
 import java.util.List;

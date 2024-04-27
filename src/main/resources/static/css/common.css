@@ -42,6 +42,21 @@ ul.custom-bullet li::before {
     z-index: 1050; /* High z-index to ensure it's above other elements */
 }
 
+.slot-picker {
+    background-color: #ffffff;  /* Light background for the input */
+    border: 1.5px solid #007bff;  /* Blue border color from Bootstrap's theme */
+    padding: 0.4rem 0.75rem;    /* Comfortable padding */
+    transition: border-color 0.3s ease-in-out;  /* Smooth transition for focus */
+}
+
+.slot-picker:focus {
+    border-color: #01377f;  /* Coral color when focused */
+    box-shadow: none
+}
+
+
+
+
 @media (min-width: 992px) {
 
     .link-underline {

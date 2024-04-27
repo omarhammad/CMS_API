@@ -1,9 +1,9 @@
 package com.example.clinicmanagementsystem.controllers.api.auth;
 
-import com.example.clinicmanagementsystem.dtos.auth.CurrentUserResponseDTO;
+import com.example.clinicmanagementsystem.controllers.dtos.auth.CurrentUserResponseDTO;
 import com.example.clinicmanagementsystem.domain.CustomUserDetails;
-import com.example.clinicmanagementsystem.dtos.auth.SignUpRequestDTO;
-import com.example.clinicmanagementsystem.dtos.patients.PatientResponseDTO;
+import com.example.clinicmanagementsystem.controllers.dtos.auth.SignUpRequestDTO;
+import com.example.clinicmanagementsystem.controllers.dtos.patients.PatientResponseDTO;
 import com.example.clinicmanagementsystem.services.stakeholdersServices.IStakeholderService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,7 +12,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;

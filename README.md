@@ -223,13 +223,10 @@ All users share the same password: `omar1997`. Below are the usernames assigned 
 
 - **Admins** have full access to:
     - Perform all actions within the application without restrictions.
----
-
-For your Week 6 project update intended for a README file, here's a polished and concise version:
 
 ---
 
-## Project Update - Week 6
+## Project - Week 6 & 7
 
 
 ### `AppointmentSvcTest` - Service Layer Testing
@@ -291,6 +288,49 @@ This class tests the RESTful endpoints related to appointment management, simula
     - Includes CSRF protection to test the security aspect of POST and DELETE requests.
 
 ----
+
+## Project - week 8
+
+#### Mockito Library and Mocking in Tests
+
+In this project, I utilized the Mockito library extensively to facilitate the isolation of the `AppointmentSvc` during testing by mocking dependencies like `AppointmentSpringData` and `StakeholdersSpringData` repos .
+##### Examples of Mockito Usage
+
+1. **Given**: This is used to define the behavior of the mock when certain conditions are met. For example:
+   ```java
+   // Mocking the behavior to return an optional of appointment when a specific ID is searched
+  
+   // Given
+   Appointment appointment = new Appointment();
+   appointment.setId(1L);
+   given(appointmentsRepo.findById(1L)).willReturn(Optional.of(appointment));
+   
+   // When
+   AppointemntResponseDTO appointmentResponse = 
+                appointmentSvc.getAppointmentById(1L);
+
+   // Then   
+   assertEquals(modelMapper.map(appointment,AppointemntResponseDTO.class)
+                                           ,appointmentResponse);
+
+   
+   ```
+
+2. **Verify**: This is used to ensure that specific interactions with the mock happen. For example:
+   ```java
+   // Verifying that the deleteById method was called on the repository
+  
+   // Given
+   doNothing().when(appointmentsRepo).deleteById(1L);
+   // When
+   appointmentSvc.removeAppointment(1L);
+   // Then
+   verify(appointmentsRepo).deleteById(1L);
+
+This command will execute all the test cases in the `AppointmentSvcTest` class, utilizing Mockito for mocking the necessary dependencies and verifying the interactions and behaviors as expected.
+
+---
+
 #### <span style ="color:orange">Thanks for reading my Project description.</span>
 
 <div style="color: darkgreen">

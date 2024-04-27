@@ -2,9 +2,7 @@ package com.example.clinicmanagementsystem.services.userDetailsService;
 
 import com.example.clinicmanagementsystem.domain.CustomUserDetails;
 import com.example.clinicmanagementsystem.domain.Stakeholder;
-import com.example.clinicmanagementsystem.domain.User;
 import com.example.clinicmanagementsystem.services.stakeholdersServices.IStakeholderService;
-import com.example.clinicmanagementsystem.services.userService.IUserService;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -12,7 +10,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Service

@@ -1,10 +1,12 @@
 package com.example.clinicmanagementsystem.services.stakeholdersServices;
 
+import com.example.clinicmanagementsystem.controllers.dtos.doctors.AvailabilityResponseDTO;
 import com.example.clinicmanagementsystem.domain.*;
-import com.example.clinicmanagementsystem.dtos.doctors.DoctorDetailsResponseDTO;
-import com.example.clinicmanagementsystem.dtos.doctors.DoctorResponseDTO;
-import com.example.clinicmanagementsystem.dtos.patients.PatientResponseDTO;
+import com.example.clinicmanagementsystem.controllers.dtos.doctors.DoctorDetailsResponseDTO;
+import com.example.clinicmanagementsystem.controllers.dtos.doctors.DoctorResponseDTO;
+import com.example.clinicmanagementsystem.controllers.dtos.patients.PatientResponseDTO;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface IStakeholderService {
@@ -42,4 +44,11 @@ public interface IStakeholderService {
     Stakeholder getStakeholderByUsername(String username);
 
 
+    List<AvailabilityResponseDTO> getDoctorAvailablilities(long id);
+
+    AvailabilityResponseDTO addDoctorAvailability(long id, LocalDateTime slot);
+
+    AvailabilityResponseDTO getDoctorAvailability(int availabilityId);
+
+    void removeAvailability(int availabilityId);
 }

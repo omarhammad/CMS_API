@@ -15,7 +15,6 @@ import static org.springframework.security.web.util.matcher.AntPathRequestMatche
 
 @Configuration
 @EnableWebSecurity
-@Profile("!test")
 public class SecurityConfig {
 
     @Bean
@@ -35,15 +34,16 @@ public class SecurityConfig {
 
                 .logout(logout-> logout.permitAll())
 
-                .exceptionHandling(exception ->
-                        exception.authenticationEntryPoint(((request, response, authException) -> {
-                            if (request.getRequestURI().startsWith("/api")){
-                                response.setStatus(HttpStatus.FORBIDDEN.value());
-                            }else{
-                                response.sendRedirect(request.getContextPath()+"/signin");
-                            }
+                .exceptionHandling(exception -> exception.authenticationEntryPoint(((request, response, authException) -> {
+                    if (!response.isCommitted()) {
+                        if (request.getRequestURI().startsWith("/api")) {
+                            response.setStatus(HttpStatus.FORBIDDEN.value());
+                        } else {
+                            response.sendRedirect(request.getContextPath() + "/signin");
+                        }
+                    }
+                })));
 
-                        })));
 
         //@formatter:on
         //  httpSecurity.csrf(AbstractHttpConfigurer::disable);

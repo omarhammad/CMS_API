@@ -1,16 +1,16 @@
 package com.example.clinicmanagementsystem.controllers.api.appointment;
 
-import com.example.clinicmanagementsystem.Exceptions.InvalidAppointmentException;
-import com.example.clinicmanagementsystem.Exceptions.NationalNumberNotFoundException;
+import com.example.clinicmanagementsystem.exceptions.AppointmentNotFoundException;
+import com.example.clinicmanagementsystem.exceptions.DoctorNotFoundException;
+import com.example.clinicmanagementsystem.exceptions.InvalidAppointmentException;
+import com.example.clinicmanagementsystem.exceptions.NationalNumberNotFoundException;
 import com.example.clinicmanagementsystem.domain.util.AppointmentType;
-import com.example.clinicmanagementsystem.dtos.appointments.AppointmentResponseDTO;
-import com.example.clinicmanagementsystem.dtos.appointments.CreateAppointmentRequestDTO;
-import com.example.clinicmanagementsystem.dtos.appointments.UpdateAppointmentRequestDTO;
-import com.example.clinicmanagementsystem.dtos.doctors.DoctorResponseDTO;
-import com.example.clinicmanagementsystem.dtos.patients.PatientResponseDTO;
-import com.example.clinicmanagementsystem.dtos.patients.UpdatePatientRequestDTO;
-import com.example.clinicmanagementsystem.dtos.prescriptions.PrescriptionResponseDTO;
-import com.example.clinicmanagementsystem.dtos.prescriptions.PrescriptionsRequestDTO;
+import com.example.clinicmanagementsystem.controllers.dtos.appointments.AppointmentResponseDTO;
+import com.example.clinicmanagementsystem.controllers.dtos.appointments.CreateAppointmentRequestDTO;
+import com.example.clinicmanagementsystem.controllers.dtos.appointments.UpdateAppointmentRequestDTO;
+import com.example.clinicmanagementsystem.controllers.dtos.patients.PatientResponseDTO;
+import com.example.clinicmanagementsystem.controllers.dtos.prescriptions.PrescriptionResponseDTO;
+import com.example.clinicmanagementsystem.controllers.dtos.prescriptions.PrescriptionsRequestDTO;
 import com.example.clinicmanagementsystem.services.appointmentServices.IAppointmentService;
 import com.example.clinicmanagementsystem.services.stakeholdersServices.IStakeholderService;
 import com.example.clinicmanagementsystem.services.treatementServices.ITreatmentService;
@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
@@ -61,7 +62,9 @@ public class AppointmentRestController {
     }
 
     @GetMapping("/patient/{id}")
+    @PreAuthorize("hasRole('ROLE_PATIENT')")
     public ResponseEntity<List<AppointmentResponseDTO>> getPatientAppointment(@PathVariable int id) {
+
 
         PatientResponseDTO patient = stakeholderService.getAPatient(id);
         if (patient == null) {
@@ -75,6 +78,7 @@ public class AppointmentRestController {
     }
 
     @GetMapping("/doctor/{id}")
+    @PreAuthorize("hasRole('ROLE_DOCTOR')")
     public ResponseEntity<List<AppointmentResponseDTO>> getDoctorAppointment(@PathVariable int id) {
 
         boolean doctorExists = stakeholderService.getADoctor(id) != null;
@@ -186,6 +190,22 @@ public class AppointmentRestController {
 
     @ExceptionHandler(NationalNumberNotFoundException.class)
     public ResponseEntity<HashMap<String, String>> handleNationalNumberNotFoundException(NationalNumberNotFoundException e, RedirectAttributes redirectAttributes) {
+        HashMap<String, String> errors = new HashMap<>();
+        errors.put("exceptionMsg", e.getMessage());
+        return ResponseEntity.badRequest().body(errors);
+    }
+
+
+    @ExceptionHandler(DoctorNotFoundException.class)
+    public ResponseEntity<HashMap<String, String>> handleDoctorNotFoundExceptionException(DoctorNotFoundException e, RedirectAttributes redirectAttributes) {
+        HashMap<String, String> errors = new HashMap<>();
+        errors.put("exceptionMsg", e.getMessage());
+        return ResponseEntity.badRequest().body(errors);
+    }
+
+
+    @ExceptionHandler(AppointmentNotFoundException.class)
+    public ResponseEntity<HashMap<String, String>> handleAppointmentNotFoundException(AppointmentNotFoundException e, RedirectAttributes redirectAttributes) {
         HashMap<String, String> errors = new HashMap<>();
         errors.put("exceptionMsg", e.getMessage());
         return ResponseEntity.badRequest().body(errors);

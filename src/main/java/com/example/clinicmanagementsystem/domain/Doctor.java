@@ -1,12 +1,10 @@
 package com.example.clinicmanagementsystem.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Size;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Table(name = "doctors")
@@ -17,15 +15,18 @@ public class Doctor extends Stakeholder {
     private String specialization;
     @Column(nullable = false, unique = true)
     private String contactInfo;
-
-
-    @JsonIgnore
+    @JsonIgnoreProperties("doctor") // Prevents back-serialization to Doctor
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "doctor")
-    private List<Appointment> appointment;
+    private List<Availability> availability;
+
+
+    @JsonIgnoreProperties("doctor") // Prevents back-serialization to Doctor
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "doctor")
+    private List<Appointment> appointments;
 
 
     public Doctor() {
-        appointment = new ArrayList<>();
+        appointments = new ArrayList<>();
     }
 
     public Doctor(int id) {
@@ -80,13 +81,20 @@ public class Doctor extends Stakeholder {
         this.contactInfo = contactInfo;
     }
 
-
-    public List<Appointment> getAppointment() {
-        return appointment;
+    public List<Availability> getAvailability() {
+        return availability;
     }
 
-    public void setAppointment(List<Appointment> appointment) {
-        this.appointment = appointment;
+    public void setAvailability(List<Availability> availability) {
+        this.availability = availability;
+    }
+
+    public List<Appointment> getAppointments() {
+        return appointments;
+    }
+
+    public void setAppointments(List<Appointment> appointment) {
+        this.appointments = appointment;
     }
 
 

@@ -1,13 +1,16 @@
 package com.example.clinicmanagementsystem.services.stakeholdersServices;
 
-import com.example.clinicmanagementsystem.Exceptions.ContactInfoExistException;
-import com.example.clinicmanagementsystem.Exceptions.NationalNumberExistException;
+import com.example.clinicmanagementsystem.exceptions.ContactInfoExistException;
+import com.example.clinicmanagementsystem.exceptions.NationalNumberExistException;
+import com.example.clinicmanagementsystem.controllers.dtos.doctors.AvailabilityResponseDTO;
 import com.example.clinicmanagementsystem.domain.*;
-import com.example.clinicmanagementsystem.dtos.appointments.AppointmentResponseDTO;
-import com.example.clinicmanagementsystem.dtos.doctors.DoctorDetailsResponseDTO;
-import com.example.clinicmanagementsystem.dtos.doctors.DoctorResponseDTO;
-import com.example.clinicmanagementsystem.dtos.patients.PatientResponseDTO;
+import com.example.clinicmanagementsystem.controllers.dtos.appointments.AppointmentResponseDTO;
+import com.example.clinicmanagementsystem.controllers.dtos.doctors.DoctorDetailsResponseDTO;
+import com.example.clinicmanagementsystem.controllers.dtos.doctors.DoctorResponseDTO;
+import com.example.clinicmanagementsystem.controllers.dtos.patients.PatientResponseDTO;
+import com.example.clinicmanagementsystem.exceptions.SlotUsedException;
 import com.example.clinicmanagementsystem.repository.appointmentsRepo.AppointmentsSpringData;
+import com.example.clinicmanagementsystem.repository.availabilitiesRepo.AvailabilitySpringData;
 import com.example.clinicmanagementsystem.repository.stakeholdersRepo.StakeholdersSpringData;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -15,6 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,16 +27,19 @@ import java.util.List;
 public class StakeholderSvc implements IStakeholderService {
 
 
-    StakeholdersSpringData stakeholdersRepo;
-    AppointmentsSpringData appointmentsRepo;
-    ModelMapper modelMapper;
+    private StakeholdersSpringData stakeholdersRepo;
+    private AppointmentsSpringData appointmentsRepo;
+
+    private AvailabilitySpringData availabilityRepo;
+    private ModelMapper modelMapper;
 
     private final BCryptPasswordEncoder encoder;
 
 
-    public StakeholderSvc(StakeholdersSpringData stakeholdersRepo, AppointmentsSpringData appointmentsRepo, ModelMapper modelMapper, BCryptPasswordEncoder encoder) {
+    public StakeholderSvc(StakeholdersSpringData stakeholdersRepo, AppointmentsSpringData appointmentsRepo, AvailabilitySpringData availabilityRepo, ModelMapper modelMapper, BCryptPasswordEncoder encoder) {
         this.stakeholdersRepo = stakeholdersRepo;
         this.appointmentsRepo = appointmentsRepo;
+        this.availabilityRepo = availabilityRepo;
         this.modelMapper = modelMapper;
         this.encoder = encoder;
     }
@@ -245,5 +252,52 @@ public class StakeholderSvc implements IStakeholderService {
     public Stakeholder getStakeholderByUsername(String username) {
         return stakeholdersRepo.findStakeholderByUsername(username).orElse(null);
     }
+
+    @Override
+    public List<AvailabilityResponseDTO> getDoctorAvailablilities(long id) {
+        List<Availability> availabilities = availabilityRepo
+                .findAvailabilitiesByDoctor_IdAndUsedIsFalseAndSlotIsAfter(id, LocalDateTime.now());
+
+        List<AvailabilityResponseDTO> availabilityResponseDTOS = new ArrayList<>();
+        for (Availability availability : availabilities) {
+            DoctorResponseDTO doctor = modelMapper.map(availability.getDoctor(), DoctorResponseDTO.class);
+            AvailabilityResponseDTO availabilityResponseDTO = modelMapper.map(availability, AvailabilityResponseDTO.class);
+            availabilityResponseDTO.setDoctor(doctor);
+            availabilityResponseDTOS.add(availabilityResponseDTO);
+        }
+        return availabilityResponseDTOS;
+    }
+
+    @Override
+    public AvailabilityResponseDTO addDoctorAvailability(long id, LocalDateTime slot) {
+        Availability availability = new Availability();
+        Doctor doctor = ((Doctor) stakeholdersRepo.findById(id).orElse(null));
+        availability.setDoctor(doctor);
+        availability.setSlot(slot);
+        availability.setUsed(false);
+        AvailabilityResponseDTO responseDTO;
+        try {
+            Availability savedAvailability = availabilityRepo.save(availability);
+            responseDTO = modelMapper.map(savedAvailability, AvailabilityResponseDTO.class);
+            responseDTO.setDoctor(modelMapper.map(savedAvailability.getDoctor(), DoctorResponseDTO.class));
+
+        } catch (DataIntegrityViolationException e) {
+            System.out.println("ExceptionReached!");
+            throw new SlotUsedException("Choose another slot");
+        }
+        return responseDTO;
+    }
+
+    @Override
+    public AvailabilityResponseDTO getDoctorAvailability(int availabilityId) {
+        Availability availability = availabilityRepo.findById(availabilityId).orElse(null);
+        return modelMapper.map(availability, AvailabilityResponseDTO.class);
+    }
+
+    @Override
+    public void removeAvailability(int availabilityId) {
+        availabilityRepo.deleteById(availabilityId);
+    }
+
 
 }

@@ -33,7 +33,6 @@ async function getOneDoctor(doctor_id) {
     }
 }
 
-
 window.addEventListener('DOMContentLoaded', async event => { // Add async keyword here
     const pathname = window.location.pathname;
     const segments = pathname.split('/');
@@ -93,6 +92,123 @@ async function setCurrenDoctorPrivileges(doctor_id) {
         card_footer.appendChild(update_btn)
         card_footer.appendChild(back_btn)
         document.getElementById('nav_block').className = 'd-block'
+
+        // Availability Section
+        const availability_section = document.createElement('div');
+        availability_section.className = 'w-50'
+
+        availability_section.innerHTML = '<i class="bi bi bi-clock-fill text-warning me-3 details-icons"></i>' +
+            '<p class="d-inline-block details-text"> Availiabilties : </p>'
+
+        // adding slots section
+        const add_slot_btn_component = document.createElement('div')
+        add_slot_btn_component.className = 'm-auto row w-50'
+
+        const date_time_picker = document.createElement('input');
+        date_time_picker.className = 'col-lg-10 col-sm-12 rounded-start slot-picker'
+        date_time_picker.type = 'datetime-local';
+        date_time_picker.step = '1800';
+
+
+        const add_slot_btn = document.createElement('a');
+        add_slot_btn.className = 'btn btn-primary bi bi-plus-circle rounded-start-0 rounded-end col-lg-2 p-2 ';
+
+
+        add_slot_btn.addEventListener('click', async () => {
+            const date_time = date_time_picker.value;
+            console.log(date_time)
+            if (date_time === undefined || date_time === null || date_time === '') {
+                showToast('SLOT MUST BE PROVIDED!', 'FAIL');
+            } else {
+                const csrf_token = document.querySelector('meta[name="_csrf"]').getAttribute('content')
+                const csrf_header = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+                const headers = {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    [csrf_header]: csrf_token
+                }
+
+                const add_slot_response =
+                    await fetch(`http://localhost:8080/api/doctors/${doctor_id}/availability`,
+                        {
+                            method: 'POST',
+                            headers: headers,
+                            body: JSON.stringify({
+                                slot: date_time
+                            })
+                        });
+                const data = await add_slot_response.json();
+                if (add_slot_response.status === HttpStatus.CREATED) {
+                    // const data = await add_slot_response.json();
+
+                    showToast('SLOT ADDED!', 'SUCCESS');
+                } else {
+
+
+                    showToast(data.exceptionMsg, 'FAIL')
+                }
+
+
+            }
+        });
+
+        add_slot_btn_component.appendChild(date_time_picker)
+        add_slot_btn_component.appendChild(add_slot_btn)
+
+        // slots components section
+        const availability_response = await fetch(`http://localhost:8080/api/doctors/${doctor_id}/availability`);
+        if (availability_response.status === HttpStatus.NO_CONTENT) {
+            const no_content = document.createElement('div');
+            no_content.innerText = 'No availability slots yet!';
+            availability_section.appendChild(no_content)
+        } else if (availability_response.status === HttpStatus.OK) {
+            const slots = await availability_response.json();
+            for (const slot of slots) {
+                const slot_component = document.createElement('div');
+                slot_component.className = 'row mb-2 bg-info rounded w-50 m-auto'
+                slot_component.id = slot.id;
+
+                const slot_text = document.createElement('div');
+                slot_text.className = 'text-center p-2 col-lg-10 col-sm-12 fw-bold p-0';
+
+                const slot_date_time = new Date(slot.slot)
+                slot_text.innerText = formatDate(slot_date_time) + ' ' + formatTime(slot_date_time);
+
+                const slot_delete = document.createElement('a');
+                slot_delete.className = 'btn btn-danger bi bi-trash col-lg-2 col-sm-12 rounded-start-0';
+                slot_delete.addEventListener('click', async () => {
+                    const csrf_token = document.querySelector('meta[name="_csrf"]').getAttribute('content')
+                    const csrf_header = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+                    const headers = {
+                        [csrf_header]: csrf_token
+                    }
+                    const slot_delete_response =
+                        await fetch(`http://localhost:8080/api/doctors/availability/${slot.id}`,
+                            {
+                                method: 'DELETE',
+                                headers: headers
+                            });
+                    if (slot_delete_response.status === HttpStatus.NOT_FOUND) {
+                        showToast('SLOT NOT FOUND !', 'FAIL')
+                    } else if (slot_delete_response.status === HttpStatus.NO_CONTENT) {
+                        availability_section.removeChild(slot_component);
+                        showToast("SLOT DELETED !", 'SUCCESS')
+                    }
+
+                })
+
+                slot_component.appendChild(slot_text);
+                slot_component.appendChild(slot_delete);
+                availability_section.appendChild(slot_component)
+            }
+        }
+        const card_body = document.querySelector('.card-body');
+        availability_section.appendChild(add_slot_btn_component);
+        card_body.appendChild(availability_section);
+
+
     } else {
         const back_btn = document.createElement('a');
         back_btn.className = 'btn btn-danger m-2';
@@ -103,7 +219,6 @@ async function setCurrenDoctorPrivileges(doctor_id) {
 
 
 }
-
 
 function formatTime(date) {
     let hours = date.getHours();
@@ -118,13 +233,30 @@ function formatTime(date) {
 }
 
 function formatDate(date) {
-    const monthNames = ["January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December"];
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const day = date.getDate();
     const monthIndex = date.getMonth();
     const year = date.getFullYear();
 
     return `${monthNames[monthIndex]} ${day}, ${year}`;
+}
+
+function showToast(message, bg_color) {
+    let toastElement = document.querySelector('.toast');
+    let toastBody = toastElement.querySelector('.toast-body');
+    if (bg_color === 'FAIL') {
+        toastElement.className += ' text-bg-danger';
+    } else if (bg_color === 'SUCCESS') {
+        toastElement.className += ' text-bg-success';
+    }
+    toastBody.innerText = message;
+
+    let toast = new bootstrap.Toast(toastElement, {
+        autohide: false
+    });
+    toast.show();
+
 }
 
 async function getcurrentUser() {
