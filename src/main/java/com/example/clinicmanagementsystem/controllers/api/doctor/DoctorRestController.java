@@ -37,7 +37,7 @@ public class DoctorRestController {
 
 
     @GetMapping({""})
-    public ResponseEntity<List<DoctorResponseDTO>> searchDoctors(@RequestParam(value = "searchTerm", required = false) final String searchTerm) {
+    public ResponseEntity<List<DoctorResponseDTO>> getDoctorsAllOrBySearchTerm(@RequestParam(value = "searchTerm", required = false) final String searchTerm) {
 
         List<DoctorResponseDTO> doctorList;
         try {
@@ -53,7 +53,6 @@ public class DoctorRestController {
                         return fullName.toLowerCase().contains(searchTerm.toLowerCase());
                     }).toList();
 
-        System.out.println("Doctor list size: " + doctorList.size());
         if (doctorList.isEmpty())
             return new ResponseEntity<>(doctorList, HttpStatus.NO_CONTENT);
         return ResponseEntity.ok(doctorList);
