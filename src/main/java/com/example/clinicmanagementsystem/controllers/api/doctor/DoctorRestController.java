@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @RestController
@@ -36,18 +37,32 @@ public class DoctorRestController {
 
 
     @GetMapping({""})
-    public ResponseEntity<List<DoctorResponseDTO>> getAllDoctors() {
+    public ResponseEntity<List<DoctorResponseDTO>> searchDoctors(@RequestParam(value = "searchTerm", required = false) final String searchTerm) {
 
-        List<DoctorResponseDTO> doctorList = service.getAllDoctors();
-        if (!doctorList.isEmpty()) {
-            return ResponseEntity.ok(doctorList);
+        List<DoctorResponseDTO> doctorList;
+        try {
+            doctorList = service.getAllDoctors();
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
         }
-        return new ResponseEntity<>(doctorList, HttpStatus.NO_CONTENT);
 
+        if (searchTerm != null && !searchTerm.isEmpty())
+            doctorList = doctorList.stream()
+                    .filter(doctorResponseDTO -> {
+                        String fullName = doctorResponseDTO.getFirstName() + " " + doctorResponseDTO.getLastName();
+                        return fullName.toLowerCase().contains(searchTerm.toLowerCase());
+                    }).toList();
+
+        System.out.println("Doctor list size: " + doctorList.size());
+        if (doctorList.isEmpty())
+            return new ResponseEntity<>(doctorList, HttpStatus.NO_CONTENT);
+        return ResponseEntity.ok(doctorList);
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<DoctorDetailsResponseDTO> getDoctorById(@PathVariable int id) {
+
         DoctorDetailsResponseDTO doctor = service.getFullDoctorData(id);
         if (doctor == null) {
             return ResponseEntity.notFound().build();
@@ -104,6 +119,7 @@ public class DoctorRestController {
         return ResponseEntity.ok(doctorResponseDTO);
 
     }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateDoctor(@RequestBody @Valid UpdateDoctorRequestDTO updateDoctorRequestDTO, @PathVariable("id") int id) {

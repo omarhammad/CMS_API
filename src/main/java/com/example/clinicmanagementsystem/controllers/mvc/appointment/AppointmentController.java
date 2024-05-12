@@ -1,5 +1,6 @@
 package com.example.clinicmanagementsystem.controllers.mvc.appointment;
 
+import com.example.clinicmanagementsystem.domain.Appointment;
 import com.example.clinicmanagementsystem.domain.util.AppointmentType;
 import com.example.clinicmanagementsystem.services.appointmentServices.IAppointmentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ public class AppointmentController {
 
     @GetMapping("/add")
     public String getAddAppointmentPage(Model model) {
+
         model.addAttribute("doctors", service.getDoctorsNames());
         model.addAttribute("appointmentTypes", AppointmentType.values());
 

@@ -10,6 +10,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
@@ -20,15 +22,28 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         //@formatter:off
-        httpSecurity.authorizeHttpRequests(auths -> {
+        httpSecurity.authorizeHttpRequests(auth -> {
 
-            auths.requestMatchers(antMatcher(HttpMethod.GET,"/js/**"),
-                                  antMatcher(HttpMethod.GET, "/css/**"),
-                                  antMatcher(HttpMethod.GET, "/media/**"),
-                                  antMatcher(HttpMethod.GET, "/"),
-                                  antMatcher(HttpMethod.GET,"/signup"),
-                                  antMatcher(HttpMethod.POST,"/api/auth/**")).permitAll()
-                                 .anyRequest().authenticated();
+            auth.requestMatchers(
+                        antMatcher(HttpMethod.GET,"/js/**"),
+                        antMatcher(HttpMethod.GET, "/css/**"),
+                        antMatcher(HttpMethod.GET, "/media/**"),
+                        antMatcher(HttpMethod.GET,"/webjars/**"),
+                        antMatcher(HttpMethod.GET, "/"),
+                        antMatcher(HttpMethod.GET,"/signup"),
+                        antMatcher(HttpMethod.POST,"/api/auth/**")
+                    ).permitAll()
+
+                    // for Client request.
+                    .requestMatchers(
+                            "/api/doctors"
+                    ).permitAll()
+                    .requestMatchers(
+                            "/doctors/details/{id}",
+                            "/api/doctors/{id}"
+                    ).permitAll()
+
+                    .anyRequest().authenticated();
         })
                 .formLogin(formLogin -> formLogin.loginPage("/signin").permitAll().defaultSuccessUrl("/",true).failureUrl("/signin?error=true"))
 
@@ -46,8 +61,26 @@ public class SecurityConfig {
 
 
         //@formatter:on
-        //  httpSecurity.csrf(AbstractHttpConfigurer::disable);
+        // this is for the separate Client project
+        httpSecurity.csrf(csrf -> csrf.ignoringRequestMatchers(
+                antMatcher(HttpMethod.POST, "/api/doctors")
+        ));
         return httpSecurity.build();
+    }
+
+
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(final CorsRegistry registry) {
+                registry.addMapping("/api/**")
+                        .allowedOrigins("http://localhost:9000")
+                        .allowedMethods(
+                                HttpMethod.GET.name(),
+                                HttpMethod.POST.name());
+            }
+        };
     }
 
     @Bean

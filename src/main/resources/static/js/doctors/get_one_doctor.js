@@ -140,9 +140,12 @@ async function setCurrenDoctorPrivileges(doctor_id) {
                         });
                 const data = await add_slot_response.json();
                 if (add_slot_response.status === HttpStatus.CREATED) {
-                    // const data = await add_slot_response.json();
 
                     showToast('SLOT ADDED!', 'SUCCESS');
+                    console.log("'Added slot' : " + data)
+                    add_slot_component(data, availability_section);
+
+
                 } else {
 
 
@@ -165,43 +168,7 @@ async function setCurrenDoctorPrivileges(doctor_id) {
         } else if (availability_response.status === HttpStatus.OK) {
             const slots = await availability_response.json();
             for (const slot of slots) {
-                const slot_component = document.createElement('div');
-                slot_component.className = 'row mb-2 bg-info rounded w-50 m-auto'
-                slot_component.id = slot.id;
-
-                const slot_text = document.createElement('div');
-                slot_text.className = 'text-center p-2 col-lg-10 col-sm-12 fw-bold p-0';
-
-                const slot_date_time = new Date(slot.slot)
-                slot_text.innerText = formatDate(slot_date_time) + ' ' + formatTime(slot_date_time);
-
-                const slot_delete = document.createElement('a');
-                slot_delete.className = 'btn btn-danger bi bi-trash col-lg-2 col-sm-12 rounded-start-0';
-                slot_delete.addEventListener('click', async () => {
-                    const csrf_token = document.querySelector('meta[name="_csrf"]').getAttribute('content')
-                    const csrf_header = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
-
-                    const headers = {
-                        [csrf_header]: csrf_token
-                    }
-                    const slot_delete_response =
-                        await fetch(`http://localhost:8080/api/doctors/availability/${slot.id}`,
-                            {
-                                method: 'DELETE',
-                                headers: headers
-                            });
-                    if (slot_delete_response.status === HttpStatus.NOT_FOUND) {
-                        showToast('SLOT NOT FOUND !', 'FAIL')
-                    } else if (slot_delete_response.status === HttpStatus.NO_CONTENT) {
-                        availability_section.removeChild(slot_component);
-                        showToast("SLOT DELETED !", 'SUCCESS')
-                    }
-
-                })
-
-                slot_component.appendChild(slot_text);
-                slot_component.appendChild(slot_delete);
-                availability_section.appendChild(slot_component)
+                add_slot_component(slot, availability_section);
             }
         }
         const card_body = document.querySelector('.card-body');
@@ -218,6 +185,46 @@ async function setCurrenDoctorPrivileges(doctor_id) {
     }
 
 
+}
+
+function add_slot_component(slot, availability_section) {
+    const slot_component = document.createElement('div');
+    slot_component.className = 'row mb-2 bg-info rounded w-50 m-auto'
+    slot_component.id = slot.id;
+
+    const slot_text = document.createElement('div');
+    slot_text.className = 'text-center p-2 col-lg-10 col-sm-12 fw-bold p-0';
+
+    const slot_date_time = new Date(slot.slot)
+    slot_text.innerText = formatDate(slot_date_time) + ' ' + formatTime(slot_date_time);
+
+    const slot_delete = document.createElement('a');
+    slot_delete.className = 'btn btn-danger bi bi-trash col-lg-2 col-sm-12 rounded-start-0';
+    slot_delete.addEventListener('click', async () => {
+        const csrf_token = document.querySelector('meta[name="_csrf"]').getAttribute('content')
+        const csrf_header = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+        const headers = {
+            [csrf_header]: csrf_token
+        }
+        const slot_delete_response =
+            await fetch(`http://localhost:8080/api/doctors/availability/${slot.id}`,
+                {
+                    method: 'DELETE',
+                    headers: headers
+                });
+        if (slot_delete_response.status === HttpStatus.NOT_FOUND) {
+            showToast('SLOT NOT FOUND !', 'FAIL')
+        } else if (slot_delete_response.status === HttpStatus.NO_CONTENT) {
+            availability_section.removeChild(slot_component);
+            showToast("SLOT DELETED !", 'SUCCESS')
+        }
+
+    })
+
+    slot_component.appendChild(slot_text);
+    slot_component.appendChild(slot_delete);
+    availability_section.appendChild(slot_component);
 }
 
 function formatTime(date) {
@@ -246,9 +253,13 @@ function showToast(message, bg_color) {
     let toastElement = document.querySelector('.toast');
     let toastBody = toastElement.querySelector('.toast-body');
     if (bg_color === 'FAIL') {
-        toastElement.className += ' text-bg-danger';
+        toastElement.classList.add(' text-bg-danger');
+        toastElement.classList.remove(' text-bg-success');
+
     } else if (bg_color === 'SUCCESS') {
-        toastElement.className += ' text-bg-success';
+        toastElement.classList.remove(' text-bg-danger');
+        toastElement.classList.add(' text-bg-success');
+
     }
     toastBody.innerText = message;
 
@@ -258,6 +269,7 @@ function showToast(message, bg_color) {
     toast.show();
 
 }
+
 
 async function getcurrentUser() {
     const response = await fetch('http://localhost:8080/api/auth/user/current');
@@ -269,3 +281,4 @@ async function getcurrentUser() {
     }
 
 }
+

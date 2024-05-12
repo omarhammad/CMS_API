@@ -24,7 +24,8 @@
     </div>
 </div>
 
-<div th:insert="fragments/navbar::naviagtion_bar(4)" th:class="d-none" id="nav_block"></div>
+<div th:insert="fragments/navbar::naviagtion_bar(4)" th:class="d-none" id="nav_block"
+     sec:authorize="isAuthenticated()"></div>
 
 <div class="container-fluid width-s-90  width-m-50 shadow p-3 mt-3">
 
@@ -60,6 +61,8 @@
     </div>
     <div>
         <div class="card-footer text-center">
+            <a th:class="'btn btn-danger text-center m-2'" id="public_back_btn" onclick="window.history.back()"
+               sec:authorize="!isAuthenticated()">Back</a>
         </div>
     </div>
 </div>
