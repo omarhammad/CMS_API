@@ -1,0 +1,93 @@
+@import "~bootswatch/dist/cosmo/variables";
+@import "~bootstrap/scss/bootstrap";
+@import "~bootstrap-icons/font/bootstrap-icons.css";
+@import "~bootswatch/dist/cosmo/bootswatch";
+
+body {
+  background-color: #daebf4;
+}
+
+.form-error {
+  font-size: 1.5vh;
+  color: rgba(255, 0, 0, 0.85);
+}
+
+ul.custom-bullet {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.table-hover tbody tr:hover {
+  cursor: pointer;
+}
+
+ul.custom-bullet li::before {
+  content: "* ";
+}
+
+.details-text {
+  font-size: 1.7em;
+}
+.details-icons {
+  font-size: 2em;
+  font-weight: bold;
+}
+.details-icons-texts {
+  font-size: 1.6em;
+  font-weight: bold;
+}
+
+.toast-container {
+  position: fixed;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1050; /* High z-index to ensure it's above other elements */
+}
+
+.slot-picker {
+  background-color: #ffffff; /* Light background for the input */
+  border: 1.5px solid #007bff; /* Blue border color from Bootstrap's theme */
+  padding: 0.4rem 0.75rem; /* Comfortable padding */
+  transition: border-color 0.3s ease-in-out; /* Smooth transition for focus */
+}
+
+.slot-picker:focus {
+  border-color: #01377f; /* Coral color when focused */
+  box-shadow: none;
+}
+
+@media (min-width: 992px) {
+  .link-underline {
+    position: relative;
+    font-weight: bold;
+    text-decoration: none;
+  }
+
+  .link-underline::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -5px;
+    width: 100%;
+    height: 4px;
+    background-color: #a7d3ea;
+  }
+}
+
+@media (max-width: 576px) {
+  .width-s-90 {
+    width: 90%;
+  }
+}
+
+@media (min-width: 576px) {
+  .width-m-75 {
+    width: 75%;
+  }
+
+  .width-m-50 {
+    width: 70%;
+  }
+}

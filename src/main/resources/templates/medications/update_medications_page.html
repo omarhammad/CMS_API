@@ -1,12 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="_csrf" th:content="${_csrf.token}">
-    <meta name="_csrf_header" th:content="${_csrf.headerName}">
-    <title th:text="#{medications.title2}"></title>
-    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.2/css/bootstrap.min.css}"/>
-    <link rel="stylesheet" th:href="@{/css/common.css}"/>
+    <th:block th:insert="~{fragments/heading :: heading (title = 'Update Medication')}"/>
+    <link th:href="@{/css/bundle-put_medication.css}" rel="stylesheet"/>
+
 </head>
 <body>
 <div th:class="'container-fluid width-s-90 width-m-75 shadow p-3'">
@@ -66,9 +63,7 @@
         <div th:class="mt-3">
             <label th:class="'form-label d-inline'" th:for="notes"
                    th:text="#{medications.note}"></label>
-            <textarea
-                    th:class="form-control"
-                    id="notes" rows="7" th:placeholder="#{medications.note.placeholder}" name="notes"></textarea>
+            <div id="notes"></div>
         </div>
 
 
@@ -79,7 +74,6 @@
 </div>
 
 
-<script th:src="@{/webjars/bootstrap/5.3.2/js/bootstrap.bundle.min.js}"></script>
-<script th:src="@{/js/medications/put_medication.js}"></script>
+<script th:src="@{/js/bundle-put_medication.js}" defer></script>
 </body>
 </html>

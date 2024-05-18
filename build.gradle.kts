@@ -2,6 +2,8 @@ plugins {
     java
     id("org.springframework.boot") version "3.2.2"
     id("io.spring.dependency-management") version "1.1.4"
+    id ("com.github.node-gradle.node") version "7.0.2"
+
 }
 
 group = "org.example"
@@ -20,6 +22,8 @@ dependencies {
     developmentOnly("org.springframework.boot:spring-boot-devtools:3.0.4")
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf:3.0.4")
+    implementation ("org.jsoup:jsoup:1.17.2")
+
     implementation("org.springframework.boot:spring-boot-starter-web:3.1.0")
     implementation("org.springframework.boot:spring-boot-starter-validation:3.0.4")
     implementation("org.webjars:bootstrap:5.3.2")
@@ -42,6 +46,10 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.2")
 
     runtimeOnly("org.postgresql:postgresql")
+}
+
+tasks.named<Copy>("processResources") {
+    dependsOn("npm_run_build")
 }
 
 tasks.withType<Test> {
