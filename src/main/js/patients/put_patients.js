@@ -1,5 +1,6 @@
 import { HttpStatus } from "../util/httpStatus.js"
 import { showToast } from "../util/toast.js"
+import { getCurrentUser } from "../util/currentUser.js"
 window.addEventListener("DOMContentLoaded", loadPatientData)
 const patient_id = window.location.pathname.split("/").pop()
 
@@ -35,7 +36,7 @@ const submitBtn = document.getElementById("submitBtn")
 submitBtn.addEventListener("click", updatePatient)
 
 async function updatePatient() {
-  const current_user = await getcurrentUser()
+  const current_user = await getCurrentUser()
   const patientJson = getFormData()
   const csrf_token = document
     .querySelector('meta[name="_csrf"]')
@@ -130,14 +131,4 @@ function getFieldsErrorElementList(errors) {
   }
 
   return ulElement
-}
-
-async function getcurrentUser() {
-  const response = await fetch("http://localhost:8080/api/auth/user/current")
-
-  if (response.status === HttpStatus.UNAUTHORIZED) {
-    window.location.href = "/signIn"
-  } else if (response.status === HttpStatus.OK) {
-    return await response.json()
-  }
 }

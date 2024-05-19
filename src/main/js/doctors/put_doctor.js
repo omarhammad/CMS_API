@@ -1,5 +1,6 @@
 import { HttpStatus } from "../util/httpStatus.js"
 import { showToast } from "../util/toast.js"
+import { getCurrentUser } from "../util/currentUser.js"
 const pathname = window.location.pathname
 const segments = pathname.split("/")
 const doctor_id = segments.pop()
@@ -26,7 +27,7 @@ export async function getOneDoctor(doctor_id) {
     const response = await fetch(
       `http://localhost:8080/api/doctors/${doctor_id}`,
     )
-    if (response.status === 404) {
+    if (response.status === HttpStatus.NOT_FOUND) {
       console.log("NOT FOUND")
     }
     return await response.json()
@@ -64,7 +65,7 @@ async function updateDoctor(event) {
     )
 
     let data = {}
-    if (response.status === 400) {
+    if (response.status === HttpStatus.BAD_REQUEST) {
       data = await response.json()
       if (Object.prototype.hasOwnProperty.call(data, "exceptionMsg")) {
         console.log("Exception Msg")
@@ -73,12 +74,12 @@ async function updateDoctor(event) {
         console.log("Fields Errors")
         handleFieldsError(data)
       }
-    } else if (response.status === 409) {
+    } else if (response.status === HttpStatus.CONFLICT) {
       showToast("CONFLICT IN THE REQUEST!")
-    } else if (response.status === 404) {
+    } else if (response.status === HttpStatus.NOT_FOUND) {
       showToast("DOCTOR NOT FOUND!")
-    } else if (response.status === 204) {
-      const current_user = await getcurrentUser()
+    } else if (response.status === HttpStatus.NO_CONTENT) {
+      const current_user = await getCurrentUser()
       if (current_user.userRoles.includes("ROLE_DOCTOR")) {
         window.location.href = "/doctors/details"
       } else {
@@ -163,14 +164,4 @@ function getFieldsErrorElementList(errors) {
   }
 
   return ulElement
-}
-
-async function getcurrentUser() {
-  const response = await fetch("http://localhost:8080/api/auth/user/current")
-
-  if (response.status === HttpStatus.UNAUTHORIZED) {
-    window.location.href = "/signIn"
-  } else if (response.status === HttpStatus.OK) {
-    return await response.json()
-  }
 }

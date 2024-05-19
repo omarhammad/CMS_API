@@ -1,5 +1,7 @@
 import { HttpStatus } from "../util/httpStatus.js"
 import { showToast } from "../util/toast.js"
+import { getCurrentUser } from "../util/currentUser.js"
+import { formatDate, formatTime } from "../util/date_time_formatter.js"
 
 window.addEventListener("DOMContentLoaded", loadAllAppointments)
 
@@ -22,8 +24,7 @@ async function loadAllAppointments() {
     "appointments_table_body",
   )
   let requestUrl
-  const current_user = await getcurrentUser()
-  console.log(current_user)
+  const current_user = await getCurrentUser()
   if (current_user.userRoles.includes("ROLE_PATIENT")) {
     requestUrl = `http://localhost:8080/api/appointments/patient/${current_user.userId}`
   } else if (current_user.userRoles.includes("ROLE_DOCTOR")) {
@@ -49,8 +50,10 @@ async function loadAllAppointments() {
         const appointment_row = document.createElement("tr")
         for (const key in appointment) {
           if (key === "appointmentId" || key === "prescription") continue
-          else if (key === "appointmentDateTime") {
-            const appointmentDateTime = new Date(appointment[key])
+          else if (key === "availabilitySlot") {
+            const appointmentDateTime = new Date(
+              appointment.availabilitySlot.slot,
+            )
 
             const date_td = document.createElement("td")
             date_td.innerText = formatDate(appointmentDateTime)
@@ -91,7 +94,7 @@ async function loadAllAppointments() {
 
         // Adding a remove button and update button in case the appointment
         // is in the past as it's going to be saved as historical appointment
-        const app_date = new Date(appointment.appointmentDateTime)
+        const app_date = new Date(appointment.availabilitySlot.slot)
         const current_date = new Date()
         if (app_date > current_date) {
           appointment_row.appendChild(deleteBtn)
@@ -110,26 +113,6 @@ async function loadAllAppointments() {
     .catch((err) => {
       console.error(err)
     })
-}
-
-function formatTime(date) {
-  let hours = date.getHours()
-  const minutes = date.getMinutes()
-  const ampm = hours >= 12 ? "PM" : "AM"
-
-  hours %= 12
-  hours = hours || 12 // the hour '0' should be '12 '
-  const minutesFormatted = minutes < 10 ? "0" + minutes : minutes
-
-  return `${hours}:${minutesFormatted} ${ampm}`
-}
-
-function formatDate(date) {
-  const day = date.getDate().toString().padStart(2, "0")
-  const month = (date.getMonth() + 1).toString().padStart(2, "0") // getMonth() is zero-indexed
-  const year = date.getFullYear()
-
-  return `${day}/${month}/${year}`
 }
 
 function deleteAppointment(appointmentId) {
@@ -174,14 +157,4 @@ function removeQueryParam(paramToRemove) {
     "",
     url.pathname + "?" + queryParams.toString() + url.hash,
   )
-}
-
-async function getcurrentUser() {
-  const response = await fetch("http://localhost:8080/api/auth/user/current")
-
-  if (response.status === HttpStatus.UNAUTHORIZED) {
-    window.location.href = "/signIn"
-  } else if (response.status === HttpStatus.OK) {
-    return await response.json()
-  }
 }

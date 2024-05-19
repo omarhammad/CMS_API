@@ -1,5 +1,6 @@
 import { HttpStatus } from "../util/httpStatus.js"
 import { Toast } from "bootstrap"
+import { getCurrentUser } from "../util/currentUser.js"
 
 const medications_tbody = document.getElementById("medications_tbody")
 window.addEventListener("DOMContentLoaded", loadAllMedications)
@@ -10,15 +11,13 @@ async function loadAllMedications() {
     removeQueryParam("created")
     showToast("New Medication created!")
   } else if (searchParam.has("updated")) {
-    console.log("enteredddddd")
-    //removeQueryParam("updated")
-    //showToast("Medication updated!")
+    removeQueryParam("updated")
+    showToast("Medication updated!")
   }
 
   try {
     const response = await fetch("http://localhost:8080/api/medications/")
     if (response.status === HttpStatus.NO_CONTENT) {
-      console.log("NO CONTENT")
       let noContentRow = document.createElement("tr")
       let noContentCell = document.createElement("td")
       noContentCell.innerHTML = "NO APPOINTMENTS YET!"
@@ -35,7 +34,7 @@ async function loadAllMedications() {
 }
 
 async function fillMedicationsTable(medications) {
-  const current_user = await getcurrentUser()
+  const current_user = await getCurrentUser()
 
   for (const medication of medications) {
     const medication_row = document.createElement("tr")
@@ -148,14 +147,4 @@ function removeQueryParam(paramToRemove) {
     "",
     url.pathname + "?" + queryParams.toString() + url.hash,
   )
-}
-
-async function getcurrentUser() {
-  const response = await fetch("http://localhost:8080/api/auth/user/current")
-
-  if (response.status === HttpStatus.UNAUTHORIZED) {
-    window.location.href = "/signIn"
-  } else if (response.status === HttpStatus.OK) {
-    return await response.json()
-  }
 }

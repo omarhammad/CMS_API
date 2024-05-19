@@ -133,7 +133,7 @@ public class AppointmentRestController {
 
         // Adding a new appointment and return a response ok with the appointment that contains the ID.
         AppointmentResponseDTO appointmentResponseDTO = appointmentService.addNewAppointment(requestDTO.getDoctor(), requestDTO.getPatientNN(),
-                requestDTO.getAppointmentDateTime(), requestDTO.getPurpose(), AppointmentType.valueOf(requestDTO.getAppointmentType()));
+                requestDTO.getAppointmentSlotId(), requestDTO.getPurpose(), AppointmentType.valueOf(requestDTO.getAppointmentType()));
         return ResponseEntity.status(HttpStatus.CREATED).body(appointmentResponseDTO);
     }
 
@@ -147,7 +147,7 @@ public class AppointmentRestController {
         }
 
         appointmentService.updateAppointment(requestDTO.getAppointmentId(), requestDTO.getDoctor(), requestDTO.getPatientNN(),
-                requestDTO.getAppointmentDateTime(), requestDTO.getPurpose(), AppointmentType.valueOf(requestDTO.getAppointmentType()));
+                requestDTO.getAppointmentSlotId(), requestDTO.getPurpose(), AppointmentType.valueOf(requestDTO.getAppointmentType()));
         return ResponseEntity.noContent().build();
     }
 

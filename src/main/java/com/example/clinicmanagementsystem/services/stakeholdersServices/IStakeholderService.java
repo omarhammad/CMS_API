@@ -51,4 +51,7 @@ public interface IStakeholderService {
     AvailabilityResponseDTO getDoctorAvailability(int availabilityId);
 
     void removeAvailability(int availabilityId);
+
+
+    AvailabilityResponseDTO getAvailability(int availabilityId);
 }

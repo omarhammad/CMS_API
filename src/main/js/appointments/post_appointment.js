@@ -1,5 +1,8 @@
 import { HttpStatus } from "../util/httpStatus.js"
 import { showToast } from "../util/toast.js"
+import { getCurrentUser } from "../util/currentUser.js"
+import { formatDate, formatTime } from "../util/date_time_formatter.js"
+
 const submitBtn = document.getElementById("submitBtn")
 submitBtn.addEventListener("click", postNewAppointment)
 
@@ -17,18 +20,15 @@ async function postNewAppointment() {
     [csrf_header]: csrf_token,
   }
 
-  const appointmentData = getFormData()
-  console.log(appointmentData)
+  const appointmentData = await getFormData()
   try {
     const response = await fetch("http://localhost:8080/api/appointments/", {
       method: "POST",
       headers: headers,
       body: appointmentData,
     })
-    console.log("Entered 1")
     const data = await response.json()
     if (response.status === HttpStatus.BAD_REQUEST) {
-      console.log("Entered 2")
       if (Object.prototype.hasOwnProperty.call(data, "exceptionMsg")) {
         showToast(data.exceptionMsg)
       } else {
@@ -46,7 +46,7 @@ async function postNewAppointment() {
   }
 }
 
-function getFormData() {
+async function getFormData() {
   document.getElementById("doctor").disabled = false
   document.getElementById("patient_nn").disabled = false
   const form = document.getElementById("form")
@@ -55,6 +55,7 @@ function getFormData() {
   for (const [key, value] of formData.entries()) {
     formJson[key] = value
   }
+
   return JSON.stringify(formJson)
 }
 
@@ -102,7 +103,7 @@ function getFieldsErrorElementList(errors) {
 window.addEventListener("DOMContentLoaded", prepareAddPage)
 
 async function prepareAddPage() {
-  const current_user = await getcurrentUser()
+  const current_user = await getCurrentUser()
 
   if (current_user.userRoles.includes("ROLE_PATIENT")) {
     fetch(`http://localhost:8080/api/patients/${current_user.userId}`)
@@ -121,14 +122,39 @@ async function prepareAddPage() {
     doctor_input.value = current_user.userId
     doctor_input.disabled = true
   }
+
+  const doctorSelection = document.getElementById("doctor")
+  setAvailabilities(doctorSelection.value)
+  doctorSelection.addEventListener("change", (event) => {
+    const doctorId = event.target.value
+    setAvailabilities(doctorId)
+  })
 }
 
-async function getcurrentUser() {
-  const response = await fetch("http://localhost:8080/api/auth/user/current")
-
-  if (response.status === HttpStatus.UNAUTHORIZED) {
-    window.location.href = "/signIn"
-  } else if (response.status === HttpStatus.OK) {
-    return await response.json()
+async function setAvailabilities(doctorId) {
+  const appointmentSlots = document.getElementById("appointment_slots")
+  const availabilities_response = await fetch(
+    `/api/doctors/${doctorId}/availability`,
+  )
+  if (availabilities_response.status === HttpStatus.NOT_FOUND) {
+    showToast("Doctor Not Found!")
+  } else if (availabilities_response.status === HttpStatus.NO_CONTENT) {
+    appointmentSlots.innerHTML = null
+    const no_slots = document.createElement("option")
+    no_slots.innerText = "NO AVAILABLE SLOTS!"
+    appointmentSlots.appendChild(no_slots)
+    appointmentSlots.disabled = true
+  } else if (availabilities_response.status === HttpStatus.OK) {
+    appointmentSlots.innerHTML = null
+    const slots = await availabilities_response.json()
+    for (const slot of slots) {
+      const slot_option = document.createElement("option")
+      const slot_date_time = new Date(slot.slot)
+      slot_option.innerText =
+        formatDate(slot_date_time) + " - " + formatTime(slot_date_time)
+      slot_option.value = slot.id
+      appointmentSlots.appendChild(slot_option)
+    }
+    appointmentSlots.disabled = false
   }
 }

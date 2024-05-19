@@ -1,9 +1,9 @@
 package com.example.clinicmanagementsystem.controllers.dtos.appointments;
 
-import com.example.clinicmanagementsystem.domain.util.AppointmentType;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Positive;
 
 import java.time.LocalDateTime;
 
@@ -11,9 +11,8 @@ public class UpdateAppointmentRequestDTO {
 
     private long appointmentId;
 
-    @NotNull(message = "Appointment Date and Time must be provided!")
-    @Future(message = "Your Appointment Should be in future")
-    private LocalDateTime appointmentDateTime;
+    @Positive(message = "Appointment Date and Time must be provided!")
+    private int appointmentSlotId;
     private String purpose;
     private int doctor;
 
@@ -22,12 +21,14 @@ public class UpdateAppointmentRequestDTO {
 
     private String appointmentType;
 
-    public LocalDateTime getAppointmentDateTime() {
-        return appointmentDateTime;
+
+    @NotNull(message = "Appointment Date and Time must be provided!")
+    public int getAppointmentSlotId() {
+        return appointmentSlotId;
     }
 
-    public void setAppointmentDateTime(LocalDateTime appointmentDateTime) {
-        this.appointmentDateTime = appointmentDateTime;
+    public void setAppointmentSlotId(@NotNull(message = "Appointment Date and Time must be provided!") int appointmentSlotId) {
+        this.appointmentSlotId = appointmentSlotId;
     }
 
     public String getPurpose() {

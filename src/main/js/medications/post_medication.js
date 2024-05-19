@@ -12,7 +12,6 @@ submitBtn.addEventListener("click", addNewMedication)
 async function addNewMedication(event) {
   event.preventDefault()
   const medicationJson = getFormData()
-  console.log(medicationJson)
   const csrfToken = document
     .querySelector('meta[name="_csrf"]')
     .getAttribute("content")

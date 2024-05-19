@@ -1,5 +1,8 @@
 import { HttpStatus } from "../util/httpStatus.js"
 import { Toast } from "bootstrap"
+import { getCurrentUser } from "../util/currentUser.js"
+import { formatDate, formatTime } from "../util/date_time_formatter.js"
+
 async function getOneDoctor(doctor_id) {
   try {
     const response = await fetch(
@@ -22,7 +25,6 @@ window.addEventListener("DOMContentLoaded", async () => {
   const doctor_id = Number(segments.pop())
   const data = await getOneDoctor(doctor_id)
   if (data) {
-    console.log(data)
     document.getElementById("fullName").innerText =
       data.firstName + " " + data.lastName
     document.getElementById("specialization").innerText = data.specialization
@@ -30,28 +32,33 @@ window.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("phone").innerText = contactInfo[0]
     document.getElementById("email").innerText = contactInfo[1]
     const appointments = data.appointments
-    if (appointments.length !== 0) {
-      for (const appointment of appointments) {
-        const p = document.createElement("p")
-        p.classList.add("d-block", "details-text", "text-center")
-        const appointment_date_time = new Date(appointment.appointmentDateTime)
-        p.innerText =
-          appointment.patient.firstName +
-          " " +
-          appointment.patient.lastName +
-          ", " +
-          formatDate(appointment_date_time) +
-          " at " +
-          formatTime(appointment_date_time)
+    const current_user = await getCurrentUser()
+    if (!current_user.userRoles.includes("ROLE_PATIENT")) {
+      if (appointments.length !== 0) {
+        for (const appointment of appointments) {
+          const p = document.createElement("p")
+          p.classList.add("d-block", "details-text", "text-center")
+          const appointment_date_time = new Date(
+            appointment.availabilitySlot.slot,
+          )
+          p.innerText =
+            appointment.patient.firstName +
+            " " +
+            appointment.patient.lastName +
+            ", " +
+            formatDate(appointment_date_time) +
+            " at " +
+            formatTime(appointment_date_time)
 
-        document.getElementById("upcoming-appointments").appendChild(p)
-      }
-    } else {
-      const p = document.createElement("p")
-      p.classList.add("h4", "m-3")
-      p.innerText = "There is No appointments"
-      if (document.getElementById("upcoming-appointments")) {
-        document.getElementById("upcoming-appointments").appendChild(p)
+          document.getElementById("upcoming-appointments").appendChild(p)
+        }
+      } else {
+        const p = document.createElement("p")
+        p.classList.add("h4", "m-3")
+        p.innerText = "There is No appointments"
+        if (document.getElementById("upcoming-appointments")) {
+          document.getElementById("upcoming-appointments").appendChild(p)
+        }
       }
     }
   } else {
@@ -61,12 +68,13 @@ window.addEventListener("DOMContentLoaded", async () => {
 })
 
 async function setCurrenDoctorPrivileges(doctor_id) {
-  const current_user = await getcurrentUser()
+  const current_user = await getCurrentUser()
   const card_footer = document.querySelector(".card-footer")
   if (
     current_user.userRoles.includes("ROLE_DOCTOR") &&
     current_user.userId === doctor_id
   ) {
+    // Doctor Profile buttons
     const update_btn = document.createElement("a")
     update_btn.className = "btn btn-primary m-2"
     update_btn.innerText = "Update"
@@ -88,6 +96,7 @@ async function setCurrenDoctorPrivileges(doctor_id) {
       '<i class="bi bi bi-clock-fill text-warning me-3 details-icons"></i>' +
       '<p class="d-inline-block details-text"> Availiabilties : </p>'
 
+    const slots_container = document.createElement("div")
     // adding slots section
     const add_slot_btn_component = document.createElement("div")
     add_slot_btn_component.className = "m-auto row w-50"
@@ -103,10 +112,10 @@ async function setCurrenDoctorPrivileges(doctor_id) {
 
     add_slot_btn.addEventListener("click", async () => {
       const date_time = date_time_picker.value
-      console.log(date_time)
       if (date_time === undefined || date_time === null || date_time === "") {
         showToast("SLOT MUST BE PROVIDED!", "FAIL")
       } else {
+        console.log("SLot Request")
         const csrf_token = document
           .querySelector('meta[name="_csrf"]')
           .getAttribute("content")
@@ -131,12 +140,17 @@ async function setCurrenDoctorPrivileges(doctor_id) {
           },
         )
         const data = await add_slot_response.json()
+        console.log("Add slot log: " + data)
         if (add_slot_response.status === HttpStatus.CREATED) {
           showToast("SLOT ADDED!", "SUCCESS")
           console.log("'Added slot' : " + data)
-          add_slot_component(data, availability_section)
-        } else {
-          showToast(data.exceptionMsg, "FAIL")
+          add_slot_component(data, slots_container)
+        } else if (add_slot_response.status === HttpStatus.BAD_REQUEST) {
+          if (Object.prototype.hasOwnProperty.call(data, "exceptionMsg")) {
+            showToast(data.exceptionMsg, "FAIL")
+          } else {
+            showToast(data.slot, "FAIL")
+          }
         }
       }
     })
@@ -145,6 +159,7 @@ async function setCurrenDoctorPrivileges(doctor_id) {
     add_slot_btn_component.appendChild(add_slot_btn)
 
     // slots components section
+
     const availability_response = await fetch(
       `http://localhost:8080/api/doctors/${doctor_id}/availability`,
     )
@@ -155,10 +170,11 @@ async function setCurrenDoctorPrivileges(doctor_id) {
     } else if (availability_response.status === HttpStatus.OK) {
       const slots = await availability_response.json()
       for (const slot of slots) {
-        add_slot_component(slot, availability_section)
+        add_slot_component(slot, slots_container)
       }
     }
     const card_body = document.querySelector(".card-body")
+    availability_section.appendChild(slots_container)
     availability_section.appendChild(add_slot_btn_component)
     card_body.appendChild(availability_section)
   } else {
@@ -170,7 +186,7 @@ async function setCurrenDoctorPrivileges(doctor_id) {
   }
 }
 
-function add_slot_component(slot, availability_section) {
+function add_slot_component(slot, slots_container) {
   const slot_component = document.createElement("div")
   slot_component.className = "row mb-2 bg-info rounded w-50 m-auto"
   slot_component.id = slot.id
@@ -206,59 +222,25 @@ function add_slot_component(slot, availability_section) {
     if (slot_delete_response.status === HttpStatus.NOT_FOUND) {
       showToast("SLOT NOT FOUND !", "FAIL")
     } else if (slot_delete_response.status === HttpStatus.NO_CONTENT) {
-      availability_section.removeChild(slot_component)
+      slots_container.removeChild(slot_component)
       showToast("SLOT DELETED !", "SUCCESS")
     }
   })
 
   slot_component.appendChild(slot_text)
   slot_component.appendChild(slot_delete)
-  availability_section.appendChild(slot_component)
-}
-
-function formatTime(date) {
-  let hours = date.getHours()
-  const minutes = date.getMinutes()
-  const ampm = hours >= 12 ? "PM" : "AM"
-
-  hours %= 12
-  hours = hours || 12 // the hour '0' should be '12'
-  const minutesFormatted = minutes < 10 ? "0" + minutes : minutes
-
-  return `${hours}:${minutesFormatted} ${ampm}`
-}
-
-function formatDate(date) {
-  const monthNames = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ]
-  const day = date.getDate()
-  const monthIndex = date.getMonth()
-  const year = date.getFullYear()
-
-  return `${monthNames[monthIndex]} ${day}, ${year}`
+  slots_container.appendChild(slot_component)
 }
 
 function showToast(message, bg_color) {
   let toastElement = document.querySelector(".toast")
   let toastBody = toastElement.querySelector(".toast-body")
   if (bg_color === "FAIL") {
-    toastElement.classList.add(" text-bg-danger")
-    toastElement.classList.remove(" text-bg-success")
+    toastElement.classList.add("text-bg-danger")
+    toastElement.classList.remove("text-bg-success")
   } else if (bg_color === "SUCCESS") {
-    toastElement.classList.remove(" text-bg-danger")
-    toastElement.classList.add(" text-bg-success")
+    toastElement.classList.remove("text-bg-danger")
+    toastElement.classList.add("text-bg-success")
   }
   toastBody.innerText = message
 
@@ -266,14 +248,4 @@ function showToast(message, bg_color) {
     autohide: false,
   })
   toast.show()
-}
-
-async function getcurrentUser() {
-  const response = await fetch("http://localhost:8080/api/auth/user/current")
-
-  if (response.status === HttpStatus.UNAUTHORIZED) {
-    window.location.href = "/signIn"
-  } else if (response.status === HttpStatus.OK) {
-    return await response.json()
-  }
 }

@@ -5,7 +5,6 @@ submitBtn.addEventListener("click", signUpNewPatient)
 
 async function signUpNewPatient() {
   const patientJson = getFormData()
-  console.log(patientJson)
   const csrf_token = document
     .querySelector('meta[name="_csrf"]')
     .getAttribute("content")

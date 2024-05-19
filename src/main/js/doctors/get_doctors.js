@@ -1,13 +1,14 @@
+import { getCurrentUser } from "../util/currentUser.js"
 import { HttpStatus } from "../util/httpStatus.js"
 
 window.addEventListener("DOMContentLoaded", getAllDoctors)
 
 async function getAllDoctors() {
-  const current_user = await getcurrentUser()
+  const current_user = await getCurrentUser()
   const doctorsBody = document.querySelector(".doctorsTbody")
   fetch("http://localhost:8080/api/doctors")
     .then((response) => {
-      if (response.status === 204) {
+      if (response.status === HttpStatus.NO_CONTENT) {
         let noContentRow = document.createElement("tr")
         let noContentCell = document.createElement("td")
         noContentCell.innerHTML = "NO DOCTORS !"
@@ -95,9 +96,9 @@ function deleteDoctor(delete_doctor_id) {
     headers: headers,
   })
     .then((response) => {
-      if (response.status === 404) {
+      if (response.status === HttpStatus.NOT_FOUND) {
         console.log("NOT FOUND")
-      } else if (response.status === 204) {
+      } else if (response.status === HttpStatus.NO_CONTENT) {
         console.log("DOCTOR DELETED!")
         document.querySelector(".doctorsTbody").innerHTML = ""
         getAllDoctors()
@@ -106,14 +107,4 @@ function deleteDoctor(delete_doctor_id) {
     .catch((err) => {
       console.error("Omar", err)
     })
-}
-
-async function getcurrentUser() {
-  const response = await fetch("http://localhost:8080/api/auth/user/current")
-
-  if (response.status === HttpStatus.UNAUTHORIZED) {
-    window.location.href = "/signIn"
-  } else if (response.status === HttpStatus.OK) {
-    return await response.json()
-  }
 }

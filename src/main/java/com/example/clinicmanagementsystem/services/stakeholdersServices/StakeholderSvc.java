@@ -12,6 +12,7 @@ import com.example.clinicmanagementsystem.exceptions.SlotUsedException;
 import com.example.clinicmanagementsystem.repository.appointmentsRepo.AppointmentsSpringData;
 import com.example.clinicmanagementsystem.repository.availabilitiesRepo.AvailabilitySpringData;
 import com.example.clinicmanagementsystem.repository.stakeholdersRepo.StakeholdersSpringData;
+import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -256,7 +257,7 @@ public class StakeholderSvc implements IStakeholderService {
     @Override
     public List<AvailabilityResponseDTO> getDoctorAvailablilities(long id) {
         List<Availability> availabilities = availabilityRepo
-                .findAvailabilitiesByDoctor_IdAndUsedIsFalseAndSlotIsAfter(id, LocalDateTime.now());
+                .findAvailabilitiesByDoctor_IdAndUsedIsFalseAndSlotIsAfter(id, LocalDateTime.now().plusMinutes(30));
 
         List<AvailabilityResponseDTO> availabilityResponseDTOS = new ArrayList<>();
         for (Availability availability : availabilities) {
@@ -283,7 +284,7 @@ public class StakeholderSvc implements IStakeholderService {
 
         } catch (DataIntegrityViolationException e) {
             System.out.println("ExceptionReached!");
-            throw new SlotUsedException("Choose another slot");
+            throw new SlotUsedException("Used! choose another slot");
         }
         return responseDTO;
     }
@@ -297,6 +298,13 @@ public class StakeholderSvc implements IStakeholderService {
     @Override
     public void removeAvailability(int availabilityId) {
         availabilityRepo.deleteById(availabilityId);
+    }
+    
+
+    @Override
+    public AvailabilityResponseDTO getAvailability(int availabilityId) {
+        Availability availability = availabilityRepo.findById(availabilityId).orElseThrow(() -> new EntityNotFoundException("Availability Not Found!"));
+        return modelMapper.map(availability, AvailabilityResponseDTO.class);
     }
 
 

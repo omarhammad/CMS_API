@@ -18,7 +18,6 @@ async function addNewPrescription() {
     [csrfHeader]: csrfToken,
   })
   const prescriptionBody = getFormData()
-  console.log(prescriptionBody)
   try {
     const response = await fetch(
       `http://localhost:8080/api/appointments/${appointment_id}/prescription`,
@@ -30,7 +29,6 @@ async function addNewPrescription() {
     )
 
     if (response.status === HttpStatus.BAD_REQUEST) {
-      console.log(response.statusText)
       const data = await response.json()
       if (Object.prototype.hasOwnProperty.call(data, "exceptionMsg")) {
         showToast(data.exceptionMsg)
@@ -38,7 +36,6 @@ async function addNewPrescription() {
         handleFieldsError(data)
       }
     } else if (response.status === HttpStatus.CREATED) {
-      console.log(response.statusText)
       window.location.href = `/appointments/details/${appointment_id}?created=true`
     }
   } catch (error) {

@@ -4,6 +4,7 @@ import com.example.clinicmanagementsystem.exceptions.ContactInfoExistException;
 import com.example.clinicmanagementsystem.controllers.dtos.doctors.*;
 import com.example.clinicmanagementsystem.exceptions.SlotUsedException;
 import com.example.clinicmanagementsystem.services.stakeholdersServices.IStakeholderService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,6 +85,17 @@ public class DoctorRestController {
         System.out.println("Reached!");
         System.out.println(availabilityResponseDTOS);
         return ResponseEntity.ok(availabilityResponseDTOS);
+    }
+
+    @GetMapping("/availability/{availabilityId}")
+    public ResponseEntity<AvailabilityResponseDTO> getAvailability(@PathVariable int availabilityId) {
+        try {
+            AvailabilityResponseDTO responseDTO = service.getAvailability(availabilityId);
+            return ResponseEntity.ok(responseDTO);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+
     }
 
     @PostMapping("/{id}/availability")
@@ -179,7 +191,6 @@ public class DoctorRestController {
                         FieldError::getDefaultMessage,
                         (existingValue, newValue) -> existingValue + "; " + newValue
                 ));
-
         return ResponseEntity.badRequest().body(errors);
     }
 

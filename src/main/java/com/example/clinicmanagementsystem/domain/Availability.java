@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"doctor_id", "slot"}))
@@ -70,6 +71,20 @@ public class Availability {
 
     public void setUsed(boolean used) {
         this.used = used;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Availability that = (Availability) o;
+        return used == that.used && Objects.equals(id, that.id) && Objects.equals(slot, that.slot) && Objects.equals(doctor, that.doctor);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, slot, doctor, used);
     }
 
     @Override

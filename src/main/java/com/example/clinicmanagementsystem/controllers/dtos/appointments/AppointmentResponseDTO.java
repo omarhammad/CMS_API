@@ -1,9 +1,11 @@
 package com.example.clinicmanagementsystem.controllers.dtos.appointments;
 
+import com.example.clinicmanagementsystem.domain.Availability;
 import com.example.clinicmanagementsystem.domain.Doctor;
 import com.example.clinicmanagementsystem.domain.Patient;
 import com.example.clinicmanagementsystem.domain.Prescription;
 import com.example.clinicmanagementsystem.domain.util.AppointmentType;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -12,7 +14,9 @@ public class AppointmentResponseDTO {
 
     private long appointmentId;
 
-    private LocalDateTime appointmentDateTime;
+    @JsonIgnoreProperties(value = {"doctor"})
+    private Availability availabilitySlot;
+
 
     private Doctor doctor;
     private Patient patient;
@@ -31,12 +35,12 @@ public class AppointmentResponseDTO {
         this.appointmentId = appointmentId;
     }
 
-    public LocalDateTime getAppointmentDateTime() {
-        return appointmentDateTime;
+    public Availability getAvailabilitySlot() {
+        return availabilitySlot;
     }
 
-    public void setAppointmentDateTime(LocalDateTime appointmentDateTime) {
-        this.appointmentDateTime = appointmentDateTime;
+    public void setAvailabilitySlot(Availability availabilitySlot) {
+        this.availabilitySlot = availabilitySlot;
     }
 
     public String getPurpose() {
@@ -84,19 +88,19 @@ public class AppointmentResponseDTO {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AppointmentResponseDTO that = (AppointmentResponseDTO) o;
-        return Objects.equals(appointmentDateTime, that.appointmentDateTime) && doctor.equals(that.doctor) && patient.equals(that.patient) && Objects.equals(purpose, that.purpose) && Objects.equals(prescription, that.prescription) && appointmentType == that.appointmentType;
+        return appointmentId == that.appointmentId && Objects.equals(availabilitySlot, that.availabilitySlot) && Objects.equals(doctor, that.doctor) && Objects.equals(patient, that.patient) && Objects.equals(purpose, that.purpose) && Objects.equals(prescription, that.prescription) && appointmentType == that.appointmentType;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash( appointmentDateTime, doctor, patient, purpose, prescription, appointmentType);
+        return Objects.hash(appointmentId, availabilitySlot, doctor, patient, purpose, prescription, appointmentType);
     }
 
     @Override
     public String toString() {
         return "AppointmentResponseDTO{" +
                 "appointmentId=" + appointmentId +
-                ", appointmentDateTime=" + appointmentDateTime +
+                ", appointmentDateTime=" + availabilitySlot.getSlot() +
                 ", doctor=" + doctor +
                 ", patient=" + patient +
                 ", purpose='" + purpose + '\'' +

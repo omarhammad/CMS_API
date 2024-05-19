@@ -2,6 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <th:block th:insert="~{fragments/heading :: heading (title = 'Add Appointment')}"/>
+
 </head>
 <body>
 <div class="toast-container">
@@ -40,11 +41,10 @@
 
         </div>
         <div th:class="mt-3">
-            <label th:class="'form-label'" th:for="appointment_date_time" th:text="#{appointment_form.time}"></label>
-            <input id="appointment_date_time"
-                   th:class="'form-control'"
-                   type="datetime-local"
-                   placeholder="HH:mm a" name="appointmentDateTime">
+            <label th:class="'form-label'" th:for="appointment_slots" th:text="#{appointment_form.time}"></label>
+            <select th:class="form-select" id="appointment_slots" name="appointmentSlotId">
+                <!-- TO BE ADDED IN JS-->
+            </select>
             <ul>
 
             </ul>

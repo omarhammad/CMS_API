@@ -10,7 +10,6 @@ async function loadPatient() {
     )
 
     if (response.status === HttpStatus.NOT_FOUND) {
-      console.log(response.statusText)
     } else if (response.status === HttpStatus.OK) {
       const patient = await response.json()
       fillPage(patient)
@@ -67,7 +66,6 @@ function fillPage(patient) {
       if (appointment_prescriptions === null) {
         medicationNames = "nothing."
       } else {
-        console.log(appointment_prescriptions)
         const medications = appointment_prescriptions["medications"]
         medicationNames = medications.reduce(
           (acc, medication, index, array) => {

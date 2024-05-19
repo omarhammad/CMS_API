@@ -1,5 +1,8 @@
 import { HttpStatus } from "../util/httpStatus.js"
 import { showToast } from "../util/toast.js"
+import { getCurrentUser } from "../util/currentUser.js"
+import { formatDate, formatTime } from "../util/date_time_formatter.js"
+
 window.addEventListener("DOMContentLoaded", loadAppointmentData)
 
 async function loadAppointmentData() {
@@ -16,19 +19,48 @@ async function loadAppointmentData() {
     } else if (response.ok) {
       const appointment = await response.json()
 
-      const current_user = await getcurrentUser()
+      const current_user = await getCurrentUser()
+
+      const patient_nn_input = document.getElementById("patient_nn")
+      const doctor_selection = document.getElementById("doctor")
+      const appointmentSlots = document.getElementById("appointment_slots")
 
       if (current_user.userRoles.includes("ROLE_PATIENT")) {
-        const patient_nn_input = document.getElementById("patient_nn")
         patient_nn_input.value = appointment.patient.nationalNumber
         patient_nn_input.disabled = true
+        doctor_selection.value = appointment.doctor.id
       } else if (current_user.userRoles.includes("ROLE_DOCTOR")) {
-        const doctor_input = document.getElementById("doctor")
-        doctor_input.value = appointment.doctor.id
-        doctor_input.disabled = true
+        doctor_selection.value = appointment.doctor.id
+        doctor_selection.disabled = true
+        patient_nn_input.value = appointment.patient.nationalNumber
+      } else if (
+        current_user.userRoles.includes("ROLE_ADMIN", "ROLE_SECRETARY")
+      ) {
+        patient_nn_input.value = appointment.patient.nationalNumber
+        doctor_selection.value = appointment.doctor.id
       }
-      document.getElementById("appointment_date_time").value =
-        appointment.appointmentDateTime
+
+      // SET DOCTORS AVAILABILITIES ON CHANGE....
+
+      await setAvailabilities(appointmentSlots, doctor_selection.value)
+      appointmentSlots.appendChild(
+        get_slot_option(appointment.availabilitySlot),
+      )
+
+      doctor_selection.addEventListener("change", async (event) => {
+        const doctorId = Number(event.target.value)
+        await setAvailabilities(appointmentSlots, doctorId)
+        if (doctorId === appointment.doctor.id) {
+          console.log("Adding current Appointmetn slot")
+          appointmentSlots.appendChild(
+            get_slot_option(appointment.availabilitySlot),
+          )
+        }
+      })
+
+      document.getElementById("appointment_slots").value =
+        appointment.availabilitySlot.id
+
       document.getElementById("appointment_type").value =
         appointment.appointmentType
       document.getElementById("purpose").value = appointment.purpose
@@ -141,12 +173,33 @@ function getFieldsErrorElementList(errors) {
   return ulElement
 }
 
-async function getcurrentUser() {
-  const response = await fetch("http://localhost:8080/api/auth/user/current")
-
-  if (response.status === HttpStatus.UNAUTHORIZED) {
-    window.location.href = "/signIn"
-  } else if (response.status === HttpStatus.OK) {
-    return await response.json()
+async function setAvailabilities(appointmentSlots, doctorId) {
+  const availabilities_response = await fetch(
+    `/api/doctors/${doctorId}/availability`,
+  )
+  if (availabilities_response.status === HttpStatus.NOT_FOUND) {
+    showToast("Doctor Not Found!")
+  } else if (availabilities_response.status === HttpStatus.NO_CONTENT) {
+    appointmentSlots.innerHTML = null
+    const no_slots = document.createElement("option")
+    no_slots.innerText = "NO AVAILABLE SLOTS!"
+    appointmentSlots.appendChild(no_slots)
+    appointmentSlots.disabled = true
+  } else if (availabilities_response.status === HttpStatus.OK) {
+    appointmentSlots.innerHTML = null
+    const slots = await availabilities_response.json()
+    for (const slot of slots) {
+      appointmentSlots.appendChild(get_slot_option(slot))
+    }
+    appointmentSlots.disabled = false
   }
+}
+
+function get_slot_option(slot) {
+  const slot_option = document.createElement("option")
+  const slot_date_time = new Date(slot.slot)
+  slot_option.innerText =
+    formatDate(slot_date_time) + " - " + formatTime(slot_date_time)
+  slot_option.value = slot.id
+  return slot_option
 }

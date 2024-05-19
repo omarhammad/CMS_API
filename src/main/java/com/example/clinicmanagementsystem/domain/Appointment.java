@@ -1,23 +1,26 @@
 package com.example.clinicmanagementsystem.domain;
 
 import com.example.clinicmanagementsystem.domain.util.AppointmentType;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "appointments", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"appointmentDateTime", "doctor_id", "patient_id"}),
-        @UniqueConstraint(columnNames = {"appointmentDateTime", "doctor_id"}),
-        @UniqueConstraint(columnNames = {"appointmentDateTime", "patient_id"})
+        @UniqueConstraint(columnNames = {"slot_id", "doctor_id", "patient_id"}),
+        @UniqueConstraint(columnNames = {"slot_id", "doctor_id"}),
+        @UniqueConstraint(columnNames = {"slot_id", "patient_id"})
 })
 public class Appointment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long appointmentId;
-    @Column(nullable = false)
-    private LocalDateTime appointmentDateTime;
+    @OneToOne
+    @JoinColumn(name = "slot_id")
+    @JsonIgnoreProperties("doctor") // Prevents back-serialization to Doctor
+    private Availability availabilitySlot;
     private String purpose;
 
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.EAGER)
@@ -39,24 +42,24 @@ public class Appointment {
     }
 
 
-    public Appointment(int appointmentId, LocalDateTime appointmentDateTime, String purpose, Doctor doctor, Patient patient, AppointmentType appointmentType) {
+    public Appointment(int appointmentId, Availability availabilitySlot, String purpose, Doctor doctor, Patient patient, AppointmentType appointmentType) {
         this.appointmentId = appointmentId;
-        this.appointmentDateTime = appointmentDateTime;
+        this.availabilitySlot = availabilitySlot;
         this.purpose = purpose;
         this.doctor = doctor;
         this.patient = patient;
         this.appointmentType = appointmentType;
     }
 
-    public Appointment(int appointmentId, LocalDateTime appointmentDateTime, String purpose, AppointmentType appointmentType) {
+    public Appointment(int appointmentId, Availability availabilitySlot, String purpose, AppointmentType appointmentType) {
         this.appointmentId = appointmentId;
-        this.appointmentDateTime = appointmentDateTime;
+        this.availabilitySlot = availabilitySlot;
         this.purpose = purpose;
         this.appointmentType = appointmentType;
     }
 
-    public Appointment(LocalDateTime appointmentDateTime, String purpose, Doctor doctor, Patient patient, AppointmentType appointmentType) {
-        this.appointmentDateTime = appointmentDateTime;
+    public Appointment(Availability availabilitySlot, String purpose, Doctor doctor, Patient patient, AppointmentType appointmentType) {
+        this.availabilitySlot = availabilitySlot;
         this.purpose = purpose;
         this.doctor = doctor;
         this.patient = patient;
@@ -72,12 +75,12 @@ public class Appointment {
         this.appointmentId = appointmentId;
     }
 
-    public LocalDateTime getAppointmentDateTime() {
-        return appointmentDateTime;
+    public Availability getAvailabilitySlot() {
+        return availabilitySlot;
     }
 
-    public void setAppointmentDateTime(LocalDateTime appointmentDateTime) {
-        this.appointmentDateTime = appointmentDateTime;
+    public void setAvailabilitySlot(Availability appointmentDateTime) {
+        this.availabilitySlot = appointmentDateTime;
     }
 
     public String getPurpose() {
@@ -122,7 +125,7 @@ public class Appointment {
     }
 
     public boolean isDone() {
-        return this.appointmentDateTime.isBefore(LocalDateTime.now());
+        return this.availabilitySlot.getSlot().isBefore(LocalDateTime.now());
     }
 
 
@@ -130,7 +133,7 @@ public class Appointment {
     public String toString() {
         return "Appointment{" +
                 "appointmentId=" + appointmentId +
-                ", appointmentDateTime=" + appointmentDateTime +
+                ", appointmentDateTime=" + availabilitySlot +
                 ", purpose='" + purpose + '\'' +
                 ", doctor=" + doctor +
                 ", patient=" + patient +

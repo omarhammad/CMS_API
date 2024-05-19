@@ -16,7 +16,6 @@ window.addEventListener("DOMContentLoaded", loadMedication)
 async function updateMedication(event) {
   event.preventDefault()
   const medicationJson = getFormData()
-  console.log("Updating medication with data:", medicationJson)
   const csrfToken = document
     .querySelector('meta[name="_csrf"]')
     .getAttribute("content")
@@ -46,7 +45,6 @@ async function updateMedication(event) {
         handleFieldsError(data)
       }
     } else if (response.status === HttpStatus.NO_CONTENT) {
-      console.log("Redirecting to: /medications?updated=true")
       window.location.href = "/medications?updated=true"
     }
   } catch (error) {

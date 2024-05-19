@@ -19,9 +19,9 @@ public interface IAppointmentService {
 
     boolean changeAppointmentDate(LocalDateTime newAppointmentDate);
 
-    AppointmentResponseDTO addNewAppointment(long doctorId, String patientNationalNumber, LocalDateTime appointmentDateTime, String purpose, AppointmentType type);
+    AppointmentResponseDTO addNewAppointment(long doctorId, String patientNationalNumber, int appointmentSlotId, String purpose, AppointmentType type);
 
-    AppointmentResponseDTO updateAppointment(long appointmentId, long doctorId, String patientNationalNumber, LocalDateTime appointmentDateTime, String purpose, AppointmentType type);
+    AppointmentResponseDTO updateAppointment(long appointmentId, long doctorId, String patientNationalNumber, int availabilitySlotId, String purpose, AppointmentType type);
 
 
     boolean removeAppointment(long appointmentId);

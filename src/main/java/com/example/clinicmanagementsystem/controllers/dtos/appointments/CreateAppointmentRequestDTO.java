@@ -1,21 +1,13 @@
 package com.example.clinicmanagementsystem.controllers.dtos.appointments;
 
-import com.example.clinicmanagementsystem.domain.Doctor;
-import com.example.clinicmanagementsystem.domain.Patient;
-import com.example.clinicmanagementsystem.domain.Prescription;
-import com.example.clinicmanagementsystem.domain.util.AppointmentType;
-import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 
-import java.time.LocalDateTime;
-
 public class CreateAppointmentRequestDTO {
 
     @NotNull(message = "Appointment Date and Time must be provided!")
-    @Future(message = "Your Appointment Should be in future")
-    private LocalDateTime appointmentDateTime;
+    private int appointmentSlotId;
     private String purpose;
     @Positive(message = "Doctor id must be provided!")
     private int doctor;
@@ -27,24 +19,22 @@ public class CreateAppointmentRequestDTO {
     private String appointmentType;
 
 
-    public CreateAppointmentRequestDTO() {
-
-    }
-
-    public CreateAppointmentRequestDTO(LocalDateTime appointmentDateTime, String purpose, int doctor, String patientNN, String appointmentType) {
-        this.appointmentDateTime = appointmentDateTime;
+    public CreateAppointmentRequestDTO(int appointmentSlotId, String purpose, int doctor, String patientNN, String appointmentType) {
+        this.appointmentSlotId = appointmentSlotId;
         this.purpose = purpose;
         this.doctor = doctor;
         this.patientNN = patientNN;
         this.appointmentType = appointmentType;
     }
 
-    public LocalDateTime getAppointmentDateTime() {
-        return appointmentDateTime;
+
+    @NotNull(message = "Appointment Date and Time must be provided!")
+    public int getAppointmentSlotId() {
+        return appointmentSlotId;
     }
 
-    public void setAppointmentDateTime(LocalDateTime appointmentDateTime) {
-        this.appointmentDateTime = appointmentDateTime;
+    public void setAppointmentSlotId(@NotNull(message = "Appointment Date and Time must be provided!") int appointmentSlotId) {
+        this.appointmentSlotId = appointmentSlotId;
     }
 
     public String getPurpose() {
@@ -82,7 +72,7 @@ public class CreateAppointmentRequestDTO {
     @Override
     public String toString() {
         return "CreateAppointmentRequestDTO{" +
-                "appointmentDateTime=" + appointmentDateTime +
+                "appointmentDateTime=" + appointmentSlotId +
                 ", purpose='" + purpose + '\'' +
                 ", doctor=" + doctor +
                 ", patientNN='" + patientNN + '\'' +

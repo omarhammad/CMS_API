@@ -39,13 +39,26 @@ VALUES ('Mahmoud', 'Hammad', 'secretary', '$2a$10$l7OaNsKv6s9FkonaKSdMquYrRvF1kW
        ('Omar', 'Hammad', 'admin', '$2a$10$l7OaNsKv6s9FkonaKSdMquYrRvF1kWLC51w.I62RM4yFkfpdLjNGe', 'ADMIN');
 
 
-INSERT INTO appointments (appointment_date_time, purpose, doctor_id, patient_id, appointment_type, prescription_id)
-VALUES ('2023-01-15 10:00:00', 'Routine Checkup', 1, 6, 'CONSULTATION', 1),
-       ('2023-01-20 14:30:00', 'Follow-up', 2, 7, 'FOLLOW_UP', 2),
-       ('2023-02-05 09:00:00', 'Annual Physical', 3, 8, 'DIAGNOSTIC_TESTING', 3),
-       ('2024-03-20 16:00:00', 'Consultation for Symptoms', 4, 9, 'CONSULTATION', 4);
-INSERT INTO appointments (appointment_date_time, purpose, doctor_id, patient_id, appointment_type)
-VALUES ('2023-02-18 11:30:00', 'Emergency Visit', 5, 6, 'EMERGENCY');
+INSERT INTO availability(slot, used, doctor_id)
+VALUES ('2024-06-20 10:30', TRUE, 1),
+       ('2024-06-20 11:00', TRUE, 2),
+       ('2024-06-20 11:30', TRUE, 3),
+       ('2024-06-20 12:00', TRUE, 4),
+       ('2024-06-20 01:00', TRUE, 1),
+       ('2024-06-20 02:00', FALSE, 1),
+       ('2024-06-20 01:00', FALSE, 2),
+       ('2024-06-20 02:00', FALSE, 2),
+       ('2024-06-20 01:00', FALSE, 3),
+       ('2024-06-20 02:00', FALSE, 3),
+       ('2024-06-20 01:00', FALSE, 4),
+       ('2024-06-20 02:00', FALSE, 4);
+
+INSERT INTO appointments (slot_id, purpose, doctor_id, patient_id, appointment_type, prescription_id)
+VALUES (1, 'Routine Checkup', 1, 6, 'CONSULTATION', 1),
+       (2, 'Follow-up', 2, 7, 'FOLLOW_UP', 2),
+       (3, 'Annual Physical', 3, 8, 'DIAGNOSTIC_TESTING', 3),
+       (4, 'Consultation for Symptoms', 4, 9, 'CONSULTATION', 4),
+       (5, 'Consultation for Symptoms', 1, 9, 'CONSULTATION', null);
 
 INSERT INTO medications (name, form, unit, quantity, frequencies, days_duration, notes)
 VALUES ('MedicationA', 'Tablets', 'MG', 500, 2, 14, 'Take after meals'),
@@ -74,10 +87,6 @@ VALUES (1, 1),
 
 
 
-INSERT INTO availability(slot, used, doctor_id)
-VALUES ('2024-05-20 10:30', FALSE, 2),
-       ('2024-05-20 11:00', FALSE, 2),
-       ('2024-05-20 11:30', FALSE, 2),
-       ('2024-12-20 12:00', FALSE, 2);
+
 
 COMMIT;

@@ -1,5 +1,7 @@
 import { HttpStatus } from "../util/httpStatus.js"
 import { showToast } from "../util/toast.js"
+import { getCurrentUser } from "../util/currentUser.js"
+
 window.addEventListener("DOMContentLoaded", loadAllPatients)
 const patientTable = document.getElementById("patients_table_body")
 
@@ -70,7 +72,7 @@ async function fillInTable(patients) {
       table_row.appendChild(table_cell)
     }
 
-    const current_user = await getcurrentUser()
+    const current_user = await getCurrentUser()
 
     if (
       !(
@@ -152,14 +154,4 @@ function removeQueryParam(paramToRemove) {
     "",
     url.pathname + "?" + queryParams.toString() + url.hash,
   )
-}
-
-async function getcurrentUser() {
-  const response = await fetch("http://localhost:8080/api/auth/user/current")
-
-  if (response.status === HttpStatus.UNAUTHORIZED) {
-    window.location.href = "/signIn"
-  } else if (response.status === HttpStatus.OK) {
-    return await response.json()
-  }
 }

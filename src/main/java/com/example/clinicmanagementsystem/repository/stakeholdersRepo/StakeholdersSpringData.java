@@ -33,14 +33,14 @@ public interface StakeholdersSpringData extends JpaRepository<Stakeholder, Long>
             "FROM Appointment a " +
             "JOIN a.patient p " +
             "WHERE a.doctor.id = :doctorId " +
-            "AND a.appointmentDateTime > current_timestamp ")
+            "AND a.availabilitySlot.slot > current_timestamp ")
     List<Patient> findDoctorPatients(Long doctorId);
 
     @Query("SELECT DISTINCT d " +
             "FROM Appointment a " +
             "JOIN a.doctor d " +
             "WHERE a.patient.id = :patientId " +
-            "AND a.appointmentDateTime > current_timestamp ")
+            "AND a.availabilitySlot.slot > current_timestamp ")
     List<Doctor> findPatientDoctors(Long patientId);
 
     @Override

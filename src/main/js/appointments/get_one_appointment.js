@@ -2,11 +2,13 @@ import { HttpStatus } from "../util/httpStatus.js"
 
 window.addEventListener("DOMContentLoaded", loadAppointmentData)
 import { showToast } from "../util/toast.js"
+import { getCurrentUser } from "../util/currentUser.js"
+import { formatDate, formatTime } from "../util/date_time_formatter.js"
 
 const appointment_id = window.location.pathname.split("/").pop()
 
 async function loadAppointmentData() {
-  const current_user = await getcurrentUser()
+  const current_user = await getCurrentUser()
   const params = new URLSearchParams(window.location.search)
   if (params.has("created")) {
     removeQueryParam("created")
@@ -21,7 +23,7 @@ async function loadAppointmentData() {
       console.log("NOT FOUND !")
     } else if (response.ok) {
       const appointment = await response.json()
-      const appointmentDateTime = new Date(appointment.appointmentDateTime)
+      const appointmentDateTime = new Date(appointment.availabilitySlot.slot)
       document.getElementById("appointment_date").innerText =
         formatDate(appointmentDateTime)
       document.getElementById("appointment_time").innerText =
@@ -100,26 +102,6 @@ async function loadAppointmentData() {
   }
 }
 
-function formatTime(date) {
-  let hours = date.getHours()
-  const minutes = date.getMinutes()
-  const ampm = hours >= 12 ? "PM" : "AM"
-
-  hours %= 12
-  hours = hours || 12 // the hour '0' should be '12'
-  const minutesFormatted = minutes < 10 ? "0" + minutes : minutes
-
-  return `${hours}:${minutesFormatted} ${ampm}`
-}
-
-function formatDate(date) {
-  const day = date.getDate().toString().padStart(2, "0")
-  const month = (date.getMonth() + 1).toString().padStart(2, "0") // getMonth() is zero-indexed
-  const year = date.getFullYear()
-
-  return `${day}/${month}/${year}`
-}
-
 async function deletePrescription(prescriptionId) {
   const csrfToken = document
     .querySelector('meta[name="_csrf"]')
@@ -164,14 +146,4 @@ function removeQueryParam(paramToRemove) {
     "",
     url.pathname + "?" + queryParams.toString() + url.hash,
   )
-}
-
-async function getcurrentUser() {
-  const response = await fetch("http://localhost:8080/api/auth/user/current")
-
-  if (response.status === HttpStatus.UNAUTHORIZED) {
-    window.location.href = "/signIn"
-  } else if (response.status === HttpStatus.OK) {
-    return await response.json()
-  }
 }

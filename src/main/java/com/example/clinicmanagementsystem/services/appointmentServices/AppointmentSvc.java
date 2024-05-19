@@ -1,16 +1,17 @@
 package com.example.clinicmanagementsystem.services.appointmentServices;
 
 
-import com.example.clinicmanagementsystem.exceptions.AppointmentNotFoundException;
-import com.example.clinicmanagementsystem.exceptions.DoctorNotFoundException;
-import com.example.clinicmanagementsystem.exceptions.InvalidAppointmentException;
-import com.example.clinicmanagementsystem.exceptions.NationalNumberNotFoundException;
+import com.example.clinicmanagementsystem.domain.Availability;
+import com.example.clinicmanagementsystem.exceptions.*;
 import com.example.clinicmanagementsystem.domain.Appointment;
 import com.example.clinicmanagementsystem.domain.Doctor;
 import com.example.clinicmanagementsystem.domain.util.AppointmentType;
 import com.example.clinicmanagementsystem.controllers.dtos.appointments.AppointmentResponseDTO;
 import com.example.clinicmanagementsystem.repository.appointmentsRepo.AppointmentsSpringData;
+import com.example.clinicmanagementsystem.repository.availabilitiesRepo.AvailabilitySpringData;
 import com.example.clinicmanagementsystem.repository.stakeholdersRepo.StakeholdersSpringData;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -26,12 +27,14 @@ public class AppointmentSvc implements IAppointmentService {
 
     private final AppointmentsSpringData appointmentRepo;
     private final StakeholdersSpringData stakeholdersRepo;
+    private final AvailabilitySpringData availabilityRepo;
     private final ModelMapper modelMapper;
 
 
-    public AppointmentSvc(AppointmentsSpringData appointmentRepo, StakeholdersSpringData stakeholdersRepo, ModelMapper modelMapper) {
+    public AppointmentSvc(AppointmentsSpringData appointmentRepo, StakeholdersSpringData stakeholdersRepo, AvailabilitySpringData availabilityRepo, ModelMapper modelMapper) {
         this.appointmentRepo = appointmentRepo;
         this.stakeholdersRepo = stakeholdersRepo;
+        this.availabilityRepo = availabilityRepo;
         this.modelMapper = modelMapper;
     }
 
@@ -66,7 +69,8 @@ public class AppointmentSvc implements IAppointmentService {
     }
 
     @Override
-    public AppointmentResponseDTO addNewAppointment(long doctorId, String patientNationalNumber, LocalDateTime appointmentDateTime, String purpose, AppointmentType type) {
+    @Transactional
+    public AppointmentResponseDTO addNewAppointment(long doctorId, String patientNationalNumber, int appointmentSlotId, String purpose, AppointmentType type) {
         Appointment appointment = new Appointment();
         appointment.setDoctor((Doctor) stakeholdersRepo.findById(doctorId).orElse(null));
         appointment.setPatient(stakeholdersRepo.findPatientByNationalNumber(patientNationalNumber).orElse(null));
@@ -74,8 +78,13 @@ public class AppointmentSvc implements IAppointmentService {
         if (appointment.getPatient() == null) throw new NationalNumberNotFoundException(patientNationalNumber);
         if (appointment.getDoctor() == null) throw new DoctorNotFoundException("Doctor not found!");
 
+        Availability availability = availabilityRepo.findById(appointmentSlotId).orElseThrow(() -> new EntityNotFoundException("Availability Not Found!"));
 
-        appointment.setAppointmentDateTime(appointmentDateTime);
+        if (availability.isUsed()) {
+            throw new SlotUsedException("This slot is used!");
+        }
+
+        appointment.setAvailabilitySlot(availability);
         appointment.setPurpose(purpose);
         appointment.setAppointmentType(type);
 
@@ -87,7 +96,7 @@ public class AppointmentSvc implements IAppointmentService {
             String doctorName = appointment.getDoctor().getFirstName() + " " + appointment.getDoctor().getLastName();
             String patientName = appointment.getPatient().getFirstName() + " " + appointment.getPatient().getLastName();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM hh:mm a");
-            String appDateTime = appointment.getAppointmentDateTime().format(formatter);
+            String appDateTime = appointment.getAvailabilitySlot().getSlot().format(formatter);
 
             if (e.getMessage().contains("appointments_appointment_date_time_doctor_id_patient_id_key")) {
                 System.out.println("doctor and patient has the same appointment slot");
@@ -106,26 +115,46 @@ public class AppointmentSvc implements IAppointmentService {
             throw new InvalidAppointmentException(message);
         }
 
+        availability.setUsed(true);
+        availabilityRepo.save(availability);
+
         return modelMapper.map(savedAppointment, AppointmentResponseDTO.class);
     }
 
     @Override
-    public AppointmentResponseDTO updateAppointment(long appointmentId, long doctorId, String patientNationalNumber, LocalDateTime appointmentDateTime, String purpose, AppointmentType type) {
+    @Transactional
+    public AppointmentResponseDTO updateAppointment(long appointmentId, long doctorId, String patientNationalNumber, int availabilitySlotId, String purpose, AppointmentType type) {
 
-        if (appointmentRepo.findById(appointmentId).isEmpty())
-            throw new AppointmentNotFoundException("Appointment Not Found!");
+        Appointment appointment = appointmentRepo.findById(appointmentId).orElseThrow(()
+                -> new AppointmentNotFoundException("Appointment Not Found!"));
+
+        Availability oldAvailability = appointment.getAvailabilitySlot();
+
+        appointment.setDoctor((Doctor) stakeholdersRepo.findById(doctorId).orElseThrow(() ->
+                new DoctorNotFoundException("Doctor Not Found!")));
+
+        appointment.setPatient(stakeholdersRepo.findPatientByNationalNumber(patientNationalNumber).orElseThrow(() ->
+                new NationalNumberNotFoundException(patientNationalNumber)));
+
+        Availability newAvailability = availabilityRepo.findById(availabilitySlotId).orElseThrow(() ->
+                new EntityNotFoundException("Availability Not Found!"));
 
 
-        Appointment appointment = new Appointment();
-        appointment.setDoctor((Doctor) stakeholdersRepo.findById(doctorId).orElse(null));
-        appointment.setPatient(stakeholdersRepo.findPatientByNationalNumber(patientNationalNumber).orElse(null));
+        if (!oldAvailability.getId().equals(newAvailability.getId())) {
 
-        if (appointment.getPatient() == null) throw new NationalNumberNotFoundException(patientNationalNumber);
-        if (appointment.getDoctor() == null) throw new DoctorNotFoundException("Doctor Not Found!");
+            if (newAvailability.isUsed()) {
+                throw new SlotUsedException("Slot already Used!");
+            }
+            oldAvailability.setUsed(false);
+            newAvailability.setUsed(true);
 
+            availabilityRepo.save(oldAvailability);
+            availabilityRepo.save(newAvailability);
+
+        }
 
         appointment.setAppointmentId(appointmentId);
-        appointment.setAppointmentDateTime(appointmentDateTime);
+        appointment.setAvailabilitySlot(newAvailability);
         appointment.setPurpose(purpose);
         appointment.setAppointmentType(type);
 
@@ -136,7 +165,7 @@ public class AppointmentSvc implements IAppointmentService {
             String doctorName = appointment.getDoctor().getFirstName() + " " + appointment.getDoctor().getLastName();
             String patientName = appointment.getPatient().getFirstName() + " " + appointment.getPatient().getLastName();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM hh:mm a");
-            String appDateTime = appointment.getAppointmentDateTime().format(formatter);
+            String appDateTime = appointment.getAvailabilitySlot().getSlot().format(formatter);
 
             if (e.getMessage().contains("appointments_appointment_date_time_doctor_id_patient_id_key")) {
                 System.out.println("doctor and patient has the same appointment slot");
@@ -158,13 +187,15 @@ public class AppointmentSvc implements IAppointmentService {
     }
 
     @Override
+    @Transactional
     public boolean removeAppointment(long appointmentId) {
-        if (appointmentRepo.findById(appointmentId).isPresent()) {
-            appointmentRepo.deleteById(appointmentId);
-            return true;
-        } else {
-            return false;
-        }
+        Appointment appointment = appointmentRepo.findById(appointmentId).orElseThrow(() -> new EntityNotFoundException("Appointment Not Found!"));
+        Availability availability = appointment.getAvailabilitySlot();
+        availability.setUsed(false);
+        availabilityRepo.save(availability);
+        appointmentRepo.deleteById(appointmentId);
+        return true;
+
     }
 
     @Override
