@@ -46,6 +46,7 @@ async function loadAppointmentData() {
       appointmentSlots.appendChild(
         get_slot_option(appointment.availabilitySlot),
       )
+      appointmentSlots.value = appointment.availabilitySlot.id
 
       doctor_selection.addEventListener("change", async (event) => {
         const doctorId = Number(event.target.value)
@@ -55,6 +56,7 @@ async function loadAppointmentData() {
           appointmentSlots.appendChild(
             get_slot_option(appointment.availabilitySlot),
           )
+          appointmentSlots.value = appointment.availabilitySlot.id
         }
       })
 
@@ -120,7 +122,11 @@ async function put_appointments() {
 function getFormData() {
   document.getElementById("doctor").disabled = false
   document.getElementById("patient_nn").disabled = false
+  const currentSlotSelected = document.getElementById("appointment_slots").value
 
+  if (currentSlotSelected !== 0) {
+    document.getElementById("appointment_slots").disabled = false
+  }
   const form = document.getElementById("form")
   const formData = new FormData(form)
   const formJson = {
@@ -183,6 +189,7 @@ async function setAvailabilities(appointmentSlots, doctorId) {
     appointmentSlots.innerHTML = null
     const no_slots = document.createElement("option")
     no_slots.innerText = "NO AVAILABLE SLOTS!"
+    no_slots.value = 0
     appointmentSlots.appendChild(no_slots)
     appointmentSlots.disabled = true
   } else if (availabilities_response.status === HttpStatus.OK) {
