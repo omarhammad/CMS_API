@@ -26,6 +26,7 @@ async function loadPatientData() {
 }
 
 function fillForm(patient) {
+  console.log(patient)
   document.getElementById("first_name").value = patient["firstName"]
   document.getElementById("last_name").value = patient["lastName"]
   document.getElementById("gender").value = patient["gender"]

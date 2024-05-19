@@ -40,18 +40,18 @@ VALUES ('Mahmoud', 'Hammad', 'secretary', '$2a$10$l7OaNsKv6s9FkonaKSdMquYrRvF1kW
 
 
 INSERT INTO availability(slot, used, doctor_id)
-VALUES ('2024-06-20 10:30', TRUE, 1),
-       ('2024-06-20 11:00', TRUE, 2),
-       ('2024-06-20 11:30', TRUE, 3),
-       ('2024-06-20 12:00', TRUE, 4),
-       ('2024-06-20 01:00', TRUE, 1),
-       ('2024-06-20 02:00', FALSE, 1),
-       ('2024-06-20 01:00', FALSE, 2),
-       ('2024-06-20 02:00', FALSE, 2),
-       ('2024-06-20 01:00', FALSE, 3),
-       ('2024-06-20 02:00', FALSE, 3),
-       ('2024-06-20 01:00', FALSE, 4),
-       ('2024-06-20 02:00', FALSE, 4);
+VALUES ('2024-05-20 12:00 PM', TRUE, 1),
+       ('2024-06-20 11:00 PM', TRUE, 2),
+       ('2024-06-20 11:30 PM', TRUE, 3),
+       ('2024-06-20 12:00 PM', TRUE, 4),
+       ('2024-06-20 01:00 PM', TRUE, 1),
+       ('2024-06-20 02:00 PM', FALSE, 1),
+       ('2024-06-20 01:00 PM', FALSE, 2),
+       ('2024-06-20 02:00 PM', FALSE, 2),
+       ('2024-06-20 01:00 PM', FALSE, 3),
+       ('2024-06-20 02:00 PM', FALSE, 3),
+       ('2024-06-20 01:00 PM', FALSE, 4),
+       ('2024-06-20 02:00 PM', FALSE, 4);
 
 INSERT INTO appointments (slot_id, purpose, doctor_id, patient_id, appointment_type, prescription_id)
 VALUES (1, 'Routine Checkup', 1, 6, 'CONSULTATION', 1),

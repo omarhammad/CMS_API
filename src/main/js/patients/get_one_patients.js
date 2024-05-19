@@ -56,7 +56,7 @@ function fillPage(patient) {
       const medical_record = document.createElement("div")
       medical_record.className = "card-text m-2 mb-4 h5"
       const appointment_date = formatDate(
-        new Date(appointment["appointmentDateTime"]),
+        new Date(appointment["availabilitySlot"].slot),
       )
       const appointment_doctor =
         appointment.doctor["firstName"] + " " + appointment.doctor["lastName"]
