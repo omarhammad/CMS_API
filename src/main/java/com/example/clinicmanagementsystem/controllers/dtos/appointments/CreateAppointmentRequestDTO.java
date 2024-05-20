@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Positive;
 
 public class CreateAppointmentRequestDTO {
 
-    @NotNull(message = "Appointment Date and Time must be provided!")
+    @Positive(message = "Appointment Date and Time must be provided!")
     private int appointmentSlotId;
     private String purpose;
     @Positive(message = "Doctor id must be provided!")

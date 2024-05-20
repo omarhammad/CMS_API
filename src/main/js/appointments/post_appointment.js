@@ -2,18 +2,13 @@ import { HttpStatus } from "../util/httpStatus.js"
 import { showToast } from "../util/toast.js"
 import { getCurrentUser } from "../util/currentUser.js"
 import { formatDate, formatTime } from "../util/date_time_formatter.js"
+import { csrf_header, csrf_token } from "../util/csrf.js"
+import * as Joi from "joi"
 
 const submitBtn = document.getElementById("submitBtn")
 submitBtn.addEventListener("click", postNewAppointment)
 
 async function postNewAppointment() {
-  const csrf_token = document
-    .querySelector('meta[name="_csrf"]')
-    .getAttribute("content")
-  const csrf_header = document
-    .querySelector('meta[name="_csrf_header"]')
-    .getAttribute("content")
-
   const headers = {
     Accept: "application/json",
     "Content-Type": "application/json",
@@ -21,28 +16,73 @@ async function postNewAppointment() {
   }
 
   const appointmentData = await getFormData()
-  try {
-    const response = await fetch("http://localhost:8080/api/appointments/", {
-      method: "POST",
-      headers: headers,
-      body: appointmentData,
+
+  const schema = Joi.object({
+    doctor: Joi.number().positive().required().messages({
+      "any.required": "Doctor id must be provided!",
+      "number.base": "Doctor id must be a number",
+      "number.positive": "Doctor id must be a positive number",
+    }),
+    patientNN: Joi.string()
+      .pattern(/^\d{2}\.\d{2}\.\d{2}-\d{3}\.\d{2}$/)
+      .required()
+      .messages({
+        "string.empty": "National Number must be provided",
+        "string.pattern.base":
+          "National Number must be provided as e.g 'yy.mm.dd-xxx.cd'",
+      }),
+    appointmentSlotId: Joi.number().positive().required().messages({
+      "any.required": "Appointment Date and Time must be provided!",
+      "number.base": "Appointment Slot Id must be a number",
+      "number.positive": "Appointment Slot Id must be a positive number",
+    }),
+    appointmentType: Joi.string().required().messages({
+      "any.required": "Appointment Type must be provided!",
+      "string.base": "Appointment Type must be a string",
+    }),
+    purpose: Joi.string().allow("", null).messages({
+      "string.base": "Purpose must be a string",
+    }),
+  })
+
+  const validate = schema.validate(appointmentData, {
+    abortEarly: false,
+  })
+
+  if (validate.error) {
+    validate.error.details.forEach((curr) => {
+      console.log(curr)
     })
-    const data = await response.json()
-    if (response.status === HttpStatus.BAD_REQUEST) {
-      if (Object.prototype.hasOwnProperty.call(data, "exceptionMsg")) {
-        showToast(data.exceptionMsg)
+    const errorMessages = validate.error.details.reduce((acc, curr) => {
+      acc[curr.path[0]] = curr.message
+      return acc
+    }, {})
+    console.log(errorMessages)
+    handleFieldsError(errorMessages)
+  } else {
+    try {
+      const response = await fetch("http://localhost:8080/api/appointments/", {
+        method: "POST",
+        headers: headers,
+        body: JSON.stringify(appointmentData),
+      })
+      const data = await response.json()
+      if (response.status === HttpStatus.BAD_REQUEST) {
+        if (Object.prototype.hasOwnProperty.call(data, "exceptionMsg")) {
+          showToast(data.exceptionMsg)
+        } else {
+          handleFieldsError(data)
+        }
+      } else if (response.status === HttpStatus.CREATED) {
+        console.log("Entered 3")
+        console.log(data)
+        window.location.href = "/appointments?created=true"
       } else {
-        handleFieldsError(data)
+        console.error("MyError:" + response.status)
       }
-    } else if (response.status === HttpStatus.CREATED) {
-      console.log("Entered 3")
-      console.log(data)
-      window.location.href = "/appointments?created=true"
-    } else {
-      console.error("MyError:" + response.status)
+    } catch (error) {
+      console.error(error.message)
     }
-  } catch (error) {
-    console.error(error.message)
   }
 }
 
@@ -56,7 +96,7 @@ async function getFormData() {
     formJson[key] = value
   }
 
-  return JSON.stringify(formJson)
+  return formJson
 }
 
 function handleFieldsError(fieldsErrors) {
@@ -80,6 +120,14 @@ function handleFieldsError(fieldsErrors) {
       .getElementById("patient_nn")
       .parentElement.appendChild(
         getFieldsErrorElementList(fieldsErrors.patientNN),
+      )
+  }
+
+  if (Object.prototype.hasOwnProperty.call(fieldsErrors, "purpose")) {
+    document
+      .getElementById("purpose")
+      .parentElement.appendChild(
+        getFieldsErrorElementList(fieldsErrors.purpose),
       )
   }
 }

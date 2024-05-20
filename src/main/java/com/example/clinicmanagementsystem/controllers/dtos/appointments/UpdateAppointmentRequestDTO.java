@@ -14,6 +14,7 @@ public class UpdateAppointmentRequestDTO {
     @Positive(message = "Appointment Date and Time must be provided!")
     private int appointmentSlotId;
     private String purpose;
+    @Positive(message = "Doctor id must be provided!")
     private int doctor;
 
     @Pattern(regexp = "^\\d{2}\\.\\d{2}\\.\\d{2}-\\d{3}\\.\\d{2}$", message = "National Number must be provided e.g 'yy.mm.dd-xxx.cd' ")
