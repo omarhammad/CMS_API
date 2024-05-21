@@ -331,6 +331,43 @@ This command will execute all the test cases in the `AppointmentSvcTest` class, 
 
 ---
 
+## Project Week 11 - Embedded Frontend Project
+
+
+## Steps Followed
+1. **Set up the Project**: Initialized the project with npm and configured webpack.
+2. **Migrate CSS to SCSS**: Converted some CSS stylings to SCSS syntax, utilizing features like variables and nesting.
+3. **Customize Bootstrap**: Customized Bootstrap using Sass.
+4. **Modularize JavaScript Code**: Refactored reusable JavaScript code into separate ECMAScript modules.
+5. **Add ESLint Configuration**: Configured ESLint for the project and applied its suggestions.
+6. **Add Bootstrap Icons**: Installed Bootstrap Icons via npm and added icons to the website.
+7. **Client-Side Form Validation**: Implemented custom client-side form validation using the 'joi' npm package.
+
+
+
+## Customizations and Implementations
+
+### Bootstrap Icons
+**Icon Added**: I have added the Bootstrap Icon to several detail pages.
+
+- **URLs**:
+    - `/appointments/details/{app_id}`
+    - `/doctors/details/{doctor_id}`
+    - `/patients/details/{patient_id}`
+
+
+### Custom Client-Side Form Validation
+**Forms with Validation**:
+- **Appointment Form**: Custom validation was added to the appointment form.
+    - **URL**: `/appointments/add`
+    - **Source File**: `post_appointment.js`
+
+- **Doctor Form**: Custom validation was added to the doctor form.
+    - **URL**: `/doctors/add`
+    - **Source File**: `post_doctor.js`
+
+---
+
 #### <span style ="color:orange">Thanks for reading my Project description.</span>
 
 <div style="color: darkgreen">
