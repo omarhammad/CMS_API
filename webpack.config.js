@@ -2,6 +2,7 @@ import MiniCssExtractPlugin from "mini-css-extract-plugin"
 import path from "path"
 import fs from "fs"
 import { fileURLToPath } from "url"
+import webpack from "webpack"
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const entries = {}
@@ -45,6 +46,12 @@ const config = {
     new MiniCssExtractPlugin({
       filename: "../css/bundle-[name].css",
     }),
+    new webpack.ProvidePlugin({
+      process: "process/browser",
+    }),
+    new webpack.DefinePlugin({
+      "process.env": JSON.stringify(process.env),
+    }),
   ],
   module: {
     rules: [
@@ -60,14 +67,28 @@ const config = {
         test: /\.(woff2?|eot|ttf|otf)$/i,
         type: "asset/resource",
       },
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: {
+          loader: "babel-loader",
+          options: {
+            presets: ["@babel/preset-env"],
+          },
+        },
+      },
     ],
   },
   experiments: {
     topLevelAwait: true,
   },
   resolve: {
-    // Prefer relative paths to resolve modules
-    preferRelative: true,
+    extensions: [".js"],
+    fallback: {
+      fs: false,
+      path: "path-browserify",
+      process: "process/browser",
+    },
   },
 }
 

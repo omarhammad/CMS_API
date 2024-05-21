@@ -2,31 +2,35 @@ ALTER TABLE appointments
     ALTER CONSTRAINT fkdcu22gag6dshn4gm1lhta0bpv DEFERRABLE INITIALLY DEFERRED;
 BEGIN;
 SET CONSTRAINTS ALL DEFERRED;
-INSERT INTO stakeholder (first_name, last_name, username, role, password)
-VALUES ('Omar', 'Johnson', 'omar_johnson', 'DOCTOR',
+INSERT INTO stakeholder (first_name, last_name, username, contact_info, role, password)
+VALUES ('Omar', 'Johnson', 'omar_johnson', '+32123456789,omar.johnson@email.com', 'DOCTOR',
         '$2a$10$l7OaNsKv6s9FkonaKSdMquYrRvF1kWLC51w.I62RM4yFkfpdLjNGe'),
-       ('Sara', 'Lee', 'sara_lee', 'DOCTOR',
+       ('Sara', 'Lee', 'sara_lee', '+32234567890,sara.lee@email.com', 'DOCTOR',
         '$2a$10$l7OaNsKv6s9FkonaKSdMquYrRvF1kWLC51w.I62RM4yFkfpdLjNGe'),
-       ('Kevin', 'Miller', 'kevin_miller', 'DOCTOR',
+       ('Kevin', 'Miller', 'kevin_miller', '+32345678901,kevin.miller@email.com', 'DOCTOR',
         '$2a$10$l7OaNsKv6s9FkonaKSdMquYrRvF1kWLC51w.I62RM4yFkfpdLjNGe'),
-       ('Nora', 'Davis', 'nora_davis', 'DOCTOR',
+       ('Nora', 'Davis', 'nora_davis', '+32456789012,nora.davis@email.com', 'DOCTOR',
         '$2a$10$l7OaNsKv6s9FkonaKSdMquYrRvF1kWLC51w.I62RM4yFkfpdLjNGe'),
-       ('Felix', 'Brown', 'felix_brown', 'DOCTOR',
+       ('Felix', 'Brown', 'felix_brown', '+32567890123,felix.brown@email.com', 'DOCTOR',
         '$2a$10$l7OaNsKv6s9FkonaKSdMquYrRvF1kWLC51w.I62RM4yFkfpdLjNGe');
 
 
-INSERT INTO doctors (id, specialization, contact_info)
-VALUES (1, 'Cardiology', '+32123456789,omar.johnson@email.com'),
-       (2, 'Neurology', '+32234567890,sara.lee@email.com'),
-       (3, 'Orthopedics', '+32345678901,kevin.miller@email.com'),
-       (4, 'Pediatrics', '+32456789012,nora.davis@email.com'),
-       (5, 'Dermatology', '+32567890123,felix.brown@email.com');
+INSERT INTO doctors (id, specialization)
+VALUES (1, 'Cardiology'),
+       (2, 'Neurology'),
+       (3, 'Orthopedics'),
+       (4, 'Pediatrics'),
+       (5, 'Dermatology');
 
-INSERT INTO stakeholder (first_name, last_name, username, password, role)
-VALUES ('Lily', 'Smith', 'lily_smith', '$2a$10$l7OaNsKv6s9FkonaKSdMquYrRvF1kWLC51w.I62RM4yFkfpdLjNGe', 'PATIENT'),
-       ('Max', 'Taylor', 'max_taylor', '$2a$10$l7OaNsKv6s9FkonaKSdMquYrRvF1kWLC51w.I62RM4yFkfpdLjNGe', 'PATIENT'),
-       ('Emma', 'Jones', 'emma_jones', '$2a$10$l7OaNsKv6s9FkonaKSdMquYrRvF1kWLC51w.I62RM4yFkfpdLjNGe', 'PATIENT'),
-       ('Noah', 'Anderson', 'noah_andreson', '$2a$10$l7OaNsKv6s9FkonaKSdMquYrRvF1kWLC51w.I62RM4yFkfpdLjNGe', 'PATIENT');
+INSERT INTO stakeholder (first_name, last_name, username, contact_info, password, role)
+VALUES ('Lily', 'Smith', 'lily_smith', '+32567890543,lily.smith@email.com',
+        '$2a$10$l7OaNsKv6s9FkonaKSdMquYrRvF1kWLC51w.I62RM4yFkfpdLjNGe', 'PATIENT'),
+       ('Max', 'Taylor', 'max_taylor', '+32567890443,max.taylor@email.com',
+        '$2a$10$l7OaNsKv6s9FkonaKSdMquYrRvF1kWLC51w.I62RM4yFkfpdLjNGe', 'PATIENT'),
+       ('Emma', 'Jones', 'emma_jones', '+32567394123,emma.jones@email.com',
+        '$2a$10$l7OaNsKv6s9FkonaKSdMquYrRvF1kWLC51w.I62RM4yFkfpdLjNGe', 'PATIENT'),
+       ('Noah', 'Anderson', 'noah_andreson', '+32018890123,noah.andreson@email.com',
+        '$2a$10$l7OaNsKv6s9FkonaKSdMquYrRvF1kWLC51w.I62RM4yFkfpdLjNGe', 'PATIENT');
 
 INSERT INTO patients (id, age, gender, national_number)
 VALUES (6, 30, 'F', '91.07.23-543.21'),
@@ -34,9 +38,11 @@ VALUES (6, 30, 'F', '91.07.23-543.21'),
        (8, 36, 'F', '87.03.15-321.98'),
        (9, 29, 'M', '94.08.26-432.76');
 
-INSERT INTO stakeholder (first_name, last_name, username, password, role)
-VALUES ('Mahmoud', 'Hammad', 'secretary', '$2a$10$l7OaNsKv6s9FkonaKSdMquYrRvF1kWLC51w.I62RM4yFkfpdLjNGe', 'SECRETARY'),
-       ('Omar', 'Hammad', 'admin', '$2a$10$l7OaNsKv6s9FkonaKSdMquYrRvF1kWLC51w.I62RM4yFkfpdLjNGe', 'ADMIN');
+INSERT INTO stakeholder (first_name, last_name, contact_info, username, password, role)
+VALUES ('Mahmoud', 'Hammad', '+32018890123,mahmoud.hammad@email.com', 'secretary',
+        '$2a$10$l7OaNsKv6s9FkonaKSdMquYrRvF1kWLC51w.I62RM4yFkfpdLjNGe', 'SECRETARY'),
+       ('Omar', 'Hammad', '+32018890123,omar.hammad@email.com', 'admin',
+        '$2a$10$l7OaNsKv6s9FkonaKSdMquYrRvF1kWLC51w.I62RM4yFkfpdLjNGe', 'ADMIN');
 
 
 INSERT INTO availability(slot, used, doctor_id)
@@ -84,8 +90,6 @@ VALUES (1, 1),
        (3, 3),
        (4, 4),
        (5, 5);
-
-
 
 
 

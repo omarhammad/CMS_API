@@ -60,8 +60,9 @@ public class PatientRestController {
     @PostMapping("")
     public ResponseEntity<PatientResponseDTO> addPatient(@RequestBody @Valid CreatePatientRequestDTO requestDTO) {
 
+        String contactInfo = requestDTO.getPhoneNumber() + "," + requestDTO.getEmail();
         PatientResponseDTO responseDTO = service.addNewPatient(requestDTO.getFirstName(), requestDTO.getLastName(),
-                requestDTO.getGender(), requestDTO.getNationalNumber(), requestDTO.getUsername(), requestDTO.getPassword());
+                requestDTO.getGender(), requestDTO.getNationalNumber(), requestDTO.getUsername(), requestDTO.getPassword(),contactInfo);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
     }
@@ -76,8 +77,9 @@ public class PatientRestController {
             return ResponseEntity.notFound().build();
         }
 
+        String contactInfo = requestDTO.getPhoneNumber() + "," + requestDTO.getEmail();
         service.updatePatient(requestDTO.getPatientId(), requestDTO.getFirstName(),
-                requestDTO.getLastName(), requestDTO.getGender(), requestDTO.getNationalNumber());
+                requestDTO.getLastName(), requestDTO.getGender(), requestDTO.getNationalNumber(),contactInfo);
         return ResponseEntity.noContent().build();
     }
 

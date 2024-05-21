@@ -43,7 +43,12 @@ async function fillInTable(patients) {
     const table_row = document.createElement("tr")
     for (const key in patient) {
       const table_cell = document.createElement("td")
-      if (key === "id" || key === "hisDoctors" || key === "oldAppointments")
+      if (
+        key === "id" ||
+        key === "hisDoctors" ||
+        key === "oldAppointments" ||
+        key === "contactInfo"
+      )
         continue
 
       if (key === "nationalNumber") {

@@ -30,7 +30,10 @@ function fillForm(patient) {
   document.getElementById("first_name").value = patient["firstName"]
   document.getElementById("last_name").value = patient["lastName"]
   document.getElementById("gender").value = patient["gender"]
+  const contactInfo = patient["contactInfo"].split(",")
   document.getElementById("national_num").value = patient["nationalNumber"]
+  document.getElementById("phone_number").value = contactInfo[0]
+  document.getElementById("email").value = contactInfo[1]
 }
 
 const submitBtn = document.getElementById("submitBtn")
@@ -115,6 +118,20 @@ function handleFieldsError(fieldsErrors) {
       .parentElement.appendChild(
         getFieldsErrorElementList(fieldsErrors.nationalNumber),
       )
+  }
+
+  if (Object.prototype.hasOwnProperty.call(fieldsErrors, "phoneNumber")) {
+    document
+      .getElementById("phone_number")
+      .parentElement.appendChild(
+        getFieldsErrorElementList(fieldsErrors.phoneNumber),
+      )
+  }
+
+  if (Object.prototype.hasOwnProperty.call(fieldsErrors, "email")) {
+    document
+      .getElementById("email")
+      .parentElement.appendChild(getFieldsErrorElementList(fieldsErrors.email))
   }
 }
 

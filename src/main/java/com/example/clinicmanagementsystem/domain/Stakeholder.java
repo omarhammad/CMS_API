@@ -22,6 +22,9 @@ public class Stakeholder {
     private String username;
     private String password;
 
+    @Column(nullable = false, unique = true)
+    private String contactInfo;
+
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
@@ -82,5 +85,13 @@ public class Stakeholder {
 
     public void setRole(UserRole role) {
         this.role = role;
+    }
+
+    public String getContactInfo() {
+        return contactInfo;
+    }
+
+    public void setContactInfo(String contactInfo) {
+        this.contactInfo = contactInfo;
     }
 }

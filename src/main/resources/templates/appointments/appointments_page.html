@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <th:block th:insert="~{fragments/heading :: heading (title = 'Appointments')}"/>
 
@@ -31,8 +31,8 @@
             <th th:text="#{patient}"></th>
             <th th:text="#{purpose}"></th>
             <th th:text="#{type}"></th>
-            <th></th>
-            <th></th>
+            <th sec:authorize="!hasRole('ROLE_PATIENT')"></th>
+            <th sec:authorize="!hasRole('ROLE_PATIENT')"></th>
         </tr>
         </thead>
         <tbody id="appointments_table_body">

@@ -25,6 +25,9 @@ function fillPage(patient) {
   document.getElementById("gender").innerText = patient["gender"]
   document.getElementById("age").innerText = patient["age"]
   document.getElementById("patient_nn").innerText = patient["nationalNumber"]
+  const contactInfo = patient["contactInfo"].split(",")
+  document.getElementById("email").innerText = contactInfo[1]
+  document.getElementById("phone").innerText = contactInfo[0]
 
   const his_doctors_body = document.getElementById("hisDoctors")
   const his_doctors = patient["hisDoctors"]

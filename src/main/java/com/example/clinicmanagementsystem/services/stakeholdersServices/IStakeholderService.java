@@ -26,20 +26,16 @@ public interface IStakeholderService {
 
     void updateADoctor(long id, String firstName, String lastName, String specialization, String contactInfo);
 
-    PatientResponseDTO addNewPatient(String firstName, String lastName, String gender, String nationalNumber, String username, String password);
+    PatientResponseDTO addNewPatient(String firstName, String lastName, String gender, String nationalNumber, String username, String password, String contactInfo);
 
     int removeDoctor(long doctorId);
 
     boolean removePatient(long patientId);
 
-    List<Patient> getDoctorPatients(long doctorId);
-
     List<Doctor> getPatientDoctors(long id);
 
-    List<Appointment> getPatientOldAppointments(long patientId);
 
-
-    void updatePatient(long patientId, String firstName, String lastName, String gender, String nationalNumber);
+    void updatePatient(long patientId, String firstName, String lastName, String gender, String nationalNumber,String contactInfo);
 
     Stakeholder getStakeholderByUsername(String username);
 

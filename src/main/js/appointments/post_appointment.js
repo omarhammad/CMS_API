@@ -74,8 +74,6 @@ async function postNewAppointment() {
           handleFieldsError(data)
         }
       } else if (response.status === HttpStatus.CREATED) {
-        console.log("Entered 3")
-        console.log(data)
         window.location.href = "/appointments?created=true"
       } else {
         console.error("MyError:" + response.status)

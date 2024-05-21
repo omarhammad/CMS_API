@@ -10,6 +10,7 @@ public class PatientResponseDTO {
     private String firstName;
     private String lastName;
     private String gender;
+    private String contactInfo;
     private int age;
     private String nationalNumber;
 
@@ -39,6 +40,14 @@ public class PatientResponseDTO {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getContactInfo() {
+        return contactInfo;
+    }
+
+    public void setContactInfo(String contactInfo) {
+        this.contactInfo = contactInfo;
     }
 
     public String getNationalNumber() {
@@ -76,6 +85,7 @@ public class PatientResponseDTO {
     public List<AppointmentResponseDTO> getOldAppointments() {
         return oldAppointments;
     }
+
 
     public void setOldAppointments(List<AppointmentResponseDTO> oldAppointments) {
         this.oldAppointments = oldAppointments;

@@ -47,6 +47,18 @@
 
         </div>
 
+        <div class="m-2">
+            <label class="form-label" for="phone_number">Phone Number</label>
+            <input class="form-control" name="phoneNumber"
+                   placeholder="+32465XXXXXX" type="tel" id="phone_number"/>
+        </div>
+
+        <div class="m-2">
+            <label class="form-label" for="email">Email</label>
+            <input class="form-control" name="email"
+                   placeholder="example@gmail.com" type="text" id="email"/>
+        </div>
+
         <button th:class="'btn btn-primary m-2'" type="button" id="submitBtn" th:text="#{patient.title2}">Update Patient
         </button>
         <a th:class="'btn btn-danger'" sec:authorize="!hasRole('ROLE_PATIENT')" th:href="@{/patients/}"

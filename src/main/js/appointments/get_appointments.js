@@ -76,32 +76,35 @@ async function loadAllAppointments() {
           }
         }
 
-        // DELETE BUTTON
-        const deleteBtn = document.createElement("td")
-        deleteBtn.className = "bi bi-trash-fill text-danger"
-        deleteBtn.addEventListener("click", (event) => {
-          event.stopPropagation()
-          deleteAppointment(appointment.appointmentId)
-        })
+        if (!current_user.userRoles.includes("ROLE_PATIENT")) {
+          // DELETE BUTTON
 
-        //EDIT BUTTON
-        const editBtn = document.createElement("td")
-        editBtn.className = "bi bi-pencil-fill text-primary"
-        editBtn.addEventListener("click", (event) => {
-          event.stopPropagation()
-          window.location.href = `/appointments/update/${appointment.appointmentId}`
-        })
+          const deleteBtn = document.createElement("td")
+          deleteBtn.className = "bi bi-trash-fill text-danger"
+          deleteBtn.addEventListener("click", (event) => {
+            event.stopPropagation()
+            deleteAppointment(appointment.appointmentId)
+          })
 
-        // Adding a remove button and update button in case the appointment
-        // is in the past as it's going to be saved as historical appointment
-        const app_date = new Date(appointment.availabilitySlot.slot)
-        const current_date = new Date()
-        if (app_date > current_date) {
-          appointment_row.appendChild(deleteBtn)
-          appointment_row.appendChild(editBtn)
-        } else {
-          appointment_row.appendChild(document.createElement("td"))
-          appointment_row.appendChild(document.createElement("td"))
+          //EDIT BUTTON
+          const editBtn = document.createElement("td")
+          editBtn.className = "bi bi-pencil-fill text-primary"
+          editBtn.addEventListener("click", (event) => {
+            event.stopPropagation()
+            window.location.href = `/appointments/update/${appointment.appointmentId}`
+          })
+
+          // Adding a remove button and update button in case the appointment
+          // is in the past as it's going to be saved as historical appointment
+          const app_date = new Date(appointment.availabilitySlot.slot)
+          const current_date = new Date()
+          if (app_date > current_date) {
+            appointment_row.appendChild(deleteBtn)
+            appointment_row.appendChild(editBtn)
+          } else {
+            appointment_row.appendChild(document.createElement("td"))
+            appointment_row.appendChild(document.createElement("td"))
+          }
         }
 
         appointment_row.addEventListener("click", () => {

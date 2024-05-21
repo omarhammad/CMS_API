@@ -162,12 +162,13 @@ public class StakeholderSvc implements IStakeholderService {
     }
 
     @Override
-    public PatientResponseDTO addNewPatient(String firstName, String lastName, String gender, String nationalNumber, String username, String password) {
+    public PatientResponseDTO addNewPatient(String firstName, String lastName, String gender, String nationalNumber, String username, String password, String contactInfo) {
         Patient patient = new Patient();
         patient.setFirstName(firstName);
         patient.setLastName(lastName);
         patient.setGender(gender);
         patient.setNationalNumber(nationalNumber);
+        patient.setContactInfo(contactInfo);
 
         String[] nDateOfBirth = nationalNumber.split("-")[0].split("\\.");
         int currentYearDigits = LocalDate.now().getYear() % 100;
@@ -207,29 +208,22 @@ public class StakeholderSvc implements IStakeholderService {
         return stakeholdersRepo.findById(patientId).isEmpty();
     }
 
-    @Override
-    public List<Patient> getDoctorPatients(long doctorId) {
-        return stakeholdersRepo.findDoctorPatients(doctorId);
-    }
 
     @Override
     public List<Doctor> getPatientDoctors(long patientId) {
         return stakeholdersRepo.findPatientDoctors(patientId);
     }
 
-    @Override
-    public List<Appointment> getPatientOldAppointments(long patientId) {
-        return appointmentsRepo.getPatientOldAppointments(patientId);
-    }
 
     @Override
-    public void updatePatient(long patientId, String firstName, String lastName, String gender, String nationalNumber) {
+    public void updatePatient(long patientId, String firstName, String lastName, String gender, String nationalNumber, String contactInfo) {
         Patient patient = ((Patient) stakeholdersRepo.findById(patientId).orElse(null));
         patient.setId(patientId);
         patient.setFirstName(firstName);
         patient.setLastName(lastName);
         patient.setGender(gender);
         patient.setNationalNumber(nationalNumber);
+        patient.setContactInfo(contactInfo);
 
         String[] nDateOfBirth = nationalNumber.split("-")[0].split("\\.");
         int currentYearDigits = LocalDate.now().getYear() % 100;
@@ -299,7 +293,7 @@ public class StakeholderSvc implements IStakeholderService {
     public void removeAvailability(int availabilityId) {
         availabilityRepo.deleteById(availabilityId);
     }
-    
+
 
     @Override
     public AvailabilityResponseDTO getAvailability(int availabilityId) {

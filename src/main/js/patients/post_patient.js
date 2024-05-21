@@ -97,6 +97,20 @@ function handleFieldsError(fieldsErrors) {
         getFieldsErrorElementList(fieldsErrors.confirmPassword),
       )
   }
+
+  if (Object.prototype.hasOwnProperty.call(fieldsErrors, "phoneNumber")) {
+    document
+      .getElementById("phone_number")
+      .parentElement.appendChild(
+        getFieldsErrorElementList(fieldsErrors.phoneNumber),
+      )
+  }
+
+  if (Object.prototype.hasOwnProperty.call(fieldsErrors, "email")) {
+    document
+      .getElementById("email")
+      .parentElement.appendChild(getFieldsErrorElementList(fieldsErrors.email))
+  }
 }
 
 function getFieldsErrorElementList(errors) {

@@ -40,7 +40,8 @@ public class AuthRestController {
         System.out.println("SIGNUP INFO : " + requestDTO);
         PatientResponseDTO responseDTO = null;
         try {
-            responseDTO = service.addNewPatient(requestDTO.getFirstName(), requestDTO.getLastName(), requestDTO.getGender(), requestDTO.getNationalNumber(), requestDTO.getUsername(), requestDTO.getPassword());
+            String contactInfo = requestDTO.getPhoneNumber() + "," + requestDTO.getEmail();
+            responseDTO = service.addNewPatient(requestDTO.getFirstName(), requestDTO.getLastName(), requestDTO.getGender(), requestDTO.getNationalNumber(), requestDTO.getUsername(), requestDTO.getPassword(),contactInfo);
             request.login(requestDTO.getUsername(), requestDTO.getPassword());
         } catch (ServletException e) {
             System.out.println(e.getMessage());

@@ -13,8 +13,7 @@ public class Doctor extends Stakeholder {
 
     @Column(nullable = false)
     private String specialization;
-    @Column(nullable = false, unique = true)
-    private String contactInfo;
+
     @JsonIgnoreProperties("doctor") // Prevents back-serialization to Doctor
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "doctor")
     private List<Availability> availability;
@@ -28,26 +27,6 @@ public class Doctor extends Stakeholder {
     public Doctor() {
         appointments = new ArrayList<>();
     }
-
-    public Doctor(int id) {
-        super(id, UserRole.DOCTOR);
-    }
-
-    public Doctor(int id, String firstName, String lastName, String specialization, String contactInfo) {
-        super(id, UserRole.DOCTOR);
-        super.setFirstName(firstName);
-        super.setLastName(lastName);
-        this.specialization = specialization;
-        this.contactInfo = contactInfo;
-    }
-
-    public Doctor(String firstName, String lastName, String specialization, String contactInfo) {
-        super.setFirstName(firstName);
-        super.setLastName(lastName);
-        this.specialization = specialization;
-        this.contactInfo = contactInfo;
-    }
-
 
     public String getFirstName() {
         return super.getFirstName();
@@ -73,13 +52,6 @@ public class Doctor extends Stakeholder {
         this.specialization = specialization;
     }
 
-    public String getContactInfo() {
-        return contactInfo;
-    }
-
-    public void setContactInfo(String contactInfo) {
-        this.contactInfo = contactInfo;
-    }
 
     public List<Availability> getAvailability() {
         return availability;
@@ -102,7 +74,6 @@ public class Doctor extends Stakeholder {
     public String toString() {
         return "Doctor{" +
                 "specialization='" + specialization + '\'' +
-                ", contactInfo='" + contactInfo + '\'' +
                 '}';
     }
 }

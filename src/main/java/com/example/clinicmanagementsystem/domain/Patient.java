@@ -31,26 +31,6 @@ public class Patient extends Stakeholder {
         appointments = new ArrayList<>();
     }
 
-    public Patient(int id) {
-        super(id, UserRole.PATIENT);
-    }
-
-    public Patient(int id, String firstName, String lastName, String nationalNumber, int age, String gender) {
-        super(id, UserRole.PATIENT);
-        super.setFirstName(firstName);
-        super.setLastName(lastName);
-        this.nationalNumber = nationalNumber;
-        this.age = age;
-        this.gender = gender;
-    }
-
-    public Patient(String firstName, String lastName, String nationalNumber, int age, String gender) {
-        super.setFirstName(firstName);
-        super.setLastName(lastName);
-        this.nationalNumber = nationalNumber;
-        this.age = age;
-        this.gender = gender;
-    }
 
     public String getFirstName() {
         return super.getFirstName();
@@ -102,6 +82,10 @@ public class Patient extends Stakeholder {
         this.appointments = appointments;
     }
 
+    @Override
+    public String getContactInfo() {
+        return super.getContactInfo();
+    }
 
     @Override
     public String toString() {

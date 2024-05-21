@@ -2,9 +2,8 @@ package com.example.clinicmanagementsystem.controllers.dtos.patients;
 
 import com.example.clinicmanagementsystem.customAnotations.PasswordsMatch;
 import com.example.clinicmanagementsystem.customAnotations.UniqueUsername;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
+
 @PasswordsMatch(password = "password", confirmPassword = "confirmPassword", message = "Passwords do not match")
 public class CreatePatientRequestDTO {
 
@@ -21,6 +20,14 @@ public class CreatePatientRequestDTO {
     @NotBlank(message = "Username must be provided!")
     @UniqueUsername(message = "Username already exists!")
     private String username;
+
+    @NotBlank(message = "Phone Number must be provided!")
+    @Pattern(regexp = "(^\\+|00)\\d{1,3}[\\s-]?\\d{1,4}[\\s-]?\\d{1,4}[\\s-]?\\d{1,4}$", message = "Phone number format should be '+32xxx xxxxxx' ")
+    private String phoneNumber;
+
+    @NotBlank(message = "Email must be provided!")
+    @Email(message = "Email format should be 'example@email.com' ")
+    private String email;
 
     @NotBlank(message = "password must be provided!")
     @Size(min = 8, max = 20, message = "Password must be at least 8 characters!")
@@ -84,5 +91,21 @@ public class CreatePatientRequestDTO {
 
     public void setConfirmPassword(String confirmPassword) {
         this.confirmPassword = confirmPassword;
+    }
+
+    public @NotBlank(message = "Phone Number must be provided!") @Pattern(regexp = "(^\\+|00)\\d{1,3}[\\s-]?\\d{1,4}[\\s-]?\\d{1,4}[\\s-]?\\d{1,4}$", message = "Phone number format should be '+32xxx xxxxxx' ") String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(@NotBlank(message = "Phone Number must be provided!") @Pattern(regexp = "(^\\+|00)\\d{1,3}[\\s-]?\\d{1,4}[\\s-]?\\d{1,4}[\\s-]?\\d{1,4}$", message = "Phone number format should be '+32xxx xxxxxx' ") String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public @NotBlank(message = "Email must be provided!") @Email(message = "Email format should be 'example@email.com' ") String getEmail() {
+        return email;
+    }
+
+    public void setEmail(@NotBlank(message = "Email must be provided!") @Email(message = "Email format should be 'example@email.com' ") String email) {
+        this.email = email;
     }
 }
