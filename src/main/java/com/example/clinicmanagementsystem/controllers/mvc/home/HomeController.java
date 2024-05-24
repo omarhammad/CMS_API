@@ -29,8 +29,7 @@ public class HomeController {
     @GetMapping("/")
     public String root(HttpServletRequest request, HttpServletResponse response) {
 
-        // Set locale to Dutch
-        Locale locale = new Locale(LANG);
+        Locale locale = Locale.ENGLISH;
         this.localeResolver.setLocale(request, response, locale);
         logger.debug("Current Locale: {}", localeResolver.resolveLocale(request));
         return "home/home";
