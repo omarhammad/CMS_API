@@ -368,6 +368,40 @@ This command will execute all the test cases in the `AppointmentSvcTest` class, 
 
 ---
 
+## Project - Week 12
+
+### Continuous Integration (CI)
+
+1. **Pipeline Setup**:
+    - Configured a CI pipeline that triggers automatically on code push.
+    - The pipeline includes two stages: build and test.
+
+2. **Build Stage**:
+    - Compiles the project using Gradle.
+    - Caching is enabled to reuse build artifacts, speeding up subsequent builds.
+
+3. **Test Stage**:
+    - Executes unit tests using Gradle.
+    - A PostgreSQL service is started to provide a database for the tests.
+    - JUnit test reports are generated and made visible on the GitLab pipeline page.
+
+
+
+### File Upload
+
+1. **Admin Page for Medications CSV Upload**:
+    - Added an admin-only page for uploading medications CSV files to create multiple medication records in bulk.
+    - You can access the page after you auth as admin and then from 'medications' page you can click on "Add CSV" btn to open the upload page
+
+### Caching for Search
+
+1. **Search Functionality**:
+    - Implemented a search feature for doctors that uses caching to avoid querying the database multiple times for the same search term.
+    - you can see the caches in StackeholdersSvc service class.
+2. **Cache Eviction**:
+    - Configured cache eviction for scenarios where the data changes (e.g., adding, updating, or deleting a doctor).
+
+---
 #### <span style ="color:orange">Thanks for reading my Project description.</span>
 
 <div style="color: darkgreen">
