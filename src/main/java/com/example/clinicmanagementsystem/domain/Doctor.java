@@ -28,6 +28,11 @@ public class Doctor extends Stakeholder {
         appointments = new ArrayList<>();
     }
 
+    public Doctor(Long id) {
+        this.setId(id);
+        appointments = new ArrayList<>();
+    }
+
     public String getFirstName() {
         return super.getFirstName();
     }

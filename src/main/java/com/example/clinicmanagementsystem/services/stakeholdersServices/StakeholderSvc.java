@@ -9,6 +9,7 @@ import com.example.clinicmanagementsystem.controllers.dtos.doctors.DoctorDetails
 import com.example.clinicmanagementsystem.controllers.dtos.doctors.DoctorResponseDTO;
 import com.example.clinicmanagementsystem.controllers.dtos.patients.PatientResponseDTO;
 import com.example.clinicmanagementsystem.exceptions.SlotUsedException;
+import com.example.clinicmanagementsystem.exceptions.WrongSlotException;
 import com.example.clinicmanagementsystem.repository.appointmentsRepo.AppointmentsSpringData;
 import com.example.clinicmanagementsystem.repository.availabilitiesRepo.AvailabilitySpringData;
 import com.example.clinicmanagementsystem.repository.stakeholdersRepo.StakeholdersSpringData;
@@ -290,8 +291,17 @@ public class StakeholderSvc implements IStakeholderService {
     }
 
     @Override
-    public void removeAvailability(int availabilityId) {
-        availabilityRepo.deleteById(availabilityId);
+    public void removeAvailability(int availabilityId,long doctorId) {
+        Availability availability = availabilityRepo.findById(availabilityId).orElseThrow(() -> new EntityNotFoundException("Availability Not Found!"));
+        if (availability.isUsed()) {
+            throw new SlotUsedException("Slot can't be deleted as it is used!");
+        }
+
+        if (availability.getDoctor().getId() != doctorId){
+            throw new WrongSlotException("This slot does not belong to this doctor!");
+        }
+
+        availabilityRepo.delete(availability);
     }
 
 

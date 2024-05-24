@@ -1,8 +1,10 @@
 package com.example.clinicmanagementsystem.controllers.api.doctor;
 
+import com.example.clinicmanagementsystem.domain.CustomUserDetails;
 import com.example.clinicmanagementsystem.exceptions.ContactInfoExistException;
 import com.example.clinicmanagementsystem.controllers.dtos.doctors.*;
 import com.example.clinicmanagementsystem.exceptions.SlotUsedException;
+import com.example.clinicmanagementsystem.exceptions.WrongSlotException;
 import com.example.clinicmanagementsystem.services.stakeholdersServices.IStakeholderService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
@@ -12,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
@@ -110,13 +113,16 @@ public class DoctorRestController {
 
     @DeleteMapping("/availability/{availabilityId}")
     @PreAuthorize("hasRole('ROLE_DOCTOR')")
-    public ResponseEntity<Void> deleteDoctorAvailabilityById(@PathVariable int availabilityId) {
-        AvailabilityResponseDTO responseDTO = service.getDoctorAvailability(availabilityId);
-        if (responseDTO == null) {
+    public ResponseEntity<Void> deleteDoctorAvailabilityById(@PathVariable int availabilityId, @AuthenticationPrincipal CustomUserDetails userDetails) {
+
+        try {
+            service.removeAvailability(availabilityId, userDetails.getUserId());
+            return ResponseEntity.noContent().build();
+        } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
+        } catch (SlotUsedException | WrongSlotException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        service.removeAvailability(availabilityId);
-        return ResponseEntity.noContent().build();
 
     }
 

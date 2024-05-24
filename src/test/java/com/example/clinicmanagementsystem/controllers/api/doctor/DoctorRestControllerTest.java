@@ -57,10 +57,34 @@ class DoctorRestControllerTest {
 
 
     @Test
-    @WithUserDetails("sara_lee")
-    void deleteDoctorAvailabilityById() throws Exception {
+    @WithUserDetails("nora_davis")
+    void deleteDoctorAvailabilityByIdThatIsUsed() throws Exception {
 
         mockMvc.perform(delete("/api/doctors/availability/{availabilityId}", 4).with(csrf()))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithUserDetails("sara_lee")
+    void deleteDoctorAvailabilityNotExists() throws Exception {
+
+        mockMvc.perform(delete("/api/doctors/availability/{availabilityId}", 100).with(csrf()))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithUserDetails("sara_lee")
+    void deleteDoctorAvailability() throws Exception {
+
+        mockMvc.perform(delete("/api/doctors/availability/{availabilityId}", 7).with(csrf()))
                 .andExpect(status().isNoContent());
+    }
+
+    @Test
+    @WithUserDetails("sara_lee")
+    void deleteDoctorAvailabilityNotForHer() throws Exception {
+
+        mockMvc.perform(delete("/api/doctors/availability/{availabilityId}", 1).with(csrf()))
+                .andExpect(status().isForbidden());
     }
 }

@@ -84,7 +84,11 @@ public class AppointmentSvc implements IAppointmentService {
             throw new SlotUsedException("This slot is used!");
         }
 
-        appointment.setAvailabilitySlot(availability);
+        if (availability.getDoctor().getId() != doctorId){
+            throw new WrongSlotException("This slot does not belong to this doctor!");
+        }
+
+            appointment.setAvailabilitySlot(availability);
         appointment.setPurpose(purpose);
         appointment.setAppointmentType(type);
 

@@ -1,9 +1,6 @@
 package com.example.clinicmanagementsystem.controllers.api.appointment;
 
-import com.example.clinicmanagementsystem.exceptions.AppointmentNotFoundException;
-import com.example.clinicmanagementsystem.exceptions.DoctorNotFoundException;
-import com.example.clinicmanagementsystem.exceptions.InvalidAppointmentException;
-import com.example.clinicmanagementsystem.exceptions.NationalNumberNotFoundException;
+import com.example.clinicmanagementsystem.exceptions.*;
 import com.example.clinicmanagementsystem.domain.util.AppointmentType;
 import com.example.clinicmanagementsystem.controllers.dtos.appointments.AppointmentResponseDTO;
 import com.example.clinicmanagementsystem.controllers.dtos.appointments.CreateAppointmentRequestDTO;
@@ -14,6 +11,7 @@ import com.example.clinicmanagementsystem.controllers.dtos.prescriptions.Prescri
 import com.example.clinicmanagementsystem.services.appointmentServices.IAppointmentService;
 import com.example.clinicmanagementsystem.services.stakeholdersServices.IStakeholderService;
 import com.example.clinicmanagementsystem.services.treatementServices.ITreatmentService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +21,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.HashMap;
 import java.util.List;
@@ -132,9 +129,9 @@ public class AppointmentRestController {
         logger.debug("DTO : {}", requestDTO);
 
         // Adding a new appointment and return a response ok with the appointment that contains the ID.
-        AppointmentResponseDTO appointmentResponseDTO = appointmentService.addNewAppointment(requestDTO.getDoctor(), requestDTO.getPatientNN(),
-                requestDTO.getAppointmentSlotId(), requestDTO.getPurpose(), AppointmentType.valueOf(requestDTO.getAppointmentType()));
-        return ResponseEntity.status(HttpStatus.CREATED).body(appointmentResponseDTO);
+            AppointmentResponseDTO appointmentResponseDTO = appointmentService.addNewAppointment(requestDTO.getDoctor(), requestDTO.getPatientNN(),
+                    requestDTO.getAppointmentSlotId(), requestDTO.getPurpose(), AppointmentType.valueOf(requestDTO.getAppointmentType()));
+            return ResponseEntity.status(HttpStatus.CREATED).body(appointmentResponseDTO);
     }
 
     @PutMapping("/{id}")
@@ -181,7 +178,15 @@ public class AppointmentRestController {
 
 
     @ExceptionHandler(InvalidAppointmentException.class)
-    public ResponseEntity<HashMap<String, String>> handleInvalidAppointmentException(InvalidAppointmentException e, RedirectAttributes redirectAttributes) {
+    public ResponseEntity<HashMap<String, String>> handleInvalidAppointmentException(InvalidAppointmentException e) {
+
+        HashMap<String, String> errors = new HashMap<>();
+        errors.put("exceptionMsg", e.getMessage());
+        return ResponseEntity.badRequest().body(errors);
+    }
+
+    @ExceptionHandler(WrongSlotException.class)
+    public ResponseEntity<HashMap<String, String>> handleWrongSlotException(WrongSlotException e) {
 
         HashMap<String, String> errors = new HashMap<>();
         errors.put("exceptionMsg", e.getMessage());
@@ -189,7 +194,7 @@ public class AppointmentRestController {
     }
 
     @ExceptionHandler(NationalNumberNotFoundException.class)
-    public ResponseEntity<HashMap<String, String>> handleNationalNumberNotFoundException(NationalNumberNotFoundException e, RedirectAttributes redirectAttributes) {
+    public ResponseEntity<HashMap<String, String>> handleNationalNumberNotFoundException(NationalNumberNotFoundException e) {
         HashMap<String, String> errors = new HashMap<>();
         errors.put("exceptionMsg", e.getMessage());
         return ResponseEntity.badRequest().body(errors);
@@ -197,7 +202,7 @@ public class AppointmentRestController {
 
 
     @ExceptionHandler(DoctorNotFoundException.class)
-    public ResponseEntity<HashMap<String, String>> handleDoctorNotFoundExceptionException(DoctorNotFoundException e, RedirectAttributes redirectAttributes) {
+    public ResponseEntity<HashMap<String, String>> handleDoctorNotFoundExceptionException(DoctorNotFoundException e) {
         HashMap<String, String> errors = new HashMap<>();
         errors.put("exceptionMsg", e.getMessage());
         return ResponseEntity.badRequest().body(errors);
@@ -205,7 +210,15 @@ public class AppointmentRestController {
 
 
     @ExceptionHandler(AppointmentNotFoundException.class)
-    public ResponseEntity<HashMap<String, String>> handleAppointmentNotFoundException(AppointmentNotFoundException e, RedirectAttributes redirectAttributes) {
+    public ResponseEntity<HashMap<String, String>> handleAppointmentNotFoundException(AppointmentNotFoundException e) {
+        HashMap<String, String> errors = new HashMap<>();
+        errors.put("exceptionMsg", e.getMessage());
+        return ResponseEntity.badRequest().body(errors);
+    }
+
+
+    @ExceptionHandler(SlotUsedException.class)
+    public ResponseEntity<HashMap<String, String>> handleSlotUsedException(SlotUsedException e) {
         HashMap<String, String> errors = new HashMap<>();
         errors.put("exceptionMsg", e.getMessage());
         return ResponseEntity.badRequest().body(errors);
