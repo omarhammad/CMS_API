@@ -1,4 +1,4 @@
-image: gradle:jdk21-alpine
+image: omarhammad997/gradle-jdk21-node-alpine:latest
 
 stages:
   - build
