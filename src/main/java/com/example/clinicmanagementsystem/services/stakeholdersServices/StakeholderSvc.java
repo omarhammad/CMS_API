@@ -29,11 +29,11 @@ import java.util.List;
 public class StakeholderSvc implements IStakeholderService {
 
 
-    private StakeholdersSpringData stakeholdersRepo;
-    private AppointmentsSpringData appointmentsRepo;
+    private final StakeholdersSpringData stakeholdersRepo;
+    private final AppointmentsSpringData appointmentsRepo;
 
-    private AvailabilitySpringData availabilityRepo;
-    private ModelMapper modelMapper;
+    private final AvailabilitySpringData availabilityRepo;
+    private final ModelMapper modelMapper;
 
     private final BCryptPasswordEncoder encoder;
 

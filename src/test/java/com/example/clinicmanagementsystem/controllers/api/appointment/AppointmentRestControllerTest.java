@@ -23,7 +23,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 // to disable the secConfigs temporarily add (addFilters = false) to AutoConfigureMockMvc
 @AutoConfigureMockMvc
-@ActiveProfiles("test")
 @TestInstance(Lifecycle.PER_CLASS)
 class AppointmentRestControllerTest {
     @Autowired
