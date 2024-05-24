@@ -28,11 +28,11 @@ test:
     POSTGRES_DB: 'clinic_testdb'
     POSTGRES_USER: 'test'
     POSTGRES_PASSWORD: 'test'
-    CI_DB_HOST_PORT: 'postgres:5432'
+    SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/clinic_testdb
   before_script:
     - echo "Running tests"
   script:
-    - ./gradlew test
+    - ./gradlew check
   artifacts:
     when: always
     reports:
