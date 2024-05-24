@@ -40,6 +40,7 @@
     </table>
     <a th:class="'btn btn-primary'" th:href="@{/medications/add}" sec:authorize="!hasRole('ROLE_PATIENT')"
        th:text="#{medications.title2}"></a>
+    <a th:class="'btn btn-info'" th:href="@{/medications-csv}" sec:authorize="hasRole('ROLE_ADMIN')">Add CSV</a>
 </div>
 
 

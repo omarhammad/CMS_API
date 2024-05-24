@@ -3,6 +3,8 @@ package com.example.clinicmanagementsystem.domain;
 import com.example.clinicmanagementsystem.domain.util.Dosage;
 import com.example.clinicmanagementsystem.domain.util.MedicationForm;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.opencsv.bean.CsvBindByName;
+import com.opencsv.bean.CsvRecurse;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -14,32 +16,34 @@ public class Medication {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int medicationId;
+
+    @CsvBindByName(column = "Name")
     private String name;
+
     @Enumerated(EnumType.STRING)
+    @CsvBindByName(column = "Form")
     private MedicationForm form;
+
     @Embedded
+    @CsvRecurse
     private Dosage dosage;
+
+    @CsvBindByName(column = "Frequency")
     private int frequencies;
+
+    @CsvBindByName(column = "Days Duration")
     private int daysDuration;
+
+    @CsvBindByName(column = "Notes")
     private String notes;
 
     @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Prescription> prescriptions;
 
-
     public Medication() {
     }
 
-    public Medication(int medicationId, String name, MedicationForm form, Dosage dosage, int frequencies, int daysDuration, String notes) {
-        this.medicationId = medicationId;
-        this.name = name;
-        this.form = form;
-        this.dosage = dosage;
-        this.frequencies = frequencies;
-        this.daysDuration = daysDuration;
-        this.notes = notes;
-    }
 
     public int getMedicationId() {
         return medicationId;

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <th:block th:insert="~{fragments/heading :: heading (title = 'Upload Medications CSV')}"/>
+
+</head>
+<body>
+
+
+<main class="container mt-5">
+    <div class="card">
+        <div class="card-header text-center bg-primary text-white">
+            <h1>Upload Medications CSV</h1>
+        </div>
+        <div class="card-body">
+            <form th:action="@{/medications-csv}" th:method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="medications-csv" class="form-label font-weight-bold">Select a file to upload</label>
+                    <input class="form-control-file" type="file" name="medications-csv" id="medications-csv" required/>
+                </div>
+                <div class="form-group text-center m-2">
+                    <button type="submit" class="btn btn-primary">Upload</button>
+                    <a type="button" class="btn btn-danger" th:href="@{/medications/}">Back</a>
+                </div>
+            </form>
+            <div th:if="${message}">
+                <div class="alert" th:classappend="${error} ? 'alert-danger' : 'alert-success'"
+                     th:text="${message}"></div>
+            </div>
+        </div>
+    </div>
+</main>
+
+
+</body>
+</html>

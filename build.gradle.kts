@@ -2,7 +2,7 @@ plugins {
     java
     id("org.springframework.boot") version "3.2.2"
     id("io.spring.dependency-management") version "1.1.4"
-    id ("com.github.node-gradle.node") version "7.0.2"
+    id("com.github.node-gradle.node") version "7.0.2"
 
 }
 
@@ -22,7 +22,7 @@ dependencies {
     developmentOnly("org.springframework.boot:spring-boot-devtools:3.0.4")
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf:3.0.4")
-    implementation ("org.jsoup:jsoup:1.17.2")
+    implementation("org.jsoup:jsoup:1.17.2")
 
     implementation("org.springframework.boot:spring-boot-starter-web:3.1.0")
     implementation("org.springframework.boot:spring-boot-starter-validation:3.0.4")
@@ -37,6 +37,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6")
     implementation("org.modelmapper:modelmapper:3.2.0")
+    implementation("com.opencsv:opencsv:5.5.2")
+    implementation("org.springframework.boot:spring-boot-starter-cache")
+    implementation ("org.ehcache:ehcache:3.9.4")
     implementation("org.jetbrains:annotations:23.0.0")
     testImplementation("javax.servlet:javax.servlet-api:4.0.1")
     testImplementation("org.springframework.security:spring-security-test")

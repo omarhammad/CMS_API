@@ -1,5 +1,6 @@
 package com.example.clinicmanagementsystem.domain.util;
 
+import com.opencsv.bean.CsvBindByName;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -10,9 +11,11 @@ import java.util.Objects;
 public class Dosage {
 
     @Enumerated(EnumType.STRING)
+    @CsvBindByName(column = "Dosage Unit")
     private Unit unit;
-    private double quantity;
 
+    @CsvBindByName(column = "Dosage Quantity")
+    private double quantity;
 
     public Dosage(Unit unit, double quantity) {
         this.unit = unit;
