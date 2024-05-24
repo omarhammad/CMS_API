@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-
 public interface PrescriptionsSpringData extends JpaRepository<Prescription, Long> {
     @Override
     <S extends Prescription> @NotNull List<S> findAll(@NotNull Example<S> example);
