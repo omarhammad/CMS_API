@@ -33,6 +33,7 @@ import static org.mockito.BDDMockito.given;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@ActiveProfiles("test")
 class AppointmentSvcTest {
 
 
