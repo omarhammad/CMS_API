@@ -1,0 +1,45 @@
+image: gradle:alpine
+
+stages:
+  - build
+  - test
+
+before_script:
+  - GRADLE_USER_HOME="$(pwd)/.gradle"
+  - export GRADLE_USER_HOME
+
+build:
+  stage: build
+  script:
+    - echo "Running build"
+    - ./gradlew --build-cache assemble
+  cache:
+    key: "$CI_COMMIT_REF_NAME"
+    policy: push
+    paths:
+      - build
+      - .gradle
+
+test:
+  stage: test
+  services:
+    - postgres:16.1-alpine
+  variables:
+    POSTGRES_DB: 'clinic_testdb'
+    POSTGRES_USER: 'test'
+    POSTGRES_PASSWORD: 'test'
+    CI_DB_HOST_PORT: 'postgres:5432'
+  before_script:
+    - echo "Running tests"
+  script:
+    - ./gradlew test
+  artifacts:
+    when: always
+    reports:
+      junit: build/test-results/test/**/TEST-*.xml
+  cache:
+    key: "$CI_COMMIT_REF_NAME"
+    policy: pull
+    paths:
+      - build
+      - .gradle
