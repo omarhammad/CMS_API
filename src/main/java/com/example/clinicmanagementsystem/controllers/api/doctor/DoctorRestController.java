@@ -45,21 +45,19 @@ public class DoctorRestController {
 
         List<DoctorResponseDTO> doctorList;
         try {
-            doctorList = service.getAllDoctors();
+            if (searchTerm != null && !searchTerm.isEmpty())
+                doctorList = service.searchDoctors(searchTerm);
+            else
+                doctorList = service.getAllDoctors();
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();
         }
 
-        if (searchTerm != null && !searchTerm.isEmpty())
-            doctorList = doctorList.stream()
-                    .filter(doctorResponseDTO -> {
-                        String fullName = doctorResponseDTO.getFirstName() + " " + doctorResponseDTO.getLastName();
-                        return fullName.toLowerCase().contains(searchTerm.toLowerCase());
-                    }).toList();
-
         if (doctorList.isEmpty())
             return new ResponseEntity<>(doctorList, HttpStatus.NO_CONTENT);
+
         return ResponseEntity.ok(doctorList);
+
     }
 
 
@@ -103,8 +101,9 @@ public class DoctorRestController {
 
     @PostMapping("/{id}/availability")
     @PreAuthorize("hasRole('ROLE_DOCTOR')")
-    public ResponseEntity<AvailabilityResponseDTO> addDoctorAvailability(@RequestBody @Valid CreateAvailabilityRequestDTO requestDTO,
-                                                                         @PathVariable long id) {
+    public ResponseEntity<AvailabilityResponseDTO> addDoctorAvailability
+            (@RequestBody @Valid CreateAvailabilityRequestDTO requestDTO,
+             @PathVariable long id) {
         System.out.println(requestDTO);
         AvailabilityResponseDTO responseDTO = service.addDoctorAvailability(id, requestDTO.getSlot());
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
@@ -113,7 +112,8 @@ public class DoctorRestController {
 
     @DeleteMapping("/availability/{availabilityId}")
     @PreAuthorize("hasRole('ROLE_DOCTOR')")
-    public ResponseEntity<Void> deleteDoctorAvailabilityById(@PathVariable int availabilityId, @AuthenticationPrincipal CustomUserDetails userDetails) {
+    public ResponseEntity<Void> deleteDoctorAvailabilityById(@PathVariable int availabilityId,
+                                                             @AuthenticationPrincipal CustomUserDetails userDetails) {
 
         try {
             service.removeAvailability(availabilityId, userDetails.getUserId());
@@ -128,7 +128,8 @@ public class DoctorRestController {
 
 
     @PostMapping("")
-    public ResponseEntity<DoctorResponseDTO> addNewDoctor(@RequestBody @Valid CreateDoctorRequestDTO createDoctorRequestDTO) {
+    public ResponseEntity<DoctorResponseDTO> addNewDoctor(@RequestBody @Valid CreateDoctorRequestDTO
+                                                                  createDoctorRequestDTO) {
 
         String contactInfo = createDoctorRequestDTO.getPhoneNumber() + "," + createDoctorRequestDTO.getEmail();
         DoctorResponseDTO doctorResponseDTO = service.addNewDoctor(createDoctorRequestDTO.getFirstName(), createDoctorRequestDTO.getLastName()
@@ -139,7 +140,8 @@ public class DoctorRestController {
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateDoctor(@RequestBody @Valid UpdateDoctorRequestDTO updateDoctorRequestDTO, @PathVariable("id") int id) {
+    public ResponseEntity<Void> updateDoctor(@RequestBody @Valid UpdateDoctorRequestDTO updateDoctorRequestDTO,
+                                             @PathVariable("id") int id) {
         logger.debug("Reached! PUT");
 
         if (id != updateDoctorRequestDTO.getId()) {
@@ -172,7 +174,8 @@ public class DoctorRestController {
 
 
     @ExceptionHandler(ContactInfoExistException.class)
-    public ResponseEntity<HashMap<String, String>> handleContactInfoExistException(ContactInfoExistException exception) {
+    public ResponseEntity<HashMap<String, String>> handleContactInfoExistException(ContactInfoExistException
+                                                                                           exception) {
         logger.debug("Entered to ContactInfoExistException: {}", exception.getMessage());
         HashMap<String, String> errors = new HashMap<>();
         errors.put("exceptionMsg", exception.getMessage());

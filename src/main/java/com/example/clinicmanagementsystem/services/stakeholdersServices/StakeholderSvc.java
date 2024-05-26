@@ -44,7 +44,6 @@ public class StakeholderSvc implements IStakeholderService {
         this.encoder = encoder;
     }
 
-    @Cacheable("search-doctors")
     @Override
     public List<DoctorResponseDTO> getAllDoctors() {
         List<Doctor> doctors = stakeholdersRepo.findAll().stream()
@@ -57,6 +56,18 @@ public class StakeholderSvc implements IStakeholderService {
             doctorResponseDTOS.add(modelMapper.map(doctor, DoctorResponseDTO.class));
         }
         return doctorResponseDTOS;
+    }
+
+    @Cacheable("search-doctors")
+    @Override
+    public List<DoctorResponseDTO> searchDoctors(String searchTerm) {
+        List<DoctorResponseDTO> doctorList = getAllDoctors();
+        doctorList = doctorList.stream()
+                    .filter(doctorResponseDTO -> {
+                        String fullName = doctorResponseDTO.getFirstName() + " " + doctorResponseDTO.getLastName();
+                        return fullName.toLowerCase().contains(searchTerm.toLowerCase());
+                    }).toList();
+        return doctorList;
     }
 
     @Cacheable(value = "doctor-details", key = "#doctorId")

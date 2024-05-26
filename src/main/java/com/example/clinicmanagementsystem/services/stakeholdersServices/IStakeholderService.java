@@ -13,6 +13,7 @@ public interface IStakeholderService {
 
 
     List<DoctorResponseDTO> getAllDoctors();
+    List<DoctorResponseDTO> searchDoctors(String searchTerm);
 
     List<PatientResponseDTO> getAllPatients();
 
@@ -50,4 +51,5 @@ public interface IStakeholderService {
 
 
     AvailabilityResponseDTO getAvailability(int availabilityId);
+
 }
