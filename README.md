@@ -1,6 +1,6 @@
 # Clinic Management System
 
-![Clinic Management System](https://your-image-url.com)
+![Clinic Management System](https://github.com/omarhammad/CMS_WebApp/blob/master/src/main/resources/static/media/landing_page.png)
 
 ---
 
@@ -13,8 +13,6 @@
 - [API Endpoints](#api-endpoints)
 - [Testing](#testing)
 - [Security and Authentication](#security-and-authentication)
-- [Why Choose This Project?](#why-choose-this-project)
-- [License](#license)
 - [Contributors](#contributors)
 
 ---
