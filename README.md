@@ -181,9 +181,6 @@ appointment scheduling, medical records management, and prescription tracking.
     - SignIn page (/signin) , SignUp(/signup) and Landing page (/) can be accessed by anyone.
     - Appointments (/appointments) , Patients (/patients) , Doctors (/doctors) and Medications (/medications)  requires
       authentication to be accessible.
-
-Certainly! Here's a revised version of your project description suitable for inclusion in a README file, with corrections for grammar and vocabulary:
-
 ---
 
 ## Project - Week 5
