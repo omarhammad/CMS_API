@@ -83,15 +83,11 @@ The **Clinic Management System** is a web-based application designed to streamli
    ```sh
    docker-compose up -d
    ```
-3. Configure environment variables:
-   ```sh
-   cp .env.example .env
-   ```
-4. Build and run the project:
+3. Build and run the project:
    ```sh
    ./gradlew bootRun
    ```
-5. Access the application at `http://localhost:8080`
+4. Access the application at `http://localhost:8080`
 
 ---
 
@@ -106,12 +102,31 @@ The **Clinic Management System** is a web-based application designed to streamli
 
 ### Appointment Endpoints
 - `GET /api/appointments` - Retrieve all appointments
+- `GET /api/appointments/{id}` - Retrieve a specific appointment
 - `POST /api/appointments` - Schedule a new appointment
+- `PUT /api/appointments/{id}` - Update an appointment
 - `DELETE /api/appointments/{id}` - Cancel an appointment
 
 ### Patient Endpoints
+- `GET /api/patients` - Retrieve all patients
 - `GET /api/patients/{id}` - Retrieve patient details
 - `POST /api/patients` - Register a new patient
+- `PUT /api/patients/{id}` - Update patient details
+- `DELETE /api/patients/{id}` - Remove a patient
+
+### Prescription Endpoints
+- `GET /api/prescriptions` - Retrieve all prescriptions
+- `GET /api/prescriptions/{id}` - Retrieve a specific prescription
+- `POST /api/prescriptions` - Add a new prescription
+- `PUT /api/prescriptions/{id}` - Update a prescription
+- `DELETE /api/prescriptions/{id}` - Remove a prescription
+
+### Medication Endpoints
+- `GET /api/medications` - Retrieve all medications
+- `GET /api/medications/{id}` - Retrieve a specific medication
+- `POST /api/medications` - Add a new medication
+- `PUT /api/medications/{id}` - Update medication details
+- `DELETE /api/medications/{id}` - Remove a medication
 
 ---
 
@@ -141,7 +156,6 @@ void shouldReturnAllAppointments() {
 - **Password Encryption** implemented using BCrypt.
 
 ---
-
 
 ## Contributors
 
