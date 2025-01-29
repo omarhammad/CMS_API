@@ -160,4 +160,6 @@ void shouldReturnAllAppointments() {
 ## Contributors
 
 👨‍💻 **Omar Yahya M Hammad**  
-📧 Email: [omar.hammad@student.kdg.be](mailto:omar.hammad@student.kdg.be)
+📧 Email: [omarhammad767@gmail.com](mailto:omarhammad767@gmail.com)
+
+---
