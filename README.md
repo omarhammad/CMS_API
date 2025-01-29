@@ -1,423 +1,151 @@
 # Clinic Management System
 
-## Introduction
+![Clinic Management System](https://your-image-url.com)
 
-The Clinic Management System is a solution designed to automate and effectively handle a variety of operations in
-appointment scheduling, medical records management, and prescription tracking.
+---
 
-## Features
+## Table of Contents
+- [Overview](#overview)
+- [Key Features](#key-features)
+- [Domain Model](#domain-model)
+- [Technologies Used](#technologies-used)
+- [Setup and Installation](#setup-and-installation)
+- [API Endpoints](#api-endpoints)
+- [Testing](#testing)
+- [Security and Authentication](#security-and-authentication)
+- [Why Choose This Project?](#why-choose-this-project)
+- [License](#license)
+- [Contributors](#contributors)
 
-### Appointments
+---
 
-- Schedule new appointments
-- cancel existing appointments
-- View appointment history
+## Overview
 
-### Prescriptions
+The **Clinic Management System** is a web-based application designed to streamline clinic operations such as appointment scheduling, medical record management, and prescription tracking. It ensures seamless communication between doctors, patients, and administrative staff while maintaining data integrity and security.
 
-- Generate prescriptions electronically
-- Track medication history
+---
+
+## Key Features
+
+### Appointment Management
+- Schedule, update, and cancel appointments.
+- View appointment history.
+
+### Prescription Management
+- Generate electronic prescriptions.
+- Track medication history.
 
 ### Medical Records
+- Patients can view their previous appointments and treatment notes.
 
-- Patient under his details page he can see all his old appointments with a small description of what happened during
-  that appointment.
+### User Roles and Permissions
+- **Admin**: Full access to manage doctors, patients, and appointments.
+- **Doctor**: Can view, update, and manage their own appointments and prescribe medications.
+- **Patient**: Can book and view their own appointments and medical records.
+- **Secretary**: Can schedule and manage appointments for patients.
+
+---
 
 ## Domain Model
 
-- Patient
-- Doctor
-- Appointment
-- Prescription
-- Medication
-
-### Explanation :
-
-> - Patient can be added with a national number and won't be added in case national number is in the system.
-> - Doctor can be added, but they must have different contact info
-> - Patient and Doctor can have multiple appointments but with different Date and Time.
-> - Medications can be added normally but can't be deleted in case a Prescription using it.
-> - Prescription can't be added without medications and the Expiry date must be in future and after the appointment
-    date.
-> - When removing a doctor or a patient their related appointments would be deleted also.
-> - All appointments that in the past can't be deleted as they would be used as a medical record for Patients
-> - when you open a Patient or Doctor details page , you'll see their appointments with who has been made
-> - Patients additionally in their details page they can see a small description of each appointment they had in the
-    past under Medical Records section
-
-## Database
-
-- Postgresql : everything to run the sql server in the docker-compose.yml file
-- the host port is 5434
-
-## Project Assignments
-
-- ### Project - week 1
-    - the project files of PROG-3 copied.
-    - the project deal with SpringData only on Postgersql
-    - docker-compose.yml file initiated with everything needed
-    - host port 5434 mapped with container 5432 port to access the sql server
-
-- ### Project - week 2
-    - DoctorController has (GET ALL, GET ONE, DELETE) endpoints
-    - test.http file initiated in "test" package has tests for each endpoint and any potential status code.
-    - js files in statics/js/doctors folder called {get_doctors.js "has the delete request",get_one_doctor.js}, in each
-      js file i call the endpoints to fill in each page using Ajax (
-      fetch).
-    - > GET http://localhost:8080/api/doctors :  "Fetching all doctors : Response is OK"
-    - > GET http://localhost:8080/api/doctors :  "Fetching all doctors : Response is NO_CONTENT (EMPTY LIST)"
-    - > GET http://localhost:8080/api/doctors/1 :  "Fetching one doctor : Response is OK"
-    - > GET http://localhost:8080/api/doctors/20 :  "Fetching one doctor : Response is NOT FOUND"
-    - > DELETE http://localhost:8080/api/doctors/1 :  "Deleting one doctor : Response is NO_CONTENT (DELETED!)"
-    - > DELETE http://localhost:8080/api/doctors/20 :  "Deleting one doctor : Response is NOT_FOUND"
-
-
-- ### Project - week 3
-    - DoctorController hsa (POST,PUT) endpoints
-    - test.http file handles all status codes for PUT,POST requests.
-    - post_doctor.js & put_doctor.js files are in static/js/doctors folder to make the request using "fetch" and handel
-      add_new_doctor.html & update_doctor_page.hml pages.
-    - > POST http://localhost:8080/api/doctors :  "Posting a new doctor: Response is OK"
-      >> Content-Type: application/json
-      >
-      >> {
-      "firstName": "Omar",
-      "lastName": "Hammad",
-      "specialization": "Urology",
-      "phoneNumber": "+32465358794",
-      "email": "omar.hammad@student.kd.be"
-      }
-    - > POST http://localhost:8080/api/doctors :  "Posting a new doctor: Response is Bad Request as fields are not
-      valid!"
-      >> Content-Type: application/json
-      >
-      >> {
-      "firstName": " ",
-      "lastName": " ",
-      "specialization": " ",
-      "phoneNumber": " ",
-      "email": " "
-      }
-    - > POST http://localhost:8080/api/doctors :  "Posting a new doctor: Response is Bad Request as the contact already"
-      exists!"
-      >> Content-Type: application/json
-      >
-      >> {
-      "firstName": "Omar",
-      "lastName": "Hammad",
-      "specialization": "Urology",
-      "phoneNumber": "+32465358794",
-      "email": "omar.hammad@student.kd.be"
-      }
-    - > PUT http://localhost:8080/api/doctors/1 :  "Updating a doctor: Response is NO_CONTENT (UPDATED!)"
-      >> Content-Type: application/json
-      >
-      >> {
-      "id": 1,
-      "firstName": "Omar",
-      "lastName": "Hammad",
-      "specialization": "Urology",
-      "phoneNumber": "+32465358794",
-      "email": "omar.hammad@student.kd.be"
-      }
-
-    - > PUT http://localhost:8080/api/doctors/2 :  "Updating a doctor: Response is CONFLICT"
-      >> Content-Type: application/json
-      >
-      >> {
-      "id": 1,
-      "firstName": "Omar",
-      "lastName": "Hammad",
-      "specialization": "Urology",
-      "phoneNumber": "+32465358794",
-      "email": "omar.hammad@student.kd.be"
-      }
-
-    - > PUT http://localhost:8080/api/doctors/1 :  "Updating a doctor: Response is Bad Request as fields are not
-      valid!"
-      >> Content-Type: application/json
-      >
-      >> {
-      "id": 1,
-      "firstName": " ",
-      "lastName": " ",
-      "specialization": "Urology",
-      "phoneNumber": "+32465358794",
-      "email": "omar.hammad@student.kd.be"
-      }
-    - > PUT http://localhost:8080/api/doctors/2 :  "Updating a doctor: Response is BAD REQUEST DUE TO CONTACT INFO USED
-      BY OTHER DOCTORS"
-      >> Content-Type: application/json
-      >
-      >> {
-      "id": 2,
-      "firstName": "Hasan",
-      "lastName": "Alkhatib",
-      "specialization": "Urology",
-      "phoneNumber": "+32465358794",
-      "email": "omar.hammad@student.kd.be"
-      }
-
-    - > PUT http://localhost:8080/api/doctors/20 : "Updating a doctor: Response is DOCTOR NOT FOUND"
-      >> Content-Type: application/json
-      >
-      >> {
-      "id": 20,
-      "firstName": "Hasan",
-      "lastName": "Alkhatib",
-      "specialization": "Urology",
-      "phoneNumber": "+32465358794",
-      "email": "omar.hammad@student.kd.be"
-      }
----
-
-- ### Project - week 4
-    - I've created a signIn and signUp pages also a Landing page.
-    - Users already in the system :
-        - username: "sara_lee" with Password "omar1997"
-        - username: "kevin_miller" with Password "omar1997"
-        - username: "lily_smith" with Password "omar1997"
-        - username: "admin" with Password "omar1997"
-    - SignIn page (/signin) , SignUp(/signup) and Landing page (/) can be accessed by anyone.
-    - Appointments (/appointments) , Patients (/patients) , Doctors (/doctors) and Medications (/medications)  requires
-      authentication to be accessible.
----
-
-## Project - Week 5
-
-### Overview
-
-This application incorporates a role-based access control system with four distinct roles: Patient, Doctor, Secretary, and Admin. Each role is associated with specific permissions that define the actions users can perform within the application.
-
-### User Roles and Credentials
-
-All users share the same password: `omar1997`. Below are the usernames assigned to each role:
-
-- **Doctor**: Username - `sara_lee`
-- **Patient**: Username - `lily_smith`
-- **Admin**: Username - `admin`
-- **Secretary**: Username - `secretary`
-
-### Role Permissions
-
-- **Doctors** are able to:
-    - View only their own appointments.
-    - Add, delete, and update medications.
-    - View other doctors' profiles.
-    - Add and update patient information.
-    - Access a profile tab to update their personal information.
-
-- **Patients** are permitted to:
-    - View only their own appointments.
-    - View medications and other doctors' profiles.
-    - Access a profile tab to update their personal information.
-
-- **Secretaries** can:
-    - Schedule appointments and view all appointments.
-    - Add new patients to the system.
-    - View doctors' profiles and their scheduled appointments.
-    - Secretaries do not have access to medication details.
-
-- **Admins** have full access to:
-    - Perform all actions within the application without restrictions.
+- **Patient**: Unique national number-based identification.
+- **Doctor**: Unique contact details.
+- **Appointment**: Patient-Doctor relation with a date and time.
+- **Prescription**: Contains medication details, linked to an appointment.
+- **Medication**: Can be prescribed but not deleted if in use.
 
 ---
 
-## Project - Week 6 & 7
+## Technologies Used
 
+- **Backend**: Java Spring Boot (Spring Data JPA, Spring Security)
+- **Frontend**: Embedded JavaScript, Bootstrap, SCSS
+- **Database**: PostgreSQL (Dockerized)
+- **Caching**: Implemented for search operations
+- **Testing**: JUnit, Mockito for unit and integration testing
+- **Authentication**: Role-based access control (RBAC) with Spring Security
 
-### `AppointmentSvcTest` - Service Layer Testing
+---
 
-This class tests various functionalities provided by the `AppointmentSvc` service layer, focusing on the CRUD operations and retrieval of appointment data.
+## Setup and Installation
 
-#### Features Tested
+### Prerequisites
+- Java 17+
+- Docker & Docker Compose
+- PostgreSQL (if running locally)
 
-1. **Retrieving All Appointments**
-    - Tests that the list of all appointments is not empty.
+### Installation Steps
 
-2. **Retrieving an Individual Appointment**
-    - Validates the retrieval of an existing appointment.
-    - Ensures that retrieving a non-existent appointment returns null.
-
-3. **Adding a New Appointment**
-    - Tests the addition of a new appointment.
-    - Verifies that the newly added appointment matches the expected values by comparing it with a mapped DTO of the appointment object.
-
-4. **Updating an Appointment**
-    - Confirms that an existing appointment can be updated.
-    - Checks if the update operation correctly modifies the appointment details, such as the purpose of the visit.
-
-5. **Removing an Appointment**
-    - Ensures that an appointment can be deleted.
-    - Verifies that once an appointment is removed, it can no longer be retrieved.
-
-6. **Retrieving Appointments for a Specific Patient**
-    - Tests retrieval of all appointments for a given patient.
-    - Confirms that all retrieved appointments belong to the specified patient.
-
-7. **Retrieving Appointments for a Specific Doctor**
-    - Ensures that all appointments for a given doctor are correctly retrieved.
-    - Checks that each appointment's doctor ID matches the expected doctor.
-
-### `AppointmentRestControllerTest` - Controller Layer Testing
-
-This class tests the RESTful endpoints related to appointment management, simulating various scenarios to validate the appointment API's reliability and security.
-
-#### Features Tested
-
-1. **Creating a New Appointment**
-    - Tests endpoint for adding a new appointment.
-    - Validates response when trying to add the same appointment twice.
-    - Checks handling of invalid input such as missing or incorrect patient national number, appointments in the past, and invalid doctor IDs.
-
-2. **Retrieving Appointments by Patient and Doctor**
-    - Tests endpoint for retrieving appointments for a specific patient, including scenarios where the patient has no appointments or does not exist.
-    - Checks the retrieval of appointments for a doctor, handling cases where the doctor has no appointments or does not exist in the system.
-
-3. **Deleting an Appointment**
-    - Tests endpoint for deleting an appointment.
-    - Validates the response when trying to delete a non-existent appointment.
-
-#### Additional Scenarios
-
-- **Security and Access Control**
-    - Tests are conducted under the assumption that the user performing the operations has administrative rights (`WithUserDetails("admin")`).
-    - Includes CSRF protection to test the security aspect of POST and DELETE requests.
-
-----
-
-## Project - week 8
-
-#### Mockito Library and Mocking in Tests
-
-In this project, I utilized the Mockito library extensively to facilitate the isolation of the `AppointmentSvc` during testing by mocking dependencies like `AppointmentSpringData` and `StakeholdersSpringData` repos .
-##### Examples of Mockito Usage
-
-1. **Given**: This is used to define the behavior of the mock when certain conditions are met. For example:
-   ```java
-   // Mocking the behavior to return an optional of appointment when a specific ID is searched
-  
-   // Given
-   Appointment appointment = new Appointment();
-   appointment.setId(1L);
-   given(appointmentsRepo.findById(1L)).willReturn(Optional.of(appointment));
-   
-   // When
-   AppointemntResponseDTO appointmentResponse = 
-                appointmentSvc.getAppointmentById(1L);
-
-   // Then   
-   assertEquals(modelMapper.map(appointment,AppointemntResponseDTO.class)
-                                           ,appointmentResponse);
-
-   
+1. Clone the repository:
+   ```sh
+   git clone https://github.com/your-repo/clinic-management.git
+   cd clinic-management
    ```
-
-2. **Verify**: This is used to ensure that specific interactions with the mock happen. For example:
-   ```java
-   // Verifying that the deleteById method was called on the repository
-  
-   // Given
-   doNothing().when(appointmentsRepo).deleteById(1L);
-   // When
-   appointmentSvc.removeAppointment(1L);
-   // Then
-   verify(appointmentsRepo).deleteById(1L);
-
-This command will execute all the test cases in the `AppointmentSvcTest` class, utilizing Mockito for mocking the necessary dependencies and verifying the interactions and behaviors as expected.
-
----
-
-## Project Week 11 - Embedded Frontend Project
-
-
-## Steps Followed
-1. **Set up the Project**: Initialized the project with npm and configured webpack.
-2. **Migrate CSS to SCSS**: Converted some CSS stylings to SCSS syntax, utilizing features like variables and nesting.
-3. **Customize Bootstrap**: Customized Bootstrap using Sass.
-4. **Modularize JavaScript Code**: Refactored reusable JavaScript code into separate ECMAScript modules.
-5. **Add ESLint Configuration**: Configured ESLint for the project and applied its suggestions.
-6. **Add Bootstrap Icons**: Installed Bootstrap Icons via npm and added icons to the website.
-7. **Client-Side Form Validation**: Implemented custom client-side form validation using the 'joi' npm package.
-
-
-
-## Customizations and Implementations
-
-### Bootstrap Icons
-**Icon Added**: I have added the Bootstrap Icon to several detail pages.
-
-- **URLs**:
-    - `/appointments/details/{app_id}`
-    - `/doctors/details/{doctor_id}`
-    - `/patients/details/{patient_id}`
-
-
-### Custom Client-Side Form Validation
-**Forms with Validation**:
-- **Appointment Form**: Custom validation was added to the appointment form.
-    - **URL**: `/appointments/add`
-    - **Source File**: `post_appointment.js`
-
-- **Doctor Form**: Custom validation was added to the doctor form.
-    - **URL**: `/doctors/add`
-    - **Source File**: `post_doctor.js`
+2. Run PostgreSQL with Docker:
+   ```sh
+   docker-compose up -d
+   ```
+3. Configure environment variables:
+   ```sh
+   cp .env.example .env
+   ```
+4. Build and run the project:
+   ```sh
+   ./gradlew bootRun
+   ```
+5. Access the application at `http://localhost:8080`
 
 ---
 
-## Project - Week 12
+## API Endpoints
 
-### Continuous Integration (CI)
+### Doctor Endpoints
+- `GET /api/doctors` - Retrieve all doctors
+- `GET /api/doctors/{id}` - Get a specific doctor
+- `POST /api/doctors` - Add a new doctor
+- `PUT /api/doctors/{id}` - Update a doctor
+- `DELETE /api/doctors/{id}` - Remove a doctor
 
-1. **Pipeline Setup**:
-    - Configured a CI pipeline that triggers automatically on code push.
-    - The pipeline includes two stages: build and test.
+### Appointment Endpoints
+- `GET /api/appointments` - Retrieve all appointments
+- `POST /api/appointments` - Schedule a new appointment
+- `DELETE /api/appointments/{id}` - Cancel an appointment
 
-2. **Build Stage**:
-    - Compiles the project using Gradle.
-    - Caching is enabled to reuse build artifacts, speeding up subsequent builds.
-
-3. **Test Stage**:
-    - Executes unit tests using Gradle.
-    - A PostgreSQL service is started to provide a database for the tests.
-    - JUnit test reports are generated and made visible on the GitLab pipeline page.
-
-
-
-### File Upload
-
-1. **Admin Page for Medications CSV Upload**:
-    - Added an admin-only page for uploading medications CSV files to create multiple medication records in bulk.
-    - You can access the page after you auth as admin and then from 'medications' page you can click on "Add CSV" btn to open the upload page
-
-### Caching for Search
-
-1. **Search Functionality**:
-    - Implemented a search feature for doctors that uses caching to avoid querying the database multiple times for the same search term.
-    - you can see the caches in StackeholdersSvc service class.
-2. **Cache Eviction**:
-    - Configured cache eviction for scenarios where the data changes (e.g., adding, updating, or deleting a doctor).
+### Patient Endpoints
+- `GET /api/patients/{id}` - Retrieve patient details
+- `POST /api/patients` - Register a new patient
 
 ---
-#### <span style ="color:orange">Thanks for reading my Project description.</span>
 
-<div style="color: darkgreen">
+## Testing
 
-### Made By :
+### Unit & Integration Testing
+- **Mockito**: Used for mocking repository dependencies.
+- **JUnit**: Ensures correct functionality of service and controller layers.
+- **API Tests**: Covers all endpoints for CRUD operations.
 
-#### Full name : Omar Yahya M Hammad
+Example Test Case:
+```java
+@Test
+void shouldReturnAllAppointments() {
+    List<Appointment> appointments = List.of(new Appointment(1L, "2024-01-29", "Checkup"));
+    given(appointmentsRepo.findAll()).willReturn(appointments);
+    assertEquals(1, appointmentSvc.getAllAppointments().size());
+}
+```
 
-#### Group : ACS 201
+---
 
-#### Email : omar.hammad@student.kdg.be
+## Security and Authentication
 
-</div>
+- **Role-Based Access Control (RBAC)** ensures users can only access relevant features.
+- **CSRF Protection** enabled for form submissions.
+- **Password Encryption** implemented using BCrypt.
 
-
-
-
-
-
+---
 
 
+## Contributors
 
+👨‍💻 **Omar Yahya M Hammad**  
+📧 Email: [omar.hammad@student.kdg.be](mailto:omar.hammad@student.kdg.be)
